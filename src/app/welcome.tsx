@@ -66,15 +66,15 @@ export default function WelcomeScreen() {
             source={churchImages.congregationPortrait}
             style={StyleSheet.absoluteFill}
             contentFit="cover"
-            contentPosition="top center"
+            contentPosition="center"
             accessibilityLabel="Members of TwainMan Ministry International worshipping together"
             accessibilityRole="image"
             accessible
             transition={240}
           />
           <LinearGradient
-            colors={['transparent', colors.scrim, colors.background]}
-            locations={[0.35, 0.75, 1]}
+            colors={['transparent', colors.scrimStrong, colors.background]}
+            locations={[0.5, 0.88, 1]}
             style={StyleSheet.absoluteFill}
             pointerEvents="none"
           />
