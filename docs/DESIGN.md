@@ -7,28 +7,58 @@ coherent.
 
 ## The idea
 
-Parchment paper, ink type, a deep forest green for the ministry's own voice, and
-brass for the small marks that organise a page. Hierarchy comes from **type and
-space**, not from boxes. The result should feel closer to a well-set book than to a
+The church's own colours: a deep aubergine **purple** for the ministry's voice and
+warm **gold** for the small marks that organise a page, on a warm ivory ground.
+Hierarchy comes from **type and space**, not from boxes — with one addition:
+colour also divides a long page into bands you can feel without reading. The result should feel closer to a well-set book than to a
 product dashboard.
 
 ## Colour
 
 | Role | Light | Dark | Used for |
 | --- | --- | --- | --- |
-| `background` | `#F7F3EC` parchment | `#15150F` ink | The page |
-| `surface` | `#FDFBF6` | `#1C1D16` | Reading surfaces, sheets |
-| `surfaceMuted` | `#EFE8DB` | `#24261D` | Tonal grouping without a border |
-| `surfaceInverse` | `#16271E` forest | `#F7F3EC` | Player, featured plate, live strip |
-| `primary` | `#2F4A3C` forest | `#8FB39D` sage | The ministry voice: primary actions, active tab |
-| `accent` | `#9A762F` brass | `#C7A75C` | Eyebrows, Scripture marks, the active-tab indicator |
+| `background` | `#F8F5F0` ivory | `#15101A` plum-ink | The page |
+| `surface` | `#FFFDF9` | `#1E1726` | Reading surfaces, sheets |
+| `surfaceMuted` | `#F0EAF0` | `#2A2133` | Tonal grouping without a border |
+| `surfaceInverse` | `#241430` plum | `#2E2039` raised plum | Player, featured plate, live strip, toast |
+| `primary` | `#4A2A5A` purple | `#C4A5D6` lilac | The ministry voice: primary actions, active tab |
+| `accent` | `#9A762F` gold | `#D9B463` | Eyebrows, Scripture marks, the active-tab indicator |
+| `accentFill` | `#C19A38` gold | `#D9B463` | Gold as a filled control — the play button |
+| `bandPrimary` | `#F3EDF6` | `#221A2B` | Section ground: formation |
+| `bandAccent` | `#FAF4E6` | `#241E14` | Section ground: Scripture |
+| `bandNeutral` | `#F0EAF0` | `#1B1622` | Section ground: notices |
 | `danger` / `success` / `warning` | clay / moss / amber | — | Status only |
+
+Dark mode is **designed, not inverted**: a plum-ink ground with a lighter lilac
+primary, because the deep purple loses contrast on dark. The plum plate is purple
+in *both* schemes — strong contrast by day, a raised panel at night — because a
+white slab in a dark room is not a reading app. Both schemes are declared
+independently, and a compile-time check keeps their key sets identical.
+
+### Colour as division
+
+Home is a long page of unrelated things, so the ground changes underneath each
+part — and the tone carries meaning rather than alternating for decoration:
+
+| Band | Holds |
+| --- | --- |
+| gold (`bandAccent`) | Scripture and the daily reading |
+| purple (`bandPrimary`) | formation: your courses, and prayer |
+| ivory (`page`) | the life of the house: what is on |
+| neutral (`bandNeutral`) | notices |
+
+The tints sit a hair above 1.05:1 against the page — you feel the change of
+section without ever being asked to look at it. Neighbouring bands never repeat a
+tone, or the division disappears. `components/ui/band.tsx` is the only way to
+draw one.
 
 Dark mode is **designed, not inverted**: a warm ink ground with a lighter sage
 primary, because the deep forest loses contrast on dark. Both schemes are declared
 independently in `colors`, and a compile-time check keeps their key sets identical.
 
-No purple-to-blue gradients, no glassmorphism, no decorative blobs.
+No purple-to-blue tech gradients, no glassmorphism, no decorative blobs. The
+only gradients in the app are photographic scrims, bottom-weighted so overlaid
+type clears contrast while the picture keeps its light.
 
 ## Type
 
@@ -43,7 +73,7 @@ The ramp lives in `typeScale`: `display, title, headline, scripture, quote, eyeb
 bodyLarge, body, bodyStrong, label, labelStrong, meta, metaStrong, caption, tab`.
 Every string in the app renders through `<Text variant=…>`, so nothing invents a size.
 
-**Eyebrows** — 11px Inter SemiBold, uppercase, 1.1 tracking, brass — sit above section
+**Eyebrows** — 11px Inter SemiBold, uppercase, 1.1 tracking, gold — sit above section
 titles and give the app much of its voice.
 
 Font scaling is always on. Compact chrome (tab labels, badges, eyebrows) caps the
@@ -66,18 +96,25 @@ screens scale without a cap.
 
 | Pattern | Where | Why it is not a card |
 | --- | --- | --- |
-| Section head: brass eyebrow → serif title on a rule | Home, Discover, detail screens | Reads as a chapter opening |
+| Section head: gold eyebrow → serif title on a rule | Home, Discover, detail screens | Reads as a chapter opening |
 | Content row: optional artwork, eyebrow, title, metadata | Sermons, courses, groups | Scannable, no wasted frame |
 | Date plate: serif day number over month | Events | The date is what members scan for |
-| Numbered item: brass `01` beside the text | Welcome, study notes | Editorial list, not bullets |
+| Numbered item: gold `01` beside the text | Welcome, study notes | Editorial list, not bullets |
 | Inverted plate | Player, featured sermon, live strip | Marks "an instrument", not content |
 
-## Artwork, and its absence
+## Photographs, and generated art
 
-`ContentImage` shows church-supplied artwork when it exists. When it does not, it
-composes a **typographic plate**: a tonal field keyed deterministically from the title,
-a hairline frame, and the title's first letter in Fraunces. The same sermon always
-gets the same plate.
+The church's own photographs do the emotional work. They are the first thing a
+member meets on the welcome screen, and they carry the featured teaching on Home.
+They live in `assets/images/church/`, resized from the originals into the sizes
+the app actually displays, and are referenced from data as `asset:<key>` so the
+same field works for a URL once the backend serves one (`lib/artwork.ts`).
+
+Where the church has supplied nothing, `ContentImage` falls back to **generated
+graphic art** rather than a stock photograph: a flat, deterministic composition
+in purple and gold — a tonal ground, two overlapping discs, a gold rule, and the
+title's initial in Fraunces. The same course always gets the same cover, and a
+list of courses reads as a set of covers instead of a row of empty frames.
 
 No stock photography, and no fabricated ministry branding.
 

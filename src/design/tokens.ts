@@ -80,7 +80,11 @@ export const colors = {
     /** Tonal block used to group content without a border. */
     surfaceMuted: palette.ivory200,
     surfacePressed: palette.ivory300,
-    /** Deep plum plate: the player, the featured block, the live strip. */
+    /**
+     * The plum plate: the player, the featured block, the live strip, a toast.
+     * It is deep purple in both schemes — bright contrast by day, a raised panel
+     * at night — because a white slab in a dark room is not a reading app.
+     */
     surfaceInverse: palette.purple800,
 
     text: palette.ink800,
@@ -137,13 +141,14 @@ export const colors = {
     surface: '#1E1726',
     surfaceMuted: palette.ink700,
     surfacePressed: palette.ink600,
-    surfaceInverse: '#F4EFF6',
+    /** Raised plum, so the plate reads as a panel rather than a hole. */
+    surfaceInverse: '#2E2039',
 
     text: '#F4EFF6',
     textSecondary: '#C3B6C9',
     textTertiary: palette.ink200,
-    textOnInverse: palette.ink900,
-    textOnInverseSecondary: palette.ink600,
+    textOnInverse: '#F6F1F7',
+    textOnInverseSecondary: '#C9B6D2',
     textOnAccent: palette.ink900,
     onAccentFill: palette.ink900,
 
@@ -174,7 +179,7 @@ export const colors = {
     warningSoft: '#2C2416',
     warningOnSoft: palette.amber400,
 
-    scrim: 'rgba(10, 6, 14, 0.58)',
+    scrim: 'rgba(10, 6, 14, 0.42)',
     scrimStrong: 'rgba(10, 6, 14, 0.82)',
     skeleton: palette.ink700,
     skeletonHighlight: palette.ink600,

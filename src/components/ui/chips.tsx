@@ -78,6 +78,8 @@ export function ChipRow<T extends string>({
       horizontal
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={styles.row}
+      // Without this the row expands to fill the remaining column height.
+      style={styles.rowScroller}
       accessibilityRole="tablist"
       accessibilityLabel={label}
     >
@@ -192,6 +194,10 @@ const styles = StyleSheet.create({
     gap: space.sm,
     paddingHorizontal: space.gutter,
     paddingVertical: space.xs,
+    alignItems: 'center',
+  },
+  rowScroller: {
+    flexGrow: 0,
   },
   segmented: {
     flexDirection: 'row',

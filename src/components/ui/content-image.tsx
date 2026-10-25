@@ -175,21 +175,21 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
   },
   discLarge: {
-    width: '85%',
+    width: '95%',
     aspectRatio: 1,
-    opacity: 0.22,
+    opacity: 0.38,
   },
   discSmall: {
-    width: '42%',
+    width: '52%',
     aspectRatio: 1,
-    bottom: '-14%',
-    opacity: 0.16,
+    bottom: '-18%',
+    opacity: 0.28,
   },
   rule: {
     width: 28,
     height: 2,
     marginBottom: space.sm,
-    opacity: 0.7,
+    opacity: 0.85,
   },
   initial: {
     fontFamily: fonts.serifSemiBold,

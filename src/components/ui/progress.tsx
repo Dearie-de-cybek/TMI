@@ -31,6 +31,7 @@ export function ProgressBar({
       accessibilityRole="progressbar"
       accessibilityLabel={accessibilityLabel ?? label ?? 'Progress'}
       accessibilityValue={{ min: 0, max: 100, now: percent, text: `${percent}%` }}
+      style={styles.root}
     >
       {label ? (
         <View style={styles.labelRow}>
@@ -58,6 +59,9 @@ export function ProgressBar({
 }
 
 const styles = StyleSheet.create({
+  root: {
+    alignSelf: 'stretch',
+  },
   labelRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',

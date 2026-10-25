@@ -1,4 +1,5 @@
 import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, View } from 'react-native';
 
 import { type Devotional, type LiveSession, type Sermon } from '@/api/schemas';
@@ -7,6 +8,7 @@ import { Pressable } from '@/components/ui/pressable';
 import { Eyebrow, Text } from '@/components/ui/text';
 import { useColors } from '@/design/theme';
 import { fonts, radius, space } from '@/design/tokens';
+import { resolveArtwork } from '@/lib/artwork';
 import { formatDate, formatDateTimeWithZone, formatMinutes, isWithinNextHours } from '@/lib/datetime';
 import { joinMeta } from '@/lib/format';
 
@@ -27,7 +29,9 @@ export function FeaturedSermon({
   onPress: () => void;
 }) {
   const colors = useColors();
-  const hasArtwork = Boolean(sermon.artwork_url);
+  // `artwork_url` may be a URL or `asset:<key>` for a bundled church photograph.
+  const artwork = resolveArtwork(sermon.artwork_url);
+  const hasArtwork = artwork !== null;
   const length = sermon.audio?.duration_seconds ?? sermon.video?.duration_seconds ?? null;
   const hasMedia = Boolean(sermon.audio ?? sermon.video);
 
@@ -45,12 +49,20 @@ export function FeaturedSermon({
       {hasArtwork ? (
         <>
           <Image
-            source={{ uri: sermon.artwork_url! }}
+            source={'local' in artwork! ? artwork!.local : { uri: artwork!.uri }}
             style={styles.featuredImage}
             contentFit="cover"
+            contentPosition="center"
             transition={200}
           />
-          <View style={[styles.scrim, { backgroundColor: colors.scrim }]} />
+          {/* Bottom-weighted, so the photograph keeps its light and the
+              overlaid type still clears contrast. */}
+          <LinearGradient
+            colors={['transparent', colors.scrim, colors.scrimStrong]}
+            locations={[0.25, 0.62, 1]}
+            style={styles.scrim}
+            pointerEvents="none"
+          />
         </>
       ) : null}
 
