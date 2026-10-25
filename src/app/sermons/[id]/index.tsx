@@ -119,7 +119,7 @@ export default function SermonDetailScreen() {
     try {
       await Share.share({
         title: sermon!.title,
-        message: `${sermon!.title} — ${sermon!.speaker.name}, Kingdom Heralds`,
+        message: `${sermon!.title} — ${sermon!.speaker.name}, TwainMan Ministry`,
       });
     } catch {
       // The member dismissed the share sheet.

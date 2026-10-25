@@ -1,56 +1,147 @@
-# Welcome to your Expo app 👋
+# TwainMan Ministry
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+The member-facing mobile application for the TwainMan Ministry ministry: sermons and
+study, discipleship courses, events, prayer, community, giving and announcements.
 
-## Get started
+This repository contains the **mobile app only**. Church administration is a separate
+system; the app talks to the church's Laravel API over a documented contract
+(`docs/API_CONTRACT.md`) and ships with a development data provider so the whole
+interface can be exercised before that API exists.
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Quick start
 
 ```bash
-npm run reset-project
+npm install
+cp .env.example .env
+npm start
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+The app boots in **demo mode** by default (`EXPO_PUBLIC_API_MODE=demo`): every screen
+works against bundled sample content, and a strip at the top of the app says so.
+Nothing in demo mode is saved on a server, no email is sent and no payment is taken.
 
-### Other setup steps
+Press `i` / `a` in the Expo CLI to open a simulator, or scan the QR code with Expo Go.
+Features that need native modules not bundled in Expo Go (background audio, push
+notifications, calendar) need a development build:
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```bash
+npx expo run:ios      # or run:android
+# or: npx eas-cli@latest build --profile development
+```
 
-## Learn more
+### Pointing at the Laravel API
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+# .env
+EXPO_PUBLIC_API_MODE=live
+EXPO_PUBLIC_API_URL=https://api.twainman.org/api/v1
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+In a development build you can also switch at runtime: **Profile → Data source**.
+Set `EXPO_PUBLIC_ALLOW_MODE_SWITCH=0` for production builds so the switch is gone.
 
-## Join the community
+---
 
-Join our community of developers creating universal apps.
+## Scripts
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+| Command | What it does |
+| --- | --- |
+| `npm start` | Expo dev server |
+| `npm run ios` / `android` / `web` | Dev server targeting one platform |
+| `npm run typecheck` | `tsc --noEmit`, strict |
+| `npm run lint` | `expo lint` (ESLint flat config) |
+| `npm test` | Jest unit and integration tests |
+| `npm run verify` | typecheck + lint + tests |
+| `npm run doctor` | `expo-doctor` dependency and config checks |
+
+---
+
+## Architecture
+
+```
+src/
+  app/                    Routes (expo-router). Files here are screens only.
+  api/                    Transport, schemas, errors, query client
+    demo/                 Development data provider (content, state, routes)
+  components/
+    ui/                   Design-system primitives
+    content/              Content rows and editorial blocks
+    media/                Audio and video players
+    app/                  App chrome: tab bar, notice strip, toast
+  config/                 Environment and runtime configuration
+  design/                 Tokens and theme provider
+  features/<domain>/      API calls, stores and hooks per domain
+  lib/                    Storage, validation, dates, formatting, deep links
+```
+
+**The rules that keep it maintainable**
+
+- Screens never call `fetch`. They call a feature's API module, which goes through
+  `api/client` and validates the response against a Zod schema.
+- There is one error type (`ApiError`) and one place where member-facing error copy
+  is written (`api/errors.ts`).
+- Authorisation is the server's decision. The app renders what the API returns —
+  course access, lesson progress, certificates and payment states are never derived
+  on the device.
+- Demo mode and live mode share one `Transport` interface, so no feature code
+  branches on which one is active.
+- Credentials live in the keychain/keystore (`expo-secure-store`); preferences and
+  caches live in `AsyncStorage`. Passwords are never persisted.
+
+### Data flow
+
+```
+screen → features/<domain>/api.ts → api/client.ts → Transport
+                                                     ├── api/http.ts   (Laravel)
+                                                     └── api/demo/*    (dev data)
+                                        ↓
+                              Zod schema validation
+                                        ↓
+                          TanStack Query cache (api/query-client.ts)
+```
+
+---
+
+## Documentation
+
+| Document | Contents |
+| --- | --- |
+| `docs/API_CONTRACT.md` | Every endpoint the app calls, with request and response shapes |
+| `docs/BACKEND_REQUIREMENTS.md` | Laravel work, external services and credentials needed |
+| `docs/DESIGN.md` | The design language and the rules behind it |
+| `.env.example` | Every environment variable, with notes |
+
+---
+
+## Testing
+
+```bash
+npm test
+```
+
+- `src/lib/*.test.ts` — validation rules, date and duration formatting, deep-link safety.
+- `src/api/errors.test.ts` — status-code mapping and member-facing error copy.
+- `src/api/demo/transport.test.ts` — integration tests over the data provider through
+  the real typed client, covering sign-in, sermons, Ask the Sermon, access codes,
+  enrolment and progress, quizzes, events, prayer privacy, giving states and search.
+- `src/components/ui/*.test.tsx` — rendering and interaction for the state and form
+  primitives.
+
+React Native Testing Library 14 is asynchronous: `render` and `fireEvent` return
+promises, so tests `await` them (see `src/test-utils/render.tsx`).
+
+---
+
+## Security notes
+
+- No payment, AI or messaging credentials exist in this app. Only `EXPO_PUBLIC_*`
+  values are bundled, and all of them are public by definition.
+- Payments are initiated and verified by the backend. The app opens the provider's
+  hosted checkout page and then asks the server for the verified status; a returning
+  browser is never treated as proof of payment.
+- Deep links from push payloads and announcements are checked against an allowlist
+  before they reach the router (`src/lib/deep-links.ts`).
+- Prayer requests are treated as sensitive: only the member's own requests are
+  fetched, and they never appear in search, feeds or notifications to other members.

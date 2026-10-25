@@ -1,24 +1,27 @@
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
-// Imported by name: the enum reaches the package root through `export *`, which
-// the import plugin cannot follow on a namespace access.
-import { AndroidImportance } from 'expo-notifications';
 import { Platform } from 'react-native';
 
 import { isDemoMode } from '@/config/runtime';
 import { preferences, storageKeys } from '@/lib/storage';
 
 import { registerDevice, unregisterDevice } from './api';
+import { loadNotifications, pushEnvironment, pushUnavailableReason } from './module';
 
 /**
  * Push registration.
  *
  * The permission prompt is never shown on first launch: `settings/notifications`
  * explains what the church sends and the member asks for it. Everything that
- * could fail — no device support, a denied prompt, a missing EAS project id —
- * returns a reason the UI can show instead of throwing.
+ * could fail — no notifications module in this runtime, no device support, a
+ * denied prompt, a missing EAS project id — returns a reason the UI can show
+ * instead of throwing.
+ *
+ * `expo-notifications` is reached only through `./module`, which loads it lazily;
+ * see the note there for why a static import is unsafe.
  */
+
+export type PushPermissionStatus = 'granted' | 'denied' | 'undetermined' | 'unavailable';
 
 export type PushRegistrationResult =
   | { status: 'registered'; token: string }
@@ -27,7 +30,10 @@ export type PushRegistrationResult =
   | { status: 'unavailable'; reason: string };
 
 export function configureNotificationHandler(): void {
-  Notifications.setNotificationHandler({
+  const notifications = loadNotifications();
+  if (!notifications) return;
+
+  notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowBanner: true,
       shouldShowList: true,
@@ -37,9 +43,18 @@ export function configureNotificationHandler(): void {
   });
 }
 
-export async function getPermissionStatus(): Promise<Notifications.PermissionStatus> {
-  const settings = await Notifications.getPermissionsAsync();
-  return settings.status;
+export async function getPermissionStatus(): Promise<PushPermissionStatus> {
+  const notifications = loadNotifications();
+  if (!notifications) return 'unavailable';
+
+  try {
+    const settings = await notifications.getPermissionsAsync();
+    if (settings.status === 'granted') return 'granted';
+    if (settings.status === 'denied') return 'denied';
+    return 'undetermined';
+  } catch {
+    return 'unavailable';
+  }
 }
 
 /** True once the member has seen the explanation screen at least once. */
@@ -50,6 +65,16 @@ export async function hasBeenPrompted(): Promise<boolean> {
 export async function registerForPush(appVersion: string): Promise<PushRegistrationResult> {
   await preferences.setString(storageKeys.notificationsPrompted, 'true');
 
+  const environment = pushEnvironment();
+  if (environment !== 'supported') {
+    return { status: 'unsupported', reason: pushUnavailableReason(environment) };
+  }
+
+  const notifications = loadNotifications();
+  if (!notifications) {
+    return { status: 'unavailable', reason: pushUnavailableReason('unavailable') };
+  }
+
   if (!Device.isDevice) {
     return {
       status: 'unsupported',
@@ -57,18 +82,18 @@ export async function registerForPush(appVersion: string): Promise<PushRegistrat
     };
   }
 
-  const existing = await Notifications.getPermissionsAsync();
+  const existing = await notifications.getPermissionsAsync();
   let status = existing.status;
   if (status !== 'granted') {
-    const requested = await Notifications.requestPermissionsAsync();
+    const requested = await notifications.requestPermissionsAsync();
     status = requested.status;
   }
   if (status !== 'granted') return { status: 'denied' };
 
   if (Platform.OS === 'android') {
-    await Notifications.setNotificationChannelAsync('default', {
+    await notifications.setNotificationChannelAsync('default', {
       name: 'Church notifications',
-      importance: AndroidImportance.DEFAULT,
+      importance: notifications.AndroidImportance.DEFAULT,
       lightColor: '#2F4A3C',
     });
   }
@@ -84,7 +109,7 @@ export async function registerForPush(appVersion: string): Promise<PushRegistrat
   }
 
   try {
-    const token = await Notifications.getExpoPushTokenAsync({ projectId });
+    const token = await notifications.getExpoPushTokenAsync({ projectId });
     if (isDemoMode()) {
       // Demo mode has no server to register with, and must not pretend it did.
       return { status: 'unavailable', reason: 'Demo mode cannot register for push notifications.' };

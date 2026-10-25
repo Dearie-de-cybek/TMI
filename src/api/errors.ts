@@ -125,7 +125,7 @@ const presentation: Record<ApiErrorKind, Presentation> = {
     message: 'Reconnect to the internet to load this. Saved content is still available.',
   },
   network: {
-    title: 'Could not reach Kingdom Heralds',
+    title: 'Could not reach TwainMan Ministry',
     message: 'Your connection dropped while loading. Check your signal and try again.',
   },
   timeout: {
@@ -166,7 +166,7 @@ const presentation: Record<ApiErrorKind, Presentation> = {
   },
   maintenance: {
     title: 'Briefly unavailable',
-    message: 'Kingdom Heralds is being updated. Please try again in a few minutes.',
+    message: 'TwainMan Ministry is being updated. Please try again in a few minutes.',
   },
   unavailable: {
     title: 'Service unavailable',

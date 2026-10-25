@@ -96,7 +96,7 @@ export default function AppearanceSettingsScreen() {
         <View style={styles.block}>
           <SectionHeader title="Text size" />
           <Text variant="body" color="textSecondary">
-            Kingdom Heralds follows the text size you set for your whole device, so changing it
+            TwainMan Ministry follows the text size you set for your whole device, so changing it
             there changes it here. Reading screens — sermons, transcripts, lessons — are laid out to
             stay readable at the largest sizes.
           </Text>

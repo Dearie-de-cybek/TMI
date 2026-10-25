@@ -116,7 +116,7 @@ export default function SearchScreen() {
               setSubmitted('');
             }}
             onSubmitEditing={() => void runSearch(query)}
-            placeholder="Search Kingdom Heralds"
+            placeholder="Search TwainMan Ministry"
             placeholderTextColor={colors.textTertiary}
             style={[styles.input, { color: colors.text }]}
             returnKeyType="search"

@@ -37,7 +37,7 @@ import { resetDemoState } from './state';
 jest.setTimeout(20_000);
 
 async function signInAsMember() {
-  const session = await signIn({ email: 'member@demo.kingdomheralds', password: 'password123' });
+  const session = await signIn({ email: 'member@demo.twainman', password: 'password123' });
   setAuthToken(session.token);
   return session;
 }
@@ -51,12 +51,12 @@ describe('authentication', () => {
   it('signs a member in and returns a token plus their record', async () => {
     const session = await signInAsMember();
     expect(session.token).toMatch(/^demo\./);
-    expect(session.member.email).toBe('member@demo.kingdomheralds');
+    expect(session.member.email).toBe('member@demo.twainman');
   });
 
   it('rejects bad credentials with 401 rather than a generic failure', async () => {
     await expect(
-      signIn({ email: 'member@demo.kingdomheralds', password: 'wrongpass' })
+      signIn({ email: 'member@demo.twainman', password: 'wrongpass' })
     ).rejects.toMatchObject({ kind: 'unauthorized' });
   });
 

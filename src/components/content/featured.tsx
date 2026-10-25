@@ -89,9 +89,12 @@ export function FeaturedSermon({
 export function ScripturePlate({
   devotional,
   onPress,
+  bare = false,
 }: {
   devotional: Devotional;
   onPress?: () => void;
+  /** Drops the plate's own ground, for use inside a coloured section band. */
+  bare?: boolean;
 }) {
   const colors = useColors();
 
@@ -102,20 +105,28 @@ export function ScripturePlate({
       feedback={onPress ? 'opacity' : 'none'}
       accessibilityRole={onPress ? 'button' : 'summary'}
       accessibilityLabel={`Today's devotional: ${devotional.title}`}
-      style={[styles.plate, { backgroundColor: colors.primarySoft }]}
+      style={[
+        styles.plate,
+        bare ? styles.plateBare : { backgroundColor: colors.primarySoft },
+      ]}
     >
       <Eyebrow color="accentOnSoft">Today</Eyebrow>
-      <Text variant="scripture" color="primaryOnSoft" style={styles.scripture}>
+      <Text variant="scripture" color={bare ? 'text' : 'primaryOnSoft'} style={styles.scripture}>
         “{devotional.scripture_text}”
       </Text>
-      <Text variant="caption" color="primaryOnSoft">
+      <Text variant="caption" color={bare ? 'accentOnSoft' : 'primaryOnSoft'}>
         {devotional.scripture_reference}
       </Text>
-      <View style={[styles.plateRule, { backgroundColor: colors.primary }]} />
-      <Text variant="bodyStrong" color="primaryOnSoft">
+      <View style={[styles.plateRule, { backgroundColor: colors.accent }]} />
+      <Text variant="bodyStrong" color={bare ? 'text' : 'primaryOnSoft'}>
         {devotional.title}
       </Text>
-      <Text variant="body" color="primaryOnSoft" numberOfLines={4} style={styles.plateBody}>
+      <Text
+        variant="body"
+        color={bare ? 'textSecondary' : 'primaryOnSoft'}
+        numberOfLines={4}
+        style={styles.plateBody}
+      >
         {devotional.body}
       </Text>
     </Pressable>
@@ -205,6 +216,10 @@ const styles = StyleSheet.create({
     padding: space.xl,
     borderRadius: radius.sm,
     gap: space.xs,
+  },
+  plateBare: {
+    paddingHorizontal: 0,
+    paddingTop: space.sm,
   },
   scripture: {
     marginTop: space.sm,

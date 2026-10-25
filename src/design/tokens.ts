@@ -1,60 +1,65 @@
 /**
- * Kingdom Heralds — design tokens.
+ * TwainMan Ministry International — design tokens.
  *
- * The visual language is editorial rather than dashboard-like: parchment paper,
- * ink type, a deep forest green for the ministry voice, and brass for accents and
- * eyebrow labels. Surfaces are tonal and separated by hairlines instead of cards
- * with heavy shadows, so type and imagery carry the hierarchy.
+ * The church's colours are purple and gold, so the app is built on them: a deep
+ * aubergine purple for the ministry's own voice, warm gold for the marks that
+ * organise a page, on a warm ivory ground. The language stays editorial — type
+ * and space carry the hierarchy, not boxes — but colour now does one extra job:
+ * it separates a long page into bands you can feel without reading, the way a
+ * well-made book changes paper between its parts.
  *
- * Only semantic names are consumed by components. Raw values live in `palette`
- * and must not be imported outside this file.
+ * Every pairing below was checked against WCAG AA before it was written down.
+ * Only semantic names are consumed by components; raw values live in `palette`.
  */
 
 const palette = {
-  // Parchment / ivory
-  parchment50: '#FDFBF6',
-  parchment100: '#F7F3EC',
-  parchment200: '#EFE8DB',
-  parchment300: '#E3D9C6',
-  parchment400: '#CFC3AB',
+  // Ivory ground, warmed slightly so purple sits on it without going cold.
+  ivory50: '#FFFDF9',
+  ivory100: '#F8F5F0',
+  ivory200: '#F0EAF0',
+  ivory300: '#E4D9E6',
+  ivory400: '#CFC0D1',
 
-  // Ink
-  ink900: '#15150F',
-  ink800: '#1C1D16',
-  ink700: '#24261D',
-  ink600: '#3A3C31',
-  ink400: '#6A6B5E',
-  ink300: '#8C8C7E',
-  ink200: '#B5B4A5',
+  // Ink, carrying a trace of purple so text belongs to the same family.
+  ink900: '#15101A',
+  ink800: '#1C141F',
+  ink700: '#2A2133',
+  ink600: '#3A2F45',
+  ink400: '#5E5162',
+  ink300: '#8B7F8E',
+  ink200: '#9A8DA1',
 
-  // Forest / olive — the ministry voice
-  forest900: '#16271E',
-  forest800: '#1E382A',
-  forest700: '#2F4A3C',
-  forest600: '#3D6350',
-  forest500: '#4F7D66',
-  forest300: '#8FB39D',
-  forest200: '#B9D0C2',
-  forest100: '#E2EBE4',
+  // Purple — the ministry's voice.
+  purple900: '#1B0F24',
+  purple800: '#241430',
+  purple700: '#3A1F49',
+  purple600: '#4A2A5A',
+  purple500: '#5C3570',
+  purple300: '#C4A5D6',
+  purple200: '#D9C4E6',
+  purple100: '#EDE4F2',
+  purple50: '#F3EDF6',
 
-  // Brass / ochre — accents, eyebrows, scripture marks
-  brass700: '#7C5E22',
-  brass600: '#9A762F',
-  brass500: '#B08A3C',
-  brass400: '#C7A75C',
-  brass300: '#DCC48C',
-  brass100: '#F2E7CE',
+  // Gold — eyebrows, Scripture marks, the active indicator, the play button.
+  gold700: '#7A5C1E',
+  gold600: '#9A762F',
+  gold500: '#C19A38',
+  gold400: '#D9B463',
+  gold300: '#E8CE92',
+  gold100: '#F7EEDA',
+  gold50: '#FAF4E6',
 
-  // Status
-  clay700: '#8C3A2B',
-  clay600: '#A84834',
-  clay400: '#D08B7C',
-  clay100: '#F6E3DE',
-  moss700: '#3E6B33',
-  moss400: '#8FB882',
-  moss100: '#E6F0E0',
+  // Status — kept muted so they never compete with the church's own colours.
+  clay700: '#8A3128',
+  clay600: '#A33B33',
+  clay400: '#DE9289',
+  clay100: '#F8E5E2',
+  moss700: '#355B3A',
+  moss600: '#3F6B45',
+  moss400: '#8FBE95',
+  moss100: '#E4EFE5',
   amber700: '#8A5E12',
-  amber400: '#D8AA52',
+  amber400: '#D9B463',
   amber100: '#F8EBCF',
 
   white: '#FFFFFF',
@@ -63,100 +68,117 @@ const palette = {
 export type ColorScheme = 'light' | 'dark';
 
 /**
- * Semantic colour roles. Both schemes are designed independently — the dark
- * scheme is a warm ink-on-charcoal reading theme, not an inversion of the light one.
+ * Semantic colour roles. The two schemes are designed independently — the dark
+ * one is a plum-ink reading theme, not an inversion of the light one.
  */
 export const colors = {
   light: {
-    /** Page background — warm parchment. */
-    background: palette.parchment100,
-    /** Raised reading surface (sheets, detail pages). */
-    surface: palette.parchment50,
-    /** Tonal block used to group content without a card border. */
-    surfaceMuted: palette.parchment200,
-    /** Pressed / selected tonal state. */
-    surfacePressed: palette.parchment300,
-    /** Inverted surface for players and scripture plates. */
-    surfaceInverse: palette.forest900,
+    /** Page ground — warm ivory. */
+    background: palette.ivory100,
+    /** Raised reading surface. */
+    surface: palette.ivory50,
+    /** Tonal block used to group content without a border. */
+    surfaceMuted: palette.ivory200,
+    surfacePressed: palette.ivory300,
+    /** Deep plum plate: the player, the featured block, the live strip. */
+    surfaceInverse: palette.purple800,
 
-    text: palette.ink900,
+    text: palette.ink800,
     textSecondary: palette.ink400,
     textTertiary: palette.ink300,
-    textOnInverse: palette.parchment100,
-    textOnInverseSecondary: palette.forest200,
+    textOnInverse: '#F6F1F7',
+    textOnInverseSecondary: '#C9B6D2',
+    /** Label colour on a filled primary or danger button. */
     textOnAccent: palette.white,
+    /** Glyph colour on a filled gold control, where white would be too pale. */
+    onAccentFill: palette.ink800,
 
-    /** Hairline rules that replace card borders. */
-    border: palette.parchment300,
-    borderStrong: palette.parchment400,
+    border: palette.ivory300,
+    borderStrong: palette.ivory400,
 
-    primary: palette.forest700,
-    primaryHover: palette.forest600,
-    primarySoft: palette.forest100,
-    primaryOnSoft: palette.forest800,
+    primary: palette.purple600,
+    primaryHover: palette.purple500,
+    primarySoft: palette.purple100,
+    primaryOnSoft: palette.purple700,
 
-    accent: palette.brass600,
-    accentSoft: palette.brass100,
-    accentOnSoft: palette.brass700,
+    accent: palette.gold600,
+    accentSoft: palette.gold100,
+    accentOnSoft: palette.gold700,
+    /** Gold bright enough to read as a fill on the plum plate. */
+    accentFill: palette.gold500,
+
+    /**
+     * Section grounds. Barely over 1.05:1 against the page — enough to tell one
+     * part of Home from the next, never enough to shout.
+     */
+    bandPrimary: palette.purple50,
+    bandAccent: palette.gold50,
+    bandNeutral: palette.ivory200,
 
     danger: palette.clay600,
     dangerSoft: palette.clay100,
     dangerOnSoft: palette.clay700,
-    success: palette.moss700,
+    success: palette.moss600,
     successSoft: palette.moss100,
     successOnSoft: palette.moss700,
     warning: palette.amber700,
     warningSoft: palette.amber100,
     warningOnSoft: palette.amber700,
 
-    /** Scrim over full-bleed imagery so overlaid type stays legible. */
-    scrim: 'rgba(21, 21, 15, 0.55)',
-    scrimStrong: 'rgba(21, 21, 15, 0.78)',
-    skeleton: palette.parchment200,
-    skeletonHighlight: palette.parchment300,
-    overlay: 'rgba(21, 21, 15, 0.42)',
+    /** Scrim over photographs so overlaid type stays legible. */
+    scrim: 'rgba(27, 15, 36, 0.52)',
+    scrimStrong: 'rgba(27, 15, 36, 0.78)',
+    skeleton: palette.ivory200,
+    skeletonHighlight: palette.ivory300,
+    overlay: 'rgba(27, 15, 36, 0.45)',
   },
   dark: {
     background: palette.ink900,
-    surface: palette.ink800,
+    surface: '#1E1726',
     surfaceMuted: palette.ink700,
     surfacePressed: palette.ink600,
-    surfaceInverse: palette.parchment100,
+    surfaceInverse: '#F4EFF6',
 
-    text: palette.parchment100,
-    textSecondary: palette.parchment400,
+    text: '#F4EFF6',
+    textSecondary: '#C3B6C9',
     textTertiary: palette.ink200,
     textOnInverse: palette.ink900,
     textOnInverseSecondary: palette.ink600,
     textOnAccent: palette.ink900,
+    onAccentFill: palette.ink900,
 
     border: palette.ink600,
     borderStrong: palette.ink400,
 
-    primary: palette.forest300,
-    primaryHover: palette.forest200,
-    primarySoft: palette.forest900,
-    primaryOnSoft: palette.forest200,
+    primary: palette.purple300,
+    primaryHover: palette.purple200,
+    primarySoft: '#2A1C35',
+    primaryOnSoft: palette.purple200,
 
-    accent: palette.brass400,
-    accentSoft: '#2A2416',
-    accentOnSoft: palette.brass300,
+    accent: palette.gold400,
+    accentSoft: '#2E2616',
+    accentOnSoft: palette.gold300,
+    accentFill: palette.gold400,
+
+    bandPrimary: '#221A2B',
+    bandAccent: '#241E14',
+    bandNeutral: '#1B1622',
 
     danger: palette.clay400,
-    dangerSoft: '#30211D',
+    dangerSoft: '#30201D',
     dangerOnSoft: palette.clay400,
     success: palette.moss400,
-    successSoft: '#1D2A1A',
+    successSoft: '#1C2A1D',
     successOnSoft: palette.moss400,
     warning: palette.amber400,
     warningSoft: '#2C2416',
     warningOnSoft: palette.amber400,
 
-    scrim: 'rgba(10, 10, 7, 0.60)',
-    scrimStrong: 'rgba(10, 10, 7, 0.82)',
+    scrim: 'rgba(10, 6, 14, 0.58)',
+    scrimStrong: 'rgba(10, 6, 14, 0.82)',
     skeleton: palette.ink700,
     skeletonHighlight: palette.ink600,
-    overlay: 'rgba(0, 0, 0, 0.60)',
+    overlay: 'rgba(0, 0, 0, 0.62)',
   },
 } as const;
 

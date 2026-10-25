@@ -41,12 +41,12 @@ export const env = {
   /** Exposes the data-source switch in Settings. Must be false in production builds. */
   allowModeSwitch: readBoolean(process.env.EXPO_PUBLIC_ALLOW_MODE_SWITCH, __DEV__),
   church: {
-    email: readString(process.env.EXPO_PUBLIC_CHURCH_EMAIL, 'hello@kingdomheralds.org'),
+    email: readString(process.env.EXPO_PUBLIC_CHURCH_EMAIL, 'hello@twainman.org'),
     phone: readString(process.env.EXPO_PUBLIC_CHURCH_PHONE, ''),
     privacyUrl: readString(
       process.env.EXPO_PUBLIC_PRIVACY_URL,
-      'https://kingdomheralds.org/privacy'
+      'https://twainman.org/privacy'
     ),
-    termsUrl: readString(process.env.EXPO_PUBLIC_TERMS_URL, 'https://kingdomheralds.org/terms'),
+    termsUrl: readString(process.env.EXPO_PUBLIC_TERMS_URL, 'https://twainman.org/terms'),
   },
 } as const;

@@ -24,7 +24,13 @@ import {
   fetchNotificationPreferences,
   updateNotificationPreferences,
 } from '@/features/notifications/api';
-import { getPermissionStatus, registerForPush, type PushRegistrationResult } from '@/features/notifications/push';
+import { pushEnvironment, pushUnavailableReason } from '@/features/notifications/module';
+import {
+  getPermissionStatus,
+  registerForPush,
+  type PushPermissionStatus,
+  type PushRegistrationResult,
+} from '@/features/notifications/push';
 
 const categories: { key: keyof NotificationPreferences; label: string; hint: string }[] = [
   { key: 'announcements', label: 'Church announcements', hint: 'Notices that affect everyone.' },
@@ -48,7 +54,7 @@ export default function NotificationSettingsScreen() {
   const queryClient = useQueryClient();
   const signedIn = useIsSignedIn();
 
-  const [permission, setPermission] = useState<string | null>(null);
+  const [permission, setPermission] = useState<PushPermissionStatus | null>(null);
   const [registration, setRegistration] = useState<PushRegistrationResult | null>(null);
   const [registering, setRegistering] = useState(false);
 
@@ -125,14 +131,21 @@ export default function NotificationSettingsScreen() {
         <View style={styles.intro}>
           <Text variant="title">What the church sends</Text>
           <Text variant="body" color="textSecondary">
-            Kingdom Heralds uses notifications for announcements, reminders for what you signed up
+            TwainMan Ministry uses notifications for announcements, reminders for what you signed up
             for, and updates on your own requests. Nothing is sent for marketing, and you can turn
             any of it off.
           </Text>
         </View>
 
         <View style={styles.permission}>
-          {permission === 'granted' ? (
+          {permission === 'unavailable' ? (
+            <Banner
+              tone="info"
+              icon="bell-off"
+              title="Push is not available here"
+              message={pushUnavailableReason(pushEnvironment())}
+            />
+          ) : permission === 'granted' ? (
             <Banner
               tone="success"
               icon="bell"

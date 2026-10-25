@@ -263,7 +263,7 @@ export default function GiveScreen() {
                 />
 
                 <Text variant="caption" color="textTertiary">
-                  Payment is handled on the provider’s own secure page. Kingdom Heralds does not see
+                  Payment is handled on the provider’s own secure page. TwainMan Ministry does not see
                   or store your card details, and this app never asks for them.
                 </Text>
               </View>

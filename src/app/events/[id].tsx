@@ -125,7 +125,7 @@ export default function EventDetailScreen() {
             onPress: () => {
               void Share.share({
                 title: data.title,
-                message: `${data.title} — ${formatDate(data.starts_at, data.timezone)}, Kingdom Heralds`,
+                message: `${data.title} — ${formatDate(data.starts_at, data.timezone)}, TwainMan Ministry`,
               }).catch(() => undefined);
             },
           },

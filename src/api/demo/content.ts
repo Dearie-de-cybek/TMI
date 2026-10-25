@@ -2,7 +2,7 @@
  * Development/demo content.
  *
  * Everything here is sample material written for development and for exercising
- * the interface without the Laravel backend. It is NOT Kingdom Heralds content:
+ * the interface without the Laravel backend. It is NOT TwainMan Ministry content:
  * speaker names, sermons, courses and groups are placeholders, the media URLs
  * are public test files, and the app shows a persistent demo notice whenever
  * this provider is active.
@@ -29,15 +29,31 @@ function at(offsetDays: number, hour = 10, minute = 0): string {
 const MEDIA = {
   audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
   audioAlt: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
-  audioBroken: 'https://demo.kingdomheralds.invalid/missing-sermon-audio.mp3',
+  audioBroken: 'https://demo.twainman.invalid/missing-sermon-audio.mp3',
   video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
 } as const;
 
-export const demoSpeakers = [
-  { id: 'sp-1', name: 'Pastor Adaeze Nwosu', role: 'Lead Pastor (sample data)' },
-  { id: 'sp-2', name: 'Pastor Micah Ibekwe', role: 'Teaching Pastor (sample data)' },
-  { id: 'sp-3', name: 'Deaconess Ruth Adeleke', role: 'Discipleship (sample data)' },
-] as const;
+type DemoSpeaker = {
+  id: string;
+  name: string;
+  role: string | null;
+  avatar_url: string | null;
+};
+
+/**
+ * The ministry's own people. Patrick Evbomoen and Happy Evbomoen are real;
+ * nothing here invents a third name or a title nobody gave us.
+ */
+export const demoSpeakers: DemoSpeaker[] = [
+  {
+    id: 'sp-1',
+    name: 'Pastor Patrick Evbomoen',
+    role: 'Lead Pastor',
+    avatar_url: 'asset:pastorPatrickPortrait',
+  },
+  { id: 'sp-2', name: 'Happy Evbomoen', role: null, avatar_url: null },
+  { id: 'sp-3', name: 'Guest Minister', role: null, avatar_url: null },
+];
 
 export const demoSeries = [
   { id: 'se-1', title: 'The Shape of Mercy', sermon_count: 4 },
@@ -47,14 +63,14 @@ export const demoSeries = [
 type DemoSermon = {
   id: string;
   title: string;
-  speaker: (typeof demoSpeakers)[number];
+  speaker: DemoSpeaker;
   series?: (typeof demoSeries)[number];
   preached_at: string;
   summary: string;
   description: string;
   topics: string[];
   scripture_references: string[];
-  artwork_url: null;
+  artwork_url: string | null;
   audio: { url: string; duration_seconds: number; kind: 'progressive' } | null;
   video: { url: string; duration_seconds: number; kind: 'progressive' } | null;
   has_transcript: boolean;
@@ -75,7 +91,7 @@ export const demoSermons: DemoSermon[] = [
       'Opening the series on mercy, we read the parable of the Samaritan traveller slowly, paying attention to what each passer-by was on their way to do. Mercy is not an emotion we wait to feel; it is a decision to be interrupted.',
     topics: ['Mercy', 'Discipleship'],
     scripture_references: ['Luke 10:25-37', 'Micah 6:8'],
-    artwork_url: null,
+    artwork_url: 'asset:congregationBanner',
     audio: { url: MEDIA.audio, duration_seconds: 2_280, kind: 'progressive' },
     video: { url: MEDIA.video, duration_seconds: 2_280, kind: 'progressive' },
     has_transcript: true,
@@ -94,7 +110,7 @@ export const demoSermons: DemoSermon[] = [
       'A study of the hidden years in the lives of Moses, David and Jesus, and what they suggest about seasons that feel like waiting.',
     topics: ['Faithfulness', 'Prayer'],
     scripture_references: ['Exodus 3:1-6', 'Luke 2:51-52'],
-    artwork_url: null,
+    artwork_url: 'asset:pastorPatrick',
     audio: { url: MEDIA.audioAlt, duration_seconds: 1_920, kind: 'progressive' },
     video: null,
     has_transcript: true,
@@ -215,7 +231,7 @@ export const demoTranscripts: Record<
     segments: [
       {
         start_seconds: 0,
-        speaker: 'Pastor Adaeze Nwosu',
+        speaker: 'Pastor Patrick Evbomoen',
         text: 'Turn with me to Luke chapter ten. A man asks Jesus a legal question and receives a story in reply, which is often how it goes.',
       },
       {
@@ -244,7 +260,7 @@ export const demoTranscripts: Record<
     segments: [
       {
         start_seconds: 0,
-        speaker: 'Pastor Micah Ibekwe',
+        speaker: 'Happy Evbomoen',
         text: 'Moses spends forty years in Pharaoh’s house and forty years with sheep, and Scripture gives one of those periods a single verse.',
       },
       {
@@ -326,25 +342,25 @@ export const demoDevotionals = [
     scripture_reference: 'Matthew 6:11',
     scripture_text: 'Give us this day our daily bread.',
     body: 'The prayer is for today. Not for the quarter, not for the five-year plan. Daily bread is a discipline of trust as much as a request for provision — it asks us to come back tomorrow.',
-    author: 'Deaconess Ruth Adeleke',
+    author: null,
   },
 ];
 
 export const demoEvents = [
   {
     id: 'ev-1',
-    title: 'Midweek Bible Study: The Shape of Mercy',
-    starts_at: at(2, 18, 0),
-    ends_at: at(2, 19, 30),
+    title: 'Blessing the Work of Your Hands',
+    starts_at: at(2, 8, 0),
+    ends_at: at(2, 11, 0),
     timezone: 'Africa/Lagos',
-    format: 'hybrid' as const,
-    venue_name: 'Kingdom Heralds Main Hall',
-    address: '12 Ministry Way',
+    format: 'in_person' as const,
+    venue_name: 'TwainMan Ministry International',
+    address: 'Ambrose Omafuvwe Street, opposite Building Material Market, OKP Road, Asaba',
     online_url: 'https://meet.google.com/sample-kh-study',
     description:
-      'Our weekly study continues in Luke 10. Come with a Bible and a notebook; the discussion groups meet afterwards.',
-    artwork_url: null,
-    organizer: 'Teaching Team',
+      'Our monthly service of consecration for the work of our hands, every second Sunday at 8:00am. Ministering: Pastor Patrick Evbomoen. Bring something that represents your work.',
+    artwork_url: 'asset:eventBlessingTheWork',
+    organizer: 'TwainMan Ministry International',
     registration: {
       required: false,
       open: true,
@@ -356,13 +372,13 @@ export const demoEvents = [
   },
   {
     id: 'ev-2',
-    title: 'Membership Class — Spring Cohort',
+    title: 'Membership Class',
     starts_at: at(9, 9, 0),
     ends_at: at(9, 13, 0),
     timezone: 'Africa/Lagos',
     format: 'in_person' as const,
-    venue_name: 'Upper Room',
-    address: '12 Ministry Way',
+    venue_name: 'TwainMan Ministry International',
+    address: 'Ambrose Omafuvwe Street, opposite Building Material Market, OKP Road, Asaba',
     online_url: null,
     description:
       'A half-day introduction to the life and commitments of the congregation. Registration is required because seating and materials are limited.',
@@ -401,17 +417,18 @@ export const demoEvents = [
   },
   {
     id: 'ev-4',
-    title: 'Community Food Drive',
+    title: 'Gethsemane Camp Meeting',
     starts_at: at(-6, 8, 0),
     ends_at: at(-6, 14, 0),
     timezone: 'Africa/Lagos',
     format: 'in_person' as const,
-    venue_name: 'Church Car Park',
-    address: '12 Ministry Way',
+    venue_name: 'TwainMan Ministry International',
+    address: 'Ambrose Omafuvwe Street, opposite Building Material Market, OKP Road, Asaba',
     online_url: null,
-    description: 'Thank you to everyone who served. Photographs are with the media team.',
-    artwork_url: null,
-    organizer: 'Mercy Ministry',
+    description:
+      'Thank you to everyone who came. Recordings from the camp meeting are being edited and will appear in the sermon library.',
+    artwork_url: 'asset:pastorPatrick',
+    organizer: 'TwainMan Ministry International',
     registration: {
       required: false,
       open: false,
@@ -499,8 +516,8 @@ type DemoCourse = {
   title: string;
   summary: string;
   description: string;
-  artwork_url: null;
-  instructors: { id: string; name: string; role: string }[];
+  artwork_url: string | null;
+  instructors: DemoSpeaker[];
   starts_at: string | null;
   ends_at: string | null;
   enrollment_mode: 'open' | 'code_required' | 'closed' | 'invite_only';
@@ -526,7 +543,7 @@ export const demoCourses: DemoCourse[] = [
     requirements: ['A Bible in any translation', 'About 30 minutes of reading each week'],
     cohort: { id: 'ch-1', name: 'Spring cohort', starts_at: at(-21, 18) },
     whatsapp_group_url: 'https://chat.whatsapp.com/sample-foundations-group',
-    whatsapp_group_name: 'Foundations — Spring cohort',
+    whatsapp_group_name: 'Foundations — TwainMan cohort',
   },
   {
     id: 'co-2',
@@ -659,7 +676,7 @@ export const demoMaterials = [
     course_id: 'co-1',
     title: 'Recommended reading list',
     kind: 'link' as const,
-    url: 'https://example.org/kingdom-heralds/reading-list',
+    url: 'https://example.org/twainman/reading-list',
     size_bytes: null,
   },
 ];
@@ -750,7 +767,7 @@ export const demoGroups = [
     meeting_schedule: 'Rehearsals Fridays, 18:00',
     meeting_location: 'Main Hall',
     requirements: 'Conversation with the ministry lead',
-    leader_name: 'Deaconess Ruth Adeleke',
+    leader_name: 'Happy Evbomoen',
     member_count: 24,
     communication_url: 'https://chat.whatsapp.com/sample-worship-group',
   },
@@ -765,20 +782,20 @@ export const demoGroups = [
     meeting_schedule: 'Second Saturday, 08:00',
     meeting_location: 'Church car park',
     requirements: null,
-    leader_name: 'Pastor Micah Ibekwe',
+    leader_name: 'Pastor Patrick Evbomoen',
     member_count: 18,
     communication_url: null,
   },
   {
     id: 'gr-3',
-    name: 'Ikeja Cell Group',
+    name: 'Okpanam Road Cell Group',
     type: 'cell' as const,
-    summary: 'Midweek home fellowship for members in Ikeja.',
+    summary: 'Midweek home fellowship for members along Okpanam Road.',
     description:
       'A home group of about a dozen members meeting on Tuesday evenings, following the midweek study material.',
     artwork_url: null,
     meeting_schedule: 'Tuesdays, 19:00',
-    meeting_location: 'Member homes, Ikeja',
+    meeting_location: 'Member homes, Asaba',
     requirements: null,
     leader_name: null,
     member_count: 12,
@@ -854,7 +871,7 @@ export const demoPastoralCare = {
       label: 'Prayer team email',
       description: 'Requests are read by the prayer team only.',
       kind: 'email' as const,
-      value: 'prayer@kingdomheralds.example',
+      value: 'prayer@twainman.example',
       availability: null,
     },
     {
@@ -862,7 +879,7 @@ export const demoPastoralCare = {
       label: 'Counselling appointment',
       description: 'Book a confidential conversation with a member of the pastoral team.',
       kind: 'form' as const,
-      value: 'https://example.org/kingdom-heralds/counselling',
+      value: 'https://example.org/twainman/counselling',
       availability: 'Appointments on Tuesdays and Thursdays',
     },
   ],
@@ -897,14 +914,14 @@ export type DemoMemberRecord = {
 export const demoMember: DemoMemberRecord = {
   id: 'me-1',
   name: 'Demo Member',
-  email: 'member@demo.kingdomheralds',
+  email: 'member@demo.twainman',
   phone: null,
   avatar_url: null,
   joined_at: at(-400),
   email_verified: true,
   phone_verified: false,
   interests: ['Bible study', 'Prayer'],
-  city: 'Lagos',
+  city: 'Asaba',
 };
 
 /**

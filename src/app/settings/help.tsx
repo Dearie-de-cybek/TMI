@@ -93,7 +93,7 @@ export default function HelpScreen() {
             About this app
           </Text>
           <Text variant="meta" color="textSecondary">
-            Kingdom Heralds {Constants.expoConfig?.version ?? '1.0.0'} ({Platform.OS})
+            TwainMan Ministry {Constants.expoConfig?.version ?? '1.0.0'} ({Platform.OS})
           </Text>
           <Text variant="caption" color="textTertiary">
             Data source: {apiMode === 'demo' ? 'bundled demo data' : env.apiUrl}

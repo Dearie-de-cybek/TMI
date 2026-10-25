@@ -90,7 +90,7 @@ export default function SignInScreen() {
           </Pressable>
           <View style={styles.footerRow}>
             <Text variant="meta" color="textSecondary">
-              New to Kingdom Heralds?
+              New to TwainMan Ministry?
             </Text>
             <Pressable inline onPress={() => router.replace('/sign-up')}>
               <Text variant="metaStrong" color="primary">

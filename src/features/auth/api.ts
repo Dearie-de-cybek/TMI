@@ -27,7 +27,7 @@ export type SignUpInput = {
 
 /** Identifies the token to the backend so members can revoke a lost device. */
 function deviceName(): string {
-  return 'Kingdom Heralds mobile';
+  return 'TwainMan Ministry mobile';
 }
 
 export function signIn(input: SignInInput): Promise<AuthSession> {

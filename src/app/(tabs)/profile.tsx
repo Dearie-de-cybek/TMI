@@ -41,7 +41,7 @@ export default function ProfileScreen() {
         <ScreenScroll bottomSpace={TAB_BAR_HEIGHT + space.xxl}>
           <View style={styles.gutter}>
             <SignInPrompt
-              title="Sign in to Kingdom Heralds"
+              title="Sign in to TwainMan Ministry"
               message="Your saved teaching, course progress, prayer requests and giving record all live with your account."
               reason="profile"
               next="/profile"

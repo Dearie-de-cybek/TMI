@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "Kingdom Heralds",
-    "slug": "kingdom-heralds",
+    "name": "TwainMan Ministry",
+    "slug": "twainman-ministry",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "kingdomheralds",
+    "scheme": "twainman",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "org.kingdomheralds.app",
+      "bundleIdentifier": "org.twainman.ministry",
       "infoPlist": {
         "UIBackgroundModes": [
           "audio"
@@ -18,9 +18,9 @@
       }
     },
     "android": {
-      "package": "org.kingdomheralds.app",
+      "package": "org.twainman.ministry",
       "adaptiveIcon": {
-        "backgroundColor": "#F7F3EC",
+        "backgroundColor": "#F3EDF6",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
@@ -49,31 +49,31 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Kingdom Heralds uses your photos so you can set a profile picture.",
-          "cameraPermission": "Kingdom Heralds uses your camera so you can take a profile picture."
+          "photosPermission": "TwainMan Ministry uses your photos so you can set a profile picture.",
+          "cameraPermission": "TwainMan Ministry uses your camera so you can take a profile picture."
         }
       ],
       [
         "expo-calendar",
         {
-          "calendarPermission": "Kingdom Heralds adds church events to your calendar when you ask it to."
+          "calendarPermission": "TwainMan Ministry adds church events to your calendar when you ask it to."
         }
       ],
       [
         "expo-notifications",
         {
-          "color": "#2F4A3C",
+          "color": "#4A2A5A",
           "defaultChannel": "default"
         }
       ],
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#F7F3EC",
+          "backgroundColor": "#F8F5F0",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 84,
           "dark": {
-            "backgroundColor": "#15150F"
+            "backgroundColor": "#15101A"
           }
         }
       ],

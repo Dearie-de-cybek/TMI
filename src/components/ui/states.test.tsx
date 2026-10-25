@@ -31,7 +31,7 @@ describe('ErrorState', () => {
       <ErrorState error={new ApiError('network', 'Could not reach the server.')} onRetry={onRetry} />
     );
 
-    expect(getByText('Could not reach Kingdom Heralds')).toBeTruthy();
+    expect(getByText('Could not reach TwainMan Ministry')).toBeTruthy();
     await fireEvent.press(getByLabelText('Try again'));
     expect(onRetry).toHaveBeenCalledTimes(1);
   });

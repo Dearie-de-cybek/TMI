@@ -3,15 +3,17 @@ import { useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { queryKeys } from '@/api/query-client';
+import { SignInPrompt } from '@/components/app/sign-in-prompt';
+import { TAB_BAR_HEIGHT } from '@/components/app/tab-bar';
 import { FeaturedSermon, LiveSessionStrip, ScripturePlate } from '@/components/content/featured';
 import { AnnouncementRow, CourseRow, EventRow, SermonTile } from '@/components/content/rows';
-import { SignInPrompt } from '@/components/app/sign-in-prompt';
+import { Band } from '@/components/ui/band';
 import { Banner } from '@/components/ui/banner';
 import { PageHeader } from '@/components/ui/header';
 import { Icon } from '@/components/ui/icon';
 import { Pressable } from '@/components/ui/pressable';
 import { Rule, Screen, ScreenScroll } from '@/components/ui/screen';
-import { Section, SectionHeader } from '@/components/ui/section';
+import { SectionHeader } from '@/components/ui/section';
 import { SkeletonFeature, SkeletonList } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/states';
 import { Text } from '@/components/ui/text';
@@ -19,7 +21,6 @@ import { useColors } from '@/design/theme';
 import { space } from '@/design/tokens';
 import { useAuth } from '@/features/auth/store';
 import { fetchHomeFeed } from '@/features/home/api';
-import { TAB_BAR_HEIGHT } from '@/components/app/tab-bar';
 
 function greeting(date = new Date()): string {
   const hour = date.getHours();
@@ -31,9 +32,17 @@ function greeting(date = new Date()): string {
 /**
  * Home.
  *
- * Every section is conditional on the backend actually sending content for it,
- * so a new member, a signed-out visitor and a member mid-course all get a page
- * that is about them rather than a grid of empty placeholders.
+ * A long page of unrelated things, so colour divides it into bands you can feel
+ * without reading — and the tone means something rather than alternating for
+ * decoration:
+ *
+ *   gold    → Scripture and the daily reading
+ *   purple  → formation: your courses, and prayer
+ *   ivory   → the life of the house: what is on, and notices
+ *
+ * Every band is still conditional on the backend sending content for it, so a
+ * new member, a signed-out visitor and a member mid-course each get a page about
+ * them rather than a grid of empty frames.
  */
 export default function HomeScreen() {
   const router = useRouter();
@@ -52,7 +61,7 @@ export default function HomeScreen() {
   return (
     <Screen>
       <PageHeader
-        eyebrow={signedIn ? greeting() : 'Kingdom Heralds'}
+        eyebrow={signedIn ? greeting() : 'TwainMan Ministry'}
         title={firstName ? firstName : 'Welcome'}
         actions={[
           { icon: 'search', label: 'Search', onPress: () => router.push('/search') },
@@ -78,52 +87,69 @@ export default function HomeScreen() {
           onRefresh={() => void home.refetch()}
           bottomSpace={TAB_BAR_HEIGHT + space.xxl}
         >
-          {feed.live_session ? (
-            <View style={styles.gutter}>
-              <LiveSessionStrip
-                session={feed.live_session}
-                onPress={() =>
-                  feed.live_session?.course_id
-                    ? router.push(`/courses/${feed.live_session.course_id}`)
-                    : router.push('/discover')
-                }
-              />
-            </View>
-          ) : null}
-
-          {feed.featured_sermon ? (
-            <FeaturedSermon
-              sermon={feed.featured_sermon}
-              eyebrow={feed.featured_sermon.series?.title ?? 'Latest teaching'}
-              onPress={() => router.push(`/sermons/${feed.featured_sermon!.id}`)}
-            />
-          ) : null}
-
-          {feed.devotional ? (
-            <View style={styles.gutter}>
-              <ScripturePlate devotional={feed.devotional} />
-            </View>
-          ) : null}
-
-          {signedIn && feed.continue_learning.length > 0 ? (
-            <Section>
+          {/* The teaching, and whatever is happening right now. */}
+          <Band flush>
+            {feed.live_session ? (
               <View style={styles.gutter}>
-                <SectionHeader
-                  eyebrow="Keep going"
-                  title="Your courses"
-                  action={{ label: 'All courses', onPress: () => router.push('/courses') }}
+                <LiveSessionStrip
+                  session={feed.live_session}
+                  onPress={() =>
+                    feed.live_session?.course_id
+                      ? router.push(`/courses/${feed.live_session.course_id}`)
+                      : router.push('/discover')
+                  }
                 />
               </View>
-              {feed.continue_learning.map((course, index) => (
+            ) : null}
+
+            {feed.featured_sermon ? (
+              <FeaturedSermon
+                sermon={feed.featured_sermon}
+                eyebrow={feed.featured_sermon.series?.title ?? 'Latest teaching'}
+                onPress={() => router.push(`/sermons/${feed.featured_sermon!.id}`)}
+              />
+            ) : null}
+          </Band>
+
+          {/* Scripture — the warmest band on the page. */}
+          {feed.devotional ? (
+            <Band tone="accent">
+              <View style={styles.gutter}>
+                <ScripturePlate devotional={feed.devotional} bare />
+              </View>
+            </Band>
+          ) : null}
+
+          {/* Formation. */}
+          <Band tone="primary">
+            <View style={styles.gutter}>
+              <SectionHeader
+                eyebrow="Keep going"
+                title={signedIn && feed.continue_learning.length > 0 ? 'Your courses' : 'Discipleship'}
+                action={{ label: 'All courses', onPress: () => router.push('/courses') }}
+              />
+            </View>
+            {signedIn && feed.continue_learning.length > 0 ? (
+              feed.continue_learning.map((course, index) => (
                 <View key={course.id}>
                   {index > 0 ? <Rule inset={space.gutter} /> : null}
                   <CourseRow course={course} onPress={() => router.push(`/courses/${course.id}`)} />
                 </View>
-              ))}
-            </Section>
-          ) : null}
+              ))
+            ) : (
+              <View style={styles.gutter}>
+                <Banner
+                  tone="accent"
+                  title={signedIn ? 'Not in a course yet' : 'Courses run through the year'}
+                  message="The discipleship team opens short courses through the year — have a look at what is open."
+                  action={{ label: 'Browse courses', onPress: () => router.push('/courses') }}
+                />
+              </View>
+            )}
+          </Band>
 
-          <Section>
+          {/* The life of the house. */}
+          <Band>
             <View style={styles.gutter}>
               <SectionHeader
                 eyebrow="What is on"
@@ -146,10 +172,10 @@ export default function HomeScreen() {
                 </View>
               ))
             )}
-          </Section>
+          </Band>
 
           {feed.announcements.length > 0 ? (
-            <Section>
+            <Band tone="neutral">
               <View style={styles.gutter}>
                 <SectionHeader
                   eyebrow="From the church"
@@ -166,11 +192,11 @@ export default function HomeScreen() {
                   />
                 </View>
               ))}
-            </Section>
+            </Band>
           ) : null}
 
           {signedIn && feed.recently_saved.length > 0 ? (
-            <Section>
+            <Band>
               <View style={styles.gutter}>
                 <SectionHeader
                   eyebrow="Saved"
@@ -191,10 +217,11 @@ export default function HomeScreen() {
                   />
                 ))}
               </ScrollView>
-            </Section>
+            </Band>
           ) : null}
 
-          <Section>
+          {/* Prayer — back to the ministry's own colour. */}
+          <Band tone="primary">
             <View style={styles.gutter}>
               <SectionHeader eyebrow="Prayer" title="Ask the church to pray" />
               <Text variant="body" color="textSecondary" style={styles.prayerCopy}>
@@ -216,27 +243,18 @@ export default function HomeScreen() {
               </Text>
               <Icon name="chevron-right" size="sm" color="textTertiary" />
             </Pressable>
-          </Section>
+          </Band>
 
           {!signedIn ? (
-            <View style={[styles.gutter, styles.signIn]}>
-              <SignInPrompt
-                title="Sign in to make it yours"
-                message="Signing in keeps your place in a sermon, your course progress, your saved teaching and your giving record."
-                reason="profile"
-              />
-            </View>
-          ) : null}
-
-          {signedIn && feed.continue_learning.length === 0 ? (
-            <View style={[styles.gutter, styles.signIn]}>
-              <Banner
-                tone="accent"
-                title="Not in a course yet"
-                message="The discipleship team runs short courses through the year — have a look at what is open."
-                action={{ label: 'Browse courses', onPress: () => router.push('/courses') }}
-              />
-            </View>
+            <Band>
+              <View style={styles.gutter}>
+                <SignInPrompt
+                  title="Sign in to make it yours"
+                  message="Signing in keeps your place in a message, your course progress, your saved teaching and your giving record."
+                  reason="profile"
+                />
+              </View>
+            </Band>
           ) : null}
         </ScreenScroll>
       )}
@@ -267,8 +285,5 @@ const styles = StyleSheet.create({
   },
   prayerLabel: {
     flex: 1,
-  },
-  signIn: {
-    paddingTop: space.xxl,
   },
 });

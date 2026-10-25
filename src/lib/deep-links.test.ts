@@ -16,7 +16,7 @@ describe('isSafeInAppPath', () => {
   it('rejects absolute and protocol-relative URLs', () => {
     expect(isSafeInAppPath('https://example.org/sermons/42')).toBe(false);
     expect(isSafeInAppPath('//example.org/sermons/42')).toBe(false);
-    expect(isSafeInAppPath('kingdomheralds://sermons/42')).toBe(false);
+    expect(isSafeInAppPath('twainman://sermons/42')).toBe(false);
   });
 
   it('rejects traversal and backslash tricks', () => {

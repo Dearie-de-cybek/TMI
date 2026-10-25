@@ -148,6 +148,8 @@ export function CourseRow({ course, onPress }: { course: CourseSummary; onPress:
       ])}
       thumbnailSeed={course.title}
       thumbnailUri={course.artwork_url}
+      thumbnailSize={72}
+      thumbnailWidth={96}
       onPress={onPress}
       footer={
         <View style={styles.courseFooter}>

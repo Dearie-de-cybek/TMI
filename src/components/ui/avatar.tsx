@@ -1,6 +1,8 @@
 import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
 
+import { resolveArtwork } from '@/lib/artwork';
+
 import { useColors } from '@/design/theme';
 import { fonts } from '@/design/tokens';
 
@@ -34,10 +36,13 @@ export function Avatar({
   const colors = useColors();
   const dimension = sizes[size];
 
-  if (uri) {
+  // `uri` may be a URL or `asset:<key>` for a bundled church photograph.
+  const portrait = resolveArtwork(uri);
+
+  if (portrait) {
     return (
       <Image
-        source={{ uri }}
+        source={'local' in portrait ? portrait.local : { uri: portrait.uri }}
         accessibilityLabel={`${name}'s profile picture`}
         style={[styles.base, { width: dimension, height: dimension, borderRadius: dimension / 2 }]}
         contentFit="cover"

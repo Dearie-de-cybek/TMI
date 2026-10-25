@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 /**
- * Wire schemas for the Kingdom Heralds API.
+ * Wire schemas for the TwainMan Ministry API.
  *
  * Responses are validated at the boundary so a backend change surfaces as one
  * clear parse error instead of an `undefined` deep inside a screen. Date fields

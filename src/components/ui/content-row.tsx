@@ -21,6 +21,7 @@ export function ContentRow({
   thumbnailUri,
   thumbnailSeed,
   thumbnailSize = 64,
+  thumbnailWidth,
   onPress,
   accessory,
   accessoryIcon = 'chevron-right',
@@ -34,6 +35,8 @@ export function ContentRow({
   /** Provide to render an artwork slot; omit for text-only rows. */
   thumbnailSeed?: string;
   thumbnailSize?: number;
+  /** Widens the artwork slot — illustrated covers need room to read. */
+  thumbnailWidth?: number;
   onPress?: () => void;
   accessory?: ReactNode;
   accessoryIcon?: IconName | null;
@@ -46,7 +49,7 @@ export function ContentRow({
         <ContentImage
           uri={thumbnailUri}
           seed={thumbnailSeed}
-          width={thumbnailSize}
+          width={thumbnailWidth ?? thumbnailSize}
           height={thumbnailSize}
         />
       ) : null}
