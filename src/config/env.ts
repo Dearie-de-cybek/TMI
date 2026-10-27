@@ -28,12 +28,13 @@ function readBoolean(value: string | undefined, fallback: boolean): boolean {
   return fallback;
 }
 
-const rawMode = readString(process.env.EXPO_PUBLIC_API_MODE, 'demo').toLowerCase();
+const isTest = process.env.NODE_ENV === 'test';
+const rawMode = readString(process.env.EXPO_PUBLIC_API_MODE, isTest ? 'demo' : 'live').toLowerCase();
 
 export const env = {
   /** Data source the app boots with. Members can never silently end up in demo mode. */
   defaultApiMode: (rawMode === 'live' ? 'live' : 'demo') satisfies ApiMode as ApiMode,
-  apiUrl: readString(process.env.EXPO_PUBLIC_API_URL, 'http://127.0.0.1:8000/api/v1').replace(
+  apiUrl: readString(process.env.EXPO_PUBLIC_API_URL, 'https://twainmanministry.org/api/v1').replace(
     /\/+$/,
     ''
   ),
@@ -41,12 +42,12 @@ export const env = {
   /** Exposes the data-source switch in Settings. Must be false in production builds. */
   allowModeSwitch: readBoolean(process.env.EXPO_PUBLIC_ALLOW_MODE_SWITCH, __DEV__),
   church: {
-    email: readString(process.env.EXPO_PUBLIC_CHURCH_EMAIL, 'hello@twainman.org'),
+    email: readString(process.env.EXPO_PUBLIC_CHURCH_EMAIL, 'hello@twainmanministry.org'),
     phone: readString(process.env.EXPO_PUBLIC_CHURCH_PHONE, ''),
     privacyUrl: readString(
       process.env.EXPO_PUBLIC_PRIVACY_URL,
-      'https://twainman.org/privacy'
+      'https://twainmanministry.org/privacy'
     ),
-    termsUrl: readString(process.env.EXPO_PUBLIC_TERMS_URL, 'https://twainman.org/terms'),
+    termsUrl: readString(process.env.EXPO_PUBLIC_TERMS_URL, 'https://twainmanministry.org/terms'),
   },
 } as const;
