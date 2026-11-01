@@ -6,7 +6,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSequence,
-  withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 
 import { useTheme } from '@/design/theme';
@@ -45,7 +45,7 @@ export function LikeButton({
   function press() {
     const nowLiked = toggle(id);
     if (nowLiked) {
-      if (!reduceMotion) scale.set(withSequence(withSpring(1.35, { damping: 6 }), withSpring(1)));
+      if (!reduceMotion) scale.set(withSequence(withTiming(1.15, { duration: 100 }), withTiming(1, { duration: 140 })));
       if (Platform.OS !== 'web') {
         void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => undefined);
       }

@@ -1,13 +1,6 @@
 import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Animated, {
-  Easing,
-  SlideInUp,
-  SlideOutUp,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated, { FadeOut, SlideInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { create } from 'zustand';
 
@@ -21,8 +14,8 @@ import { radius, space } from '@/design/tokens';
  * its own ("Saved", "Marked as read"). Failures are never shown here — they get
  * an inline error next to the control that failed, so the member can act on it.
  *
- * It drops in from the top on a spring, carries a coloured edge and a glyph for
- * its tone, and a thin line runs down as the time to read it runs out.
+ * A single white pill at the top, an icon in the tone's colour and one line of
+ * text, sliding in and fading out. Nothing else.
  */
 export type ToastTone = 'neutral' | 'success' | 'warning';
 
@@ -35,7 +28,7 @@ type ToastState = {
 };
 
 let nextId = 1;
-const DURATION_MS = 2_800;
+const DURATION_MS = 2_600;
 
 export const useToastStore = create<ToastState>((set) => ({
   current: null,
@@ -68,81 +61,50 @@ export function ToastHost() {
 
   if (!toast) return null;
 
-  const edge =
-    toast.tone === 'success' ? colors.success : toast.tone === 'warning' ? colors.warning : colors.accentFill;
+  const iconColor =
+    toast.tone === 'success' ? 'success' : toast.tone === 'warning' ? 'warning' : 'primary';
 
   return (
-    <Animated.View
-      key={toast.id}
-      pointerEvents="none"
-      accessibilityLiveRegion="polite"
-      entering={reduceMotion ? undefined : SlideInUp.springify().damping(15).stiffness(160)}
-      exiting={reduceMotion ? undefined : SlideOutUp.duration(180)}
-      style={[
-        styles.toast,
-        {
-          top: insets.top + space.sm,
-          backgroundColor: colors.surfaceInverse,
-        },
-      ]}
-    >
-      <View style={[styles.edge, { backgroundColor: edge }]} />
-      <View style={styles.row}>
-        <Icon name={toast.icon ?? defaultIcons[toast.tone]} size="md" color="accentFill" />
-        <Text variant="metaStrong" color="textOnInverse" numberOfLines={2} style={styles.label}>
+    <View pointerEvents="none" style={[styles.wrap, { top: insets.top + space.sm }]}>
+      <Animated.View
+        key={toast.id}
+        accessibilityLiveRegion="polite"
+        entering={reduceMotion ? undefined : SlideInUp.duration(220)}
+        exiting={reduceMotion ? undefined : FadeOut.duration(160)}
+        style={[styles.toast, { backgroundColor: colors.surface, borderColor: colors.border }]}
+      >
+        <Icon name={toast.icon ?? defaultIcons[toast.tone]} size="md" color={iconColor} />
+        <Text variant="labelStrong" numberOfLines={2} style={styles.label}>
           {toast.message}
         </Text>
-      </View>
-      <Countdown color={edge} reduceMotion={reduceMotion} />
-    </Animated.View>
+      </Animated.View>
+    </View>
   );
 }
 
-function Countdown({ color, reduceMotion }: { color: string; reduceMotion: boolean }) {
-  const progress = useSharedValue(1);
-
-  useEffect(() => {
-    if (reduceMotion) return;
-    progress.value = withTiming(0, { duration: DURATION_MS, easing: Easing.linear });
-  }, [progress, reduceMotion]);
-
-  const animated = useAnimatedStyle(() => ({ width: `${progress.value * 100}%` }));
-
-  return <Animated.View style={[styles.countdown, { backgroundColor: color }, animated]} />;
-}
-
 const styles = StyleSheet.create({
-  toast: {
+  wrap: {
     position: 'absolute',
     left: space.gutter,
     right: space.gutter,
-    borderRadius: radius.md,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOpacity: 0.28,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 10,
+    alignItems: 'center',
   },
-  edge: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: 4,
-  },
-  row: {
+  toast: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.md,
-    paddingLeft: space.lg + 4,
-    paddingRight: space.lg,
-    paddingVertical: space.lg,
+    maxWidth: '100%',
+    paddingHorizontal: space.xl,
+    paddingVertical: space.md,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOpacity: 0.14,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 8,
   },
   label: {
-    flex: 1,
-  },
-  countdown: {
-    height: 2,
+    flexShrink: 1,
   },
 });

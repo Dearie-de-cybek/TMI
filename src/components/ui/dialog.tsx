@@ -2,7 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { useEffect } from 'react';
 import { Modal, Platform, StyleSheet, View } from 'react-native';
-import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
+import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
 import { create } from 'zustand';
 
 import { useTheme } from '@/design/theme';
@@ -104,11 +104,11 @@ export function DialogHost() {
     }
   }, [request]);
 
-  const headerColors: [string, string] = request?.destructive
-    ? [colors.dangerOnSoft, colors.danger]
-    : request?.celebrate
-      ? [colors.surfaceInverse, colors.primary]
-      : [colors.surfaceInverse, colors.primary];
+  // The church's own colours: deep purple, warming to gold. A destructive
+  // confirmation turns clay so it cannot be mistaken for a routine one.
+  const headerColors: [string, string, string] = request?.destructive
+    ? [colors.dangerOnSoft, colors.danger, colors.danger]
+    : ['#2A1342', '#4A2A5A', '#8A6A2A'];
 
   return (
     <Modal
@@ -128,13 +128,14 @@ export function DialogHost() {
         {request ? (
           <Animated.View
             key={`card-${request.id}`}
-            entering={reduceMotion ? undefined : ZoomIn.springify().damping(14).stiffness(170)}
+            entering={reduceMotion ? undefined : SlideInDown.duration(260)}
             accessibilityViewIsModal
             accessibilityRole="alert"
             style={[styles.card, { backgroundColor: colors.surface }]}
           >
             <LinearGradient
               colors={headerColors}
+              locations={[0, 0.65, 1]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.header}
@@ -142,7 +143,7 @@ export function DialogHost() {
               <Icon
                 name={request.icon ?? defaultIcon(request)}
                 size="xl"
-                color={request.celebrate ? 'accentFill' : 'textOnInverse'}
+                color={request.destructive ? 'textOnInverse' : 'accentFill'}
               />
               {request.eyebrow ? (
                 <Eyebrow style={{ color: colors.accentFill }}>{request.eyebrow}</Eyebrow>

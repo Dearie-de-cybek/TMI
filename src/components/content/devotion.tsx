@@ -135,7 +135,8 @@ export function DevotionCard() {
 
   return (
     <LinearGradient
-      colors={['#8A2236', '#3D111C']}
+      colors={['#2A1342', '#4A2A5A', '#8A6A2A']}
+      locations={[0, 0.62, 1]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.decreeCard}

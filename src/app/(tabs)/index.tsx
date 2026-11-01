@@ -19,6 +19,7 @@ import {
 import { LiveSessionStrip } from '@/components/content/featured';
 import { EventRow, SermonTile } from '@/components/content/rows';
 import { Band } from '@/components/ui/band';
+import { Button } from '@/components/ui/button';
 import { Rise } from '@/components/ui/motion';
 import { Pressable } from '@/components/ui/pressable';
 import { Rule, Screen, ScreenScroll } from '@/components/ui/screen';
@@ -285,7 +286,7 @@ export default function HomeScreen() {
               Explore
             </Text>
             <View style={styles.categories}>
-              {categories.map((category, index) => (
+              {categories.slice(0, 3).map((category, index) => (
                 <Rise key={category.title} delay={index * 50}>
                   <CategoryCard
                     title={category.title}
@@ -295,6 +296,13 @@ export default function HomeScreen() {
                   />
                 </Rise>
               ))}
+              <Button
+                label="See more"
+                variant="secondary"
+                size="lg"
+                fullWidth
+                onPress={() => router.push('/discover')}
+              />
             </View>
           </View>
 

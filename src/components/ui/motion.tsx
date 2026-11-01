@@ -28,7 +28,7 @@ export function Rise({
   return (
     <Animated.View
       entering={
-        reduceMotion ? undefined : FadeInDown.delay(delay).springify().damping(18).stiffness(140)
+        reduceMotion ? undefined : FadeInDown.delay(delay).duration(320)
       }
       style={style}
     >
