@@ -155,7 +155,7 @@ function RequestCard({ request }: { request: PrayerRequest }) {
   const withdraw = useMutation({
     mutationFn: () => withdrawPrayerRequest(request.id),
     onSuccess: () => {
-      toast('Your request has been withdrawn.', { icon: 'check' });
+      toast('Your request has been withdrawn.', { icon: 'heart' });
       void queryClient.invalidateQueries({ queryKey: queryKeys.prayerRequests });
       void queryClient.invalidateQueries({ queryKey: queryKeys.home });
     },

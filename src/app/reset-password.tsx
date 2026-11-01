@@ -40,7 +40,7 @@ export default function ResetPasswordScreen() {
     setSubmitting(true);
     try {
       await resetPassword(result.data);
-      toast('Password reset. Sign in with your new password.', { tone: 'success', icon: 'check' });
+      toast('Password reset. Sign in with your new password.', { tone: 'success', icon: 'key' });
       router.replace('/sign-in');
     } catch (caught) {
       setError(caught);

@@ -45,7 +45,7 @@ export default function EventDetailScreen() {
     queryClient.setQueryData(queryKeys.event(id), updated);
     void queryClient.invalidateQueries({ queryKey: queryKeys.events('upcoming') });
     void queryClient.invalidateQueries({ queryKey: queryKeys.home });
-    toast(message, { tone: 'success', icon: 'check' });
+    toast(message, { tone: 'success', icon: 'calendar' });
   }
 
   const register = useMutation({
@@ -187,7 +187,7 @@ export default function EventDetailScreen() {
             <>
               <Banner
                 tone="success"
-                icon="check-circle"
+                icon="calendar"
                 title={
                   registration.my_status === 'waitlisted'
                     ? 'You are on the waiting list'

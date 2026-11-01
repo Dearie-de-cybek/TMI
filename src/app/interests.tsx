@@ -39,7 +39,7 @@ export default function InterestsScreen() {
     mutationFn: () => updateProfile({ interests: selected }),
     onSuccess: (updated) => {
       setMember(updated);
-      toast('Saved.', { tone: 'success', icon: 'check' });
+      toast('Saved.', { tone: 'success', icon: 'bookmark' });
       router.replace('/');
     },
   });

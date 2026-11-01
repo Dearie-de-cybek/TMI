@@ -90,7 +90,7 @@ export default function DevotionalScreen() {
         () => undefined
       );
     }
-    toast('Marked as read.', { tone: 'success', icon: 'check' });
+    toast('Marked as read.', { tone: 'success', icon: 'book-open' });
   }
 
   return (
@@ -141,13 +141,13 @@ export default function DevotionalScreen() {
         <View style={[styles.gutter, styles.actions]}>
           {read ? (
             <View style={styles.readMark}>
-              <Icon name="check" size="md" color="success" />
+              <Icon name="book-open" size="md" color="success" />
               <Text variant="metaStrong" color="success">
                 You have read this word
               </Text>
             </View>
           ) : (
-            <Button label="I have read this" icon="check" fullWidth onPress={markRead} />
+            <Button label="I have read this" icon="book-open" fullWidth onPress={markRead} />
           )}
           <Button
             label="Back to devotion"

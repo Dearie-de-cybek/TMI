@@ -58,7 +58,7 @@ export default function NotificationsScreen() {
   const markAll = useMutation({
     mutationFn: markAllNotificationsRead,
     onSuccess: () => {
-      toast('All caught up.', { icon: 'check' });
+      toast('All caught up.', { icon: 'bell' });
       void queryClient.invalidateQueries({ queryKey: queryKeys.notifications });
       void queryClient.invalidateQueries({ queryKey: queryKeys.home });
     },
@@ -92,7 +92,7 @@ export default function NotificationsScreen() {
           ...(unread > 0
             ? [
                 {
-                  icon: 'check-circle' as IconName,
+                  icon: 'bell' as IconName,
                   label: 'Mark all as read',
                   onPress: () => markAll.mutate(),
                 },

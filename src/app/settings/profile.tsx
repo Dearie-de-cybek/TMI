@@ -39,7 +39,7 @@ export default function EditProfileScreen() {
       }),
     onSuccess: (updated) => {
       setMember(updated);
-      toast('Profile updated.', { tone: 'success', icon: 'check' });
+      toast('Profile updated.', { tone: 'success', icon: 'user' });
       router.back();
     },
     onError: (error) =>
@@ -73,7 +73,7 @@ export default function EditProfileScreen() {
     onSuccess: (updated) => {
       if (!updated) return;
       setMember(updated);
-      toast('Profile picture updated.', { tone: 'success', icon: 'check' });
+      toast('Profile picture updated.', { tone: 'success', icon: 'camera' });
     },
   });
 

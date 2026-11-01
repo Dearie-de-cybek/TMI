@@ -180,7 +180,7 @@ export default function DevotionScreen() {
               <View style={styles.block}>
                 <Banner
                   tone="success"
-                  icon="check-circle"
+                  icon="award"
                   title="You have prayed every decree this month"
                   message="Keep returning to them — the month is not over, and a decree prayed once is not a decree prayed through."
                 />
@@ -228,7 +228,7 @@ export default function DevotionScreen() {
                   </Text>
                 </View>
                 <Icon
-                  name={devotionalRead ? 'check-circle' : 'chevron-right'}
+                  name={devotionalRead ? 'book-open' : 'chevron-right'}
                   size="md"
                   color={devotionalRead ? 'success' : 'textTertiary'}
                 />

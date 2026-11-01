@@ -59,7 +59,7 @@ export default function AppearanceSettingsScreen() {
                     {option.hint}
                   </Text>
                 </View>
-                {selected ? <Icon name="check" size="sm" color="primaryOnSoft" /> : null}
+                {selected ? <Icon name="sun" size="sm" color="primaryOnSoft" /> : null}
               </Pressable>
             );
           })}

@@ -50,7 +50,7 @@ export default function LessonScreen() {
         progress.certificate_issued
           ? 'Course complete — the church has issued your certificate.'
           : `Lesson complete. ${progress.enrollment.completed_lessons} of ${progress.enrollment.total_lessons} done.`,
-        { tone: 'success', icon: 'check' }
+        { tone: 'success', icon: 'award' }
       );
       void queryClient.invalidateQueries({ queryKey: queryKeys.lesson(id) });
       void queryClient.invalidateQueries({ queryKey: queryKeys.courses() });
@@ -113,7 +113,7 @@ export default function LessonScreen() {
           <Text style={[styles.title, { color: colors.text }]}>{data.title}</Text>
           <View style={styles.headerMeta}>
             {data.duration_minutes ? <Tag label={`${data.duration_minutes} min`} /> : null}
-            {data.completed ? <Tag label="Completed" tone="success" icon="check" /> : null}
+            {data.completed ? <Tag label="Completed" tone="success" icon="award" /> : null}
           </View>
         </View>
 
@@ -175,7 +175,7 @@ export default function LessonScreen() {
           <View style={styles.actions}>
             <Button
               label={data.completed ? 'Retake the quiz' : 'Take the quiz'}
-              icon="check-square"
+              icon="award"
               fullWidth
               onPress={() => router.push(`/quizzes/${data.quiz_id}`)}
             />
@@ -190,7 +190,7 @@ export default function LessonScreen() {
           {data.completed ? (
             <Banner
               tone="success"
-              icon="check-circle"
+              icon="award"
               message="The church has recorded this lesson as complete."
             />
           ) : (

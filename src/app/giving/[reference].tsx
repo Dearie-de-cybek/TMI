@@ -26,7 +26,7 @@ const presentation: Record<
 > = {
   pending: { icon: 'clock', tone: 'warning' },
   processing: { icon: 'loader', tone: 'warning' },
-  successful: { icon: 'check-circle', tone: 'success' },
+  successful: { icon: 'heart', tone: 'success' },
   failed: { icon: 'x-circle', tone: 'danger' },
   cancelled: { icon: 'slash', tone: 'info' },
   demo_not_processed: { icon: 'tool', tone: 'info' },

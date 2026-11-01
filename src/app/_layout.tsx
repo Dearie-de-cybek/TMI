@@ -9,7 +9,7 @@ import { Inter_700Bold } from '@expo-google-fonts/inter/700Bold';
 import { Inter_800ExtraBold } from '@expo-google-fonts/inter/800ExtraBold';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
-import { Stack, useRouter } from 'expo-router';
+import { Stack, usePathname, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo, useState } from 'react';
@@ -84,7 +84,10 @@ function AppShell() {
   const { colors, scheme } = useTheme();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const stripVisible = useNoticeStripVisible();
+  const pathname = usePathname();
+  // The welcome pager is full-screen photography; nothing sits above it.
+  const onWelcome = pathname === '/welcome';
+  const stripVisible = useNoticeStripVisible() && !onWelcome;
   const onboardingSeen = useAuth((state) => state.onboardingSeen);
 
   useNotificationRouting();
@@ -120,9 +123,9 @@ function AppShell() {
 
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
-      <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+      <StatusBar style={scheme === 'dark' || onWelcome ? 'light' : 'dark'} />
       <View style={{ paddingTop: stripVisible ? insets.top : 0 }}>
-        <NoticeStrip />
+        {onWelcome ? null : <NoticeStrip />}
       </View>
       <SafeAreaInsetsContext.Provider value={childInsets}>
         <Stack screenOptions={screenOptions}>

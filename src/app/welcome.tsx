@@ -13,20 +13,20 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/ui/button';
-import { Screen } from '@/components/ui/screen';
+import { Rise } from '@/components/ui/motion';
 import { Eyebrow, Text } from '@/components/ui/text';
-import { useColors } from '@/design/theme';
-import { fonts, space } from '@/design/tokens';
+import { fonts, radius, space } from '@/design/tokens';
 import { useAuth } from '@/features/auth/store';
 import { churchImages } from '@/lib/artwork';
 
 /**
  * First launch.
  *
- * Three photographs of the church, one short line each. The first thing a
- * member should meet is people they recognise, not a logo — so each slide is
- * the church's own picture with a single idea over it, and the sign-up choices
- * wait on the last one.
+ * Three photographs of the church, edge to edge, one short line each. The first
+ * thing a member should meet is people they recognise, not a logo — so each
+ * slide is the church's own picture filling the screen, with a single idea set
+ * large over it. The buttons float on the picture; the sign-up choices wait on
+ * the last slide.
  *
  * "Look around first" is deliberate: the public content is browsable without an
  * account, and the app should say so on the way in.
@@ -71,8 +71,10 @@ const slides: Slide[] = [
   },
 ];
 
+/** Room reserved under the caption for the pager and the three last-slide buttons. */
+const FOOTER_RESERVE = 232;
+
 export default function WelcomeScreen() {
-  const colors = useColors();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
@@ -81,9 +83,6 @@ export default function WelcomeScreen() {
   const listRef = useRef<FlatList<Slide>>(null);
   const [index, setIndex] = useState(0);
   const last = index === slides.length - 1;
-
-  // The photograph takes most of the screen, but the actions are always visible.
-  const photoHeight = Math.round(height * 0.62);
 
   async function go(destination: '/sign-up' | '/sign-in' | '/') {
     await markOnboardingSeen();
@@ -101,48 +100,61 @@ export default function WelcomeScreen() {
   }
 
   return (
-    <Screen>
-      <View style={{ height: photoHeight }}>
-        <FlatList
-          ref={listRef}
-          data={slides}
-          keyExtractor={(slide) => slide.key}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={onScrollEnd}
-          getItemLayout={(_, itemIndex) => ({ length: width, offset: width * itemIndex, index: itemIndex })}
-          renderItem={({ item }) => (
-            <View style={{ width, height: photoHeight }}>
-              <Image
-                source={item.image}
-                style={StyleSheet.absoluteFill}
-                contentFit="cover"
-                contentPosition={item.position}
-                accessibilityLabel={item.label}
-                accessibilityRole="image"
-                accessible
-                transition={240}
-              />
-              <LinearGradient
-                colors={['transparent', colors.scrim, colors.scrimStrong]}
-                locations={[0.35, 0.7, 1]}
-                style={StyleSheet.absoluteFill}
-                pointerEvents="none"
-              />
-              <View style={[styles.caption, { paddingTop: insets.top + space.lg }]}>
-                <Eyebrow style={{ color: colors.accentFill }}>{item.eyebrow}</Eyebrow>
-                <Text style={[styles.title, { color: colors.textOnInverse }]}>{item.title}</Text>
-                <Text variant="body" color="textOnInverseSecondary" style={styles.body}>
-                  {item.body}
-                </Text>
-              </View>
+    <View style={styles.root}>
+      <FlatList
+        ref={listRef}
+        data={slides}
+        keyExtractor={(slide) => slide.key}
+        horizontal
+        pagingEnabled
+        bounces={false}
+        showsHorizontalScrollIndicator={false}
+        onMomentumScrollEnd={onScrollEnd}
+        getItemLayout={(_, itemIndex) => ({ length: width, offset: width * itemIndex, index: itemIndex })}
+        renderItem={({ item }) => (
+          <View style={{ width, height }}>
+            <Image
+              source={item.image}
+              style={StyleSheet.absoluteFill}
+              contentFit="cover"
+              contentPosition={item.position}
+              accessibilityLabel={item.label}
+              accessibilityRole="image"
+              accessible
+              transition={240}
+            />
+            <LinearGradient
+              colors={['rgba(0,0,0,0.35)', 'transparent', 'rgba(8,3,5,0.55)', 'rgba(8,3,5,0.92)']}
+              locations={[0, 0.3, 0.62, 1]}
+              style={StyleSheet.absoluteFill}
+              pointerEvents="none"
+            />
+            <View
+              style={[styles.caption, { paddingBottom: insets.bottom + FOOTER_RESERVE }]}
+              pointerEvents="none"
+            >
+              <Eyebrow style={styles.eyebrow}>{item.eyebrow}</Eyebrow>
+              <Text style={styles.title}>{item.title}</Text>
+              <Text variant="bodyLarge" style={styles.body}>
+                {item.body}
+              </Text>
             </View>
-          )}
-        />
-      </View>
+          </View>
+        )}
+      />
 
-      <View style={[styles.footer, { paddingBottom: insets.bottom + space.lg }]}>
+      {last ? null : (
+        <View style={[styles.skip, { top: insets.top + space.md }]}>
+          <Button
+            label="Skip"
+            variant="glass"
+            size="sm"
+            onPress={() => void go('/')}
+          />
+        </View>
+      )}
+
+      <View style={[styles.footer, { paddingBottom: insets.bottom + space.xl }]}>
         <View
           style={styles.indicator}
           accessible
@@ -155,8 +167,8 @@ export default function WelcomeScreen() {
               style={[
                 styles.bar,
                 {
-                  width: slideIndex === index ? 28 : 12,
-                  backgroundColor: slideIndex === index ? colors.accent : colors.borderStrong,
+                  width: slideIndex === index ? 32 : 10,
+                  backgroundColor: slideIndex === index ? '#FFFFFF' : 'rgba(255,255,255,0.4)',
                 },
               ]}
             />
@@ -164,50 +176,78 @@ export default function WelcomeScreen() {
         </View>
 
         {last ? (
-          <View style={styles.actions}>
-            <Button label="Create an account" fullWidth onPress={() => void go('/sign-up')} />
+          <Rise style={styles.actions}>
+            <Button label="Create an account" variant="light" size="lg" fullWidth onPress={() => void go('/sign-up')} />
             <Button
               label="I already have an account"
-              variant="secondary"
+              variant="glass"
+              size="lg"
               fullWidth
               onPress={() => void go('/sign-in')}
             />
-            <Button label="Look around first" variant="ghost" fullWidth onPress={() => void go('/')} />
-          </View>
+            <Button
+              label="Look around first"
+              variant="ghostLight"
+              fullWidth
+              style={styles.look}
+              onPress={() => void go('/')}
+            />
+          </Rise>
         ) : (
           <View style={styles.actions}>
-            <Button label="Continue" icon="arrow-right" iconPosition="trailing" fullWidth onPress={next} />
-            <Button label="Skip" variant="ghost" fullWidth onPress={() => void go('/')} />
+            <Button
+              label="Continue"
+              variant="light"
+              size="lg"
+              icon="arrow-right"
+              iconPosition="trailing"
+              fullWidth
+              onPress={next}
+            />
           </View>
         )}
       </View>
-    </Screen>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: '#080305',
+  },
   caption: {
     flex: 1,
     justifyContent: 'flex-end',
     paddingHorizontal: space.gutter,
-    paddingBottom: space.lg,
-    gap: space.xs,
+    gap: space.sm,
+  },
+  eyebrow: {
+    color: '#E3B965',
   },
   title: {
-    fontFamily: fonts.sansBold,
-    fontSize: 38,
-    lineHeight: 42,
-    letterSpacing: -1,
+    color: '#FFFFFF',
+    fontFamily: fonts.sansExtraBold,
+    fontSize: 44,
+    lineHeight: 48,
+    letterSpacing: -1.4,
   },
   body: {
-    maxWidth: 380,
+    color: 'rgba(255,255,255,0.86)',
+    maxWidth: 340,
+  },
+  skip: {
+    position: 'absolute',
+    right: space.gutter,
+    borderRadius: radius.pill,
   },
   footer: {
-    flex: 1,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
     paddingHorizontal: space.gutter,
-    paddingTop: space.lg,
-    gap: space.lg,
-    justifyContent: 'space-between',
+    gap: space.xl,
   },
   indicator: {
     flexDirection: 'row',
@@ -215,9 +255,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   bar: {
-    height: 3,
+    height: 4,
+    borderRadius: radius.pill,
   },
   actions: {
     gap: space.sm,
+  },
+  look: {
+    alignSelf: 'center',
   },
 });

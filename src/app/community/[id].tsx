@@ -43,7 +43,7 @@ export default function GroupDetailScreen() {
   function onSuccess(updated: Group, message: string) {
     queryClient.setQueryData(queryKeys.group(id), updated);
     void queryClient.invalidateQueries({ queryKey: queryKeys.groups() });
-    toast(message, { tone: 'success', icon: 'check' });
+    toast(message, { tone: 'success', icon: 'users' });
   }
 
   const join = useMutation({
@@ -127,7 +127,7 @@ export default function GroupDetailScreen() {
           {described ? <Banner tone="danger" title={described.title} message={described.message} /> : null}
 
           {data.membership.status === 'member' ? (
-            <Banner tone="success" icon="check-circle" message="You are part of this group." />
+            <Banner tone="success" icon="users" message="You are part of this group." />
           ) : data.membership.status === 'pending' ? (
             <Banner
               tone="warning"

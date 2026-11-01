@@ -142,7 +142,7 @@ export default function DecreeScreen() {
                 </Text>
               </View>
               <Icon
-                name={confessionDeclaredOn ? 'check-circle' : 'chevron-right'}
+                name={confessionDeclaredOn ? 'mic' : 'chevron-right'}
                 size="md"
                 color={confessionDeclaredOn ? 'success' : 'textTertiary'}
               />

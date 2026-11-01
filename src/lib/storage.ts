@@ -120,6 +120,7 @@ export const storageKeys = {
   notificationsPrompted: 'notifications.prompted',
   playbackPositions: 'playback.positions',
   devotionProgress: 'devotion.progress',
+  likes: 'likes',
   prayerReminder: 'devotion.reminder',
   demoState: 'demo.state',
 } as const;

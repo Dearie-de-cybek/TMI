@@ -114,7 +114,7 @@ export default function ConfessionScreen() {
           {declaredToday ? (
             <>
               <View style={styles.declaredMark}>
-                <Icon name="check-circle" size="md" color="success" />
+                <Icon name="mic" size="md" color="success" />
                 <Text variant="metaStrong" color="success">
                   Declared today
                 </Text>
@@ -127,7 +127,7 @@ export default function ConfessionScreen() {
           ) : (
             <Button
               label="I have declared this"
-              icon="check"
+              icon="mic"
               fullWidth
               onPress={declare}
             />

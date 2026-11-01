@@ -108,7 +108,7 @@ export function EventRow({ event, onPress }: { event: ChurchEvent; onPress: () =
         ) : null}
         {registered ? (
           <View style={styles.eventTag}>
-            <Tag label="You are registered" tone="success" icon="check" />
+            <Tag label="You are registered" tone="success" icon="calendar" />
           </View>
         ) : event.registration.my_status === 'waitlisted' ? (
           <View style={styles.eventTag}>
@@ -225,7 +225,7 @@ export function GroupRow({ group, onPress }: { group: Group; onPress: () => void
       footer={
         group.membership.status === 'member' ? (
           <View style={styles.eventTag}>
-            <Tag label="You are a member" tone="success" icon="check" />
+            <Tag label="You are a member" tone="success" icon="users" />
           </View>
         ) : group.membership.status === 'pending' ? (
           <View style={styles.eventTag}>

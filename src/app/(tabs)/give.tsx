@@ -165,7 +165,7 @@ export default function GiveScreen() {
                       </Text>
                     ) : null}
                   </View>
-                  {selected ? <Icon name="check" size="sm" color="primaryOnSoft" /> : null}
+                  {selected ? <Icon name="heart" size="sm" color="primaryOnSoft" /> : null}
                 </Pressable>
               );
             })}

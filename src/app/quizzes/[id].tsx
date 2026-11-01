@@ -230,7 +230,7 @@ function Option({
           { borderColor: selected ? colors.primary : colors.borderStrong, backgroundColor: selected ? colors.primary : 'transparent' },
         ]}
       >
-        {selected ? <Icon name="check" size="xs" color="textOnAccent" /> : null}
+        {selected ? <Icon name="edit-3" size="xs" color="textOnAccent" /> : null}
       </View>
       <Text variant="body" style={styles.optionLabel}>
         {label}
@@ -283,7 +283,7 @@ function QuizResultView({
               return (
                 <View key={item.question_id} style={styles.feedbackItem}>
                   <Icon
-                    name={item.correct ? 'check-circle' : 'x-circle'}
+                    name={item.correct ? 'thumbs-up' : 'refresh-cw'}
                     size="md"
                     color={item.correct ? 'success' : 'danger'}
                   />

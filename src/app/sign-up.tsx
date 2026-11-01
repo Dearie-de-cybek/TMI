@@ -162,7 +162,7 @@ export default function SignUpScreen() {
             },
           ]}
         >
-          {acceptedTerms ? <Icon name="check" size="xs" color="textOnAccent" /> : null}
+          {acceptedTerms ? <Icon name="shield" size="xs" color="textOnAccent" /> : null}
         </View>
         <View style={styles.consentText}>
           <Text variant="meta" color="textSecondary">

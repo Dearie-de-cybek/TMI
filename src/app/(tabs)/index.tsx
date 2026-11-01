@@ -1,16 +1,24 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'expo-router';
+import { useRouter, type Href } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { queryKeys } from '@/api/query-client';
 import { SignInPrompt } from '@/components/app/sign-in-prompt';
 import { TAB_BAR_HEIGHT } from '@/components/app/tab-bar';
-import { DevotionCard, VerseCard } from '@/components/content/devotion';
-import { FeaturedSermon, LiveSessionStrip } from '@/components/content/featured';
+import { DevotionCard } from '@/components/content/devotion';
+import {
+  CategoryCard,
+  HeroCard,
+  HeroCarousel,
+  VerseHero,
+  type HeroItem,
+} from '@/components/content/home-cards';
+import { LiveSessionStrip } from '@/components/content/featured';
 import { AnnouncementRow, CourseRow, EventRow, SermonTile } from '@/components/content/rows';
 import { Band } from '@/components/ui/band';
 import { Banner } from '@/components/ui/banner';
-import { PageHeader } from '@/components/ui/header';
 import { Icon } from '@/components/ui/icon';
 import { Rise } from '@/components/ui/motion';
 import { Pressable } from '@/components/ui/pressable';
@@ -20,10 +28,57 @@ import { SkeletonFeature, SkeletonList } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/states';
 import { Text } from '@/components/ui/text';
 import { useColors } from '@/design/theme';
-import { space } from '@/design/tokens';
+import { radius, space } from '@/design/tokens';
 import { useAuth } from '@/features/auth/store';
+import { churchImages } from '@/lib/artwork';
+import { fetchCurrentDecree } from '@/features/devotion/api';
 import { useDevotionProgress } from '@/features/devotion/progress-store';
+import { useDevotionSync } from '@/features/devotion/use-devotion-sync';
 import { fetchHomeFeed } from '@/features/home/api';
+
+const categories: {
+  title: string;
+  description: string;
+  href: Href;
+  images: [number, number];
+}[] = [
+  {
+    title: 'Sermons',
+    description: 'Every teaching, with notes and a way to ask.',
+    href: '/sermons',
+    images: [churchImages.teachingSuit, churchImages.worshipLead],
+  },
+  {
+    title: 'Prayer and devotion',
+    description: 'The monthly decree and a word each day.',
+    href: '/devotion',
+    images: [churchImages.prayerHandsRaised, churchImages.prayerQuiet],
+  },
+  {
+    title: 'Courses',
+    description: 'Study with your cohort, lesson by lesson.',
+    href: '/courses',
+    images: [churchImages.teachingSeated, churchImages.teachingKeyboard],
+  },
+  {
+    title: 'Events',
+    description: 'Gatherings and conferences you can register for.',
+    href: '/events',
+    images: [churchImages.eventBlessingTheWork, churchImages.eventBackAndBetter],
+  },
+  {
+    title: 'Ministries',
+    description: 'Departments and fellowships to serve in.',
+    href: '/community',
+    images: [churchImages.fellowshipMen, churchImages.youthAuditorium],
+  },
+  {
+    title: 'About TwainMan',
+    description: 'Who we are, when we meet, what we believe.',
+    href: '/about',
+    images: [churchImages.congregationBanner, churchImages.communionTable],
+  },
+];
 
 function greeting(date = new Date()): string {
   const hour = date.getHours();
@@ -59,24 +114,107 @@ export default function HomeScreen() {
   });
 
   const feed = home.data;
+  const insets = useSafeAreaInsets();
+  useDevotionSync();
+  const streakDays = useDevotionProgress((state) => state.streakDays);
+  const decree = useQuery({
+    queryKey: queryKeys.decree('current'),
+    queryFn: ({ signal }) => fetchCurrentDecree(signal),
+  });
   const readDevotionalIds = useDevotionProgress((state) => state.readDevotionalIds);
   const firstName = feed?.member_first_name ?? member?.name.split(' ')[0] ?? null;
 
+  const heroItems: HeroItem[] = [];
+  if (feed?.devotional) {
+    const devotional = feed.devotional;
+    heroItems.push({
+      key: 'verse',
+      render: ({ width, height }) => (
+        <VerseHero
+          width={width}
+          height={height}
+          id={`verse-${devotional.id}`}
+          artwork={devotional.artwork_url}
+          verse={devotional.scripture_text}
+          reference={devotional.scripture_reference}
+          read={readDevotionalIds.includes(devotional.id)}
+          onPress={() => router.push(`/devotion/devotional/${devotional.id}`)}
+          onRead={() => router.push(`/devotion/devotional/${devotional.id}`)}
+        />
+      ),
+    });
+  }
+  if (feed?.featured_sermon) {
+    const sermon = feed.featured_sermon;
+    heroItems.push({
+      key: 'sermon',
+      render: ({ width, height }) => (
+        <HeroCard
+          width={width}
+          height={height}
+          artwork={sermon.artwork_url}
+          position="center"
+          kicker={sermon.series?.title ?? 'Latest teaching'}
+          title={sermon.title}
+          subtitle={sermon.speaker.name}
+          action="Listen or watch"
+          label={`Latest teaching: ${sermon.title} by ${sermon.speaker.name}`}
+          onPress={() => router.push(`/sermons/${sermon.id}`)}
+        />
+      ),
+    });
+  }
+  if (decree.data) {
+    const current = decree.data;
+    heroItems.push({
+      key: 'decree',
+      render: ({ width, height }) => (
+        <HeroCard
+          width={width}
+          height={height}
+          artwork={current.artwork_url}
+          kicker={`${current.month_label} · prophetic decree`}
+          title={current.theme}
+          subtitle={`From ${current.author}`}
+          action="Pray this month’s decree"
+          label={`This month's decree: ${current.theme}`}
+          onPress={() => router.push('/devotion')}
+        />
+      ),
+    });
+  }
+
   return (
     <Screen>
-      <PageHeader
-        eyebrow={signedIn ? greeting() : 'TwainMan Ministry'}
-        title={firstName ? firstName : 'Welcome'}
-        actions={[
-          { icon: 'search', label: 'Search', onPress: () => router.push('/search') },
-          {
-            icon: 'bell',
-            label: 'Notifications',
-            onPress: () => router.push('/notifications'),
-            badge: feed?.unread_notifications ?? 0,
-          },
-        ]}
-      />
+      <View style={[styles.header, { paddingTop: insets.top + space.md }]}>
+        <Text variant="display" style={styles.greeting} numberOfLines={2}>
+          {signedIn && firstName ? `${greeting()}, ${firstName}` : 'Welcome'}
+        </Text>
+        <View style={styles.headerActions}>
+          <Pressable
+            onPress={() => router.push('/devotion')}
+            accessibilityLabel={
+              streakDays > 0 ? `${streakDays} day prayer streak` : 'Start a prayer streak'
+            }
+            feedback="opacity"
+            style={[styles.streak, { backgroundColor: colors.surfaceMuted }]}
+          >
+            <Ionicons name="flash" size={18} color={streakDays > 0 ? colors.primary : colors.textTertiary} />
+            <Text variant="labelStrong">{streakDays}</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => router.push('/notifications')}
+            accessibilityLabel="Notifications"
+            feedback="opacity"
+            style={styles.bell}
+          >
+            <Ionicons name="notifications-outline" size={26} color={colors.text} />
+            {(feed?.unread_notifications ?? 0) > 0 ? (
+              <View style={[styles.dot, { backgroundColor: colors.primary, borderColor: colors.background }]} />
+            ) : null}
+          </Pressable>
+        </View>
+      </View>
 
       {home.isPending ? (
         <ScreenScroll bottomSpace={TAB_BAR_HEIGHT + space.xxl}>
@@ -91,69 +229,63 @@ export default function HomeScreen() {
           onRefresh={() => void home.refetch()}
           bottomSpace={TAB_BAR_HEIGHT + space.xxl}
         >
-          {/* The teaching, and whatever is happening right now. */}
-          <Band flush>
-            {feed.live_session ? (
-              <View style={styles.gutter}>
-                <LiveSessionStrip
-                  session={feed.live_session}
-                  onPress={() =>
-                    feed.live_session?.course_id
-                      ? router.push(`/courses/${feed.live_session.course_id}`)
-                      : router.push('/discover')
-                  }
-                />
-              </View>
-            ) : null}
+          {/* Search. */}
+          <View style={styles.gutter}>
+            <Pressable
+              onPress={() => router.push('/search')}
+              accessibilityRole="search"
+              accessibilityLabel="Search teaching, courses, events and more"
+              feedback="opacity"
+              style={[styles.search, { backgroundColor: colors.surfaceMuted }]}
+            >
+              <Ionicons name="search" size={20} color={colors.textTertiary} />
+              <Text variant="body" color="textTertiary">
+                Search teaching, courses, events…
+              </Text>
+            </Pressable>
+          </View>
 
-            {feed.featured_sermon ? (
-              <FeaturedSermon
-                sermon={feed.featured_sermon}
-                eyebrow={feed.featured_sermon.series?.title ?? 'Latest teaching'}
-                onPress={() => router.push(`/sermons/${feed.featured_sermon!.id}`)}
+          {feed.live_session ? (
+            <View style={[styles.gutter, styles.live]}>
+              <LiveSessionStrip
+                session={feed.live_session}
+                onPress={() =>
+                  feed.live_session?.course_id
+                    ? router.push(`/courses/${feed.live_session.course_id}`)
+                    : router.push('/discover')
+                }
               />
-            ) : null}
-          </Band>
-
-          {/* Scripture — the way into the daily devotional. */}
-          {feed.devotional ? (
-            <Band tone="accent">
-              <Rise style={styles.gutter}>
-                <VerseCard
-                  devotional={feed.devotional}
-                  read={readDevotionalIds.includes(feed.devotional.id)}
-                  onPress={() => router.push(`/devotion/devotional/${feed.devotional!.id}`)}
-                />
-                <View style={styles.devotionLinks}>
-                  <Pressable
-                    onPress={() => router.push('/devotion/devotionals')}
-                    accessibilityLabel="Earlier devotionals"
-                    inline
-                  >
-                    <Text variant="labelStrong" color="primary">
-                      Earlier days
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    onPress={() => router.push('/devotion')}
-                    accessibilityLabel="Prayer and devotion"
-                    inline
-                  >
-                    <Text variant="labelStrong" color="primary">
-                      Prayer and devotion
-                    </Text>
-                  </Pressable>
-                </View>
-              </Rise>
-            </Band>
+            </View>
           ) : null}
 
+          {/* The verse, the teaching, the month's decree — swipe through them. */}
+          <Rise style={styles.carousel}>
+            <HeroCarousel items={heroItems} />
+          </Rise>
+
           {/* Prayer — where the member left off in this month's decree. */}
-          <Band>
-            <Rise delay={80} style={styles.gutter}>
-              <DevotionCard />
-            </Rise>
-          </Band>
+          <Rise delay={80} style={[styles.gutter, styles.block]}>
+            <DevotionCard />
+          </Rise>
+
+          {/* Everything the church offers, one card each. */}
+          <View style={[styles.gutter, styles.block]}>
+            <Text variant="title" style={styles.sectionTitle}>
+              Explore
+            </Text>
+            <View style={styles.categories}>
+              {categories.map((category, index) => (
+                <Rise key={category.title} delay={index * 50}>
+                  <CategoryCard
+                    title={category.title}
+                    description={category.description}
+                    images={category.images}
+                    onPress={() => router.push(category.href)}
+                  />
+                </Rise>
+              ))}
+            </View>
+          </View>
 
           {/* Formation. */}
           <Band tone="primary">
@@ -298,6 +430,69 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: space.md,
+    paddingHorizontal: space.gutter,
+    paddingBottom: space.lg,
+  },
+  greeting: {
+    flex: 1,
+    paddingTop: space.xs,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.sm,
+  },
+  streak: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.xs,
+    height: 40,
+    paddingHorizontal: space.md,
+    borderRadius: radius.pill,
+  },
+  bell: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dot: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 12,
+    height: 12,
+    borderRadius: radius.pill,
+    borderWidth: 2,
+  },
+  search: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.md,
+    height: 52,
+    paddingHorizontal: space.lg,
+    borderRadius: radius.pill,
+  },
+  live: {
+    paddingTop: space.lg,
+  },
+  carousel: {
+    paddingTop: space.xl,
+  },
+  block: {
+    paddingTop: space.xxl,
+  },
+  sectionTitle: {
+    paddingBottom: space.lg,
+  },
+  categories: {
+    gap: space.md,
+  },
   devotionLinks: {
     flexDirection: 'row',
     justifyContent: 'space-between',

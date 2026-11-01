@@ -49,7 +49,7 @@ export default function VerifyScreen() {
       const updated = await verifyAccount(result.data.code);
       setMember(updated);
       clearVerificationRequirement();
-      toast('Account verified.', { tone: 'success', icon: 'check' });
+      toast('Account verified.', { tone: 'success', icon: 'shield' });
       router.replace('/interests');
     } catch (caught) {
       setError(caught);

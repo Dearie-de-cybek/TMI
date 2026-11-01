@@ -116,7 +116,7 @@ export default function DataSourceScreen() {
                 </Text>
               ) : null}
             </View>
-            {selected ? <Icon name="check" size="sm" color="primaryOnSoft" /> : null}
+            {selected ? <Icon name="database" size="sm" color="primaryOnSoft" /> : null}
           </Pressable>
         );
       })}

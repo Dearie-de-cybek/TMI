@@ -77,7 +77,7 @@ export default function DevotionalsScreen() {
                   </Text>
                 </View>
                 <Icon
-                  name={read ? 'check' : 'chevron-right'}
+                  name={read ? 'book-open' : 'chevron-right'}
                   size="md"
                   color={read ? 'success' : 'textTertiary'}
                 />

@@ -7,7 +7,7 @@ import { Icon, type IconName } from './icon';
 import { Pressable } from './pressable';
 import { Text } from './text';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'inverse' | 'brand';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'inverse' | 'brand' | 'light' | 'glass' | 'ghostLight';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export type ButtonProps = {
@@ -56,6 +56,9 @@ export function Button({
     danger: { backgroundColor: colors.danger },
     inverse: { backgroundColor: colors.surfaceInverse },
     brand: { backgroundColor: colors.primary },
+    light: { backgroundColor: '#FFFFFF' },
+    glass: { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+    ghostLight: { backgroundColor: 'transparent' },
   };
 
   const labelColor: Record<ButtonVariant, ColorToken> = {
@@ -65,10 +68,13 @@ export function Button({
     danger: 'textOnAccent',
     inverse: 'textOnInverse',
     brand: 'textOnAccent',
+    light: 'onAccentFill',
+    glass: 'textOnInverse',
+    ghostLight: 'textOnInverse',
   };
 
   const resolvedLabelColor = labelColor[variant];
-  const filled = variant !== 'secondary' && variant !== 'ghost';
+  const filled = variant !== 'secondary' && variant !== 'ghost' && variant !== 'glass' && variant !== 'ghostLight';
 
   return (
     <Pressable

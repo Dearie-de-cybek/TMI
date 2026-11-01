@@ -58,7 +58,7 @@ export default function NewPrayerRequestScreen() {
         ) : (
           <Banner
             tone="success"
-            icon="check-circle"
+            icon="heart"
             message="You can follow its status, add an update, or withdraw it from the prayer screen."
           />
         )}
@@ -133,7 +133,7 @@ export default function NewPrayerRequestScreen() {
                   },
                 ]}
               >
-                {selected ? <Icon name="check" size="xs" color="textOnAccent" /> : null}
+                {selected ? <Icon name="heart" size="xs" color="textOnAccent" /> : null}
               </View>
               <View style={styles.optionText}>
                 <Text variant="bodyStrong" color={selected ? 'primaryOnSoft' : 'text'}>
@@ -165,7 +165,7 @@ export default function NewPrayerRequestScreen() {
             },
           ]}
         >
-          {isAnonymous ? <Icon name="check" size="xs" color="textOnAccent" /> : null}
+          {isAnonymous ? <Icon name="eye-off" size="xs" color="textOnAccent" /> : null}
         </View>
         <View style={styles.optionText}>
           <Text variant="body">Send without my name</Text>

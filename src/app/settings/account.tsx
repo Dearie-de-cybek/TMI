@@ -40,7 +40,7 @@ export default function AccountSettingsScreen() {
   const requestDeletion = useMutation({
     mutationFn: () => requestAccountDeletion(),
     onSuccess: (result) => {
-      toast('Deletion request sent to the church office.', { icon: 'check' });
+      toast('Deletion request sent to the church office.', { icon: 'send' });
       void notice({ eyebrow: 'Account', title: 'Request recorded', message: result.message });
     },
   });
@@ -95,7 +95,7 @@ export default function AccountSettingsScreen() {
       {requestDeletion.isSuccess ? (
         <Banner
           tone="success"
-          icon="check-circle"
+          icon="send"
           title="Your request is with the church office"
           message="They will contact you about anything that has to be kept for financial or safeguarding reasons."
         />

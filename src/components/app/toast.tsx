@@ -50,7 +50,7 @@ export function useToast() {
 
 const defaultIcons: Record<ToastTone, IconName> = {
   neutral: 'info',
-  success: 'check',
+  success: 'star',
   warning: 'alert-triangle',
 };
 

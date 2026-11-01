@@ -16,7 +16,7 @@ const toneStyles: Record<
 > = {
   info: { background: 'surfaceMuted', text: 'textSecondary', icon: 'info' },
   accent: { background: 'accentSoft', text: 'accentOnSoft', icon: 'bookmark' },
-  success: { background: 'successSoft', text: 'successOnSoft', icon: 'check-circle' },
+  success: { background: 'successSoft', text: 'successOnSoft', icon: 'star' },
   warning: { background: 'warningSoft', text: 'warningOnSoft', icon: 'alert-triangle' },
   danger: { background: 'dangerSoft', text: 'dangerOnSoft', icon: 'alert-circle' },
 };

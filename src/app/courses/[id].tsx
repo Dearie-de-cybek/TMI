@@ -32,7 +32,7 @@ const lessonIcons: Record<LessonSummary['kind'], IconName> = {
   reading: 'file-text',
   video: 'play-circle',
   audio: 'headphones',
-  quiz: 'check-square',
+  quiz: 'edit-3',
   assignment: 'edit-3',
   live: 'video',
 };
@@ -62,7 +62,7 @@ export default function CourseDetailScreen() {
   const enroll = useMutation({
     mutationFn: () => enrollInCourse(id),
     onSuccess: (result) => {
-      toast(result.message ?? 'You are enrolled.', { tone: 'success', icon: 'check' });
+      toast(result.message ?? 'You are enrolled.', { tone: 'success', icon: 'book-open' });
       void queryClient.invalidateQueries({ queryKey: queryKeys.course(id) });
       void queryClient.invalidateQueries({ queryKey: queryKeys.courses() });
       void queryClient.invalidateQueries({ queryKey: queryKeys.home });
@@ -205,7 +205,7 @@ export default function CourseDetailScreen() {
             <SectionHeader title="What you need" />
             {data.requirements.map((requirement) => (
               <View key={requirement} style={styles.bullet}>
-                <Icon name="check" size="xs" color="primary" />
+                <Icon name="star" size="xs" color="primary" />
                 <Text variant="body" style={styles.bulletText}>
                   {requirement}
                 </Text>
@@ -258,7 +258,7 @@ export default function CourseDetailScreen() {
                     style={styles.lessonRow}
                   >
                     <Icon
-                      name={lesson.completed ? 'check-circle' : lesson.locked ? 'lock' : lessonIcons[lesson.kind]}
+                      name={lesson.completed ? 'award' : lesson.locked ? 'lock' : lessonIcons[lesson.kind]}
                       size="md"
                       color={lesson.completed ? 'success' : lesson.locked ? 'textTertiary' : 'primary'}
                     />

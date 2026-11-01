@@ -152,7 +152,7 @@ export default function DecreeSectionScreen() {
           {prayed ? (
             <>
               <View style={[styles.prayedMark, { borderColor: colors.success }]}>
-                <Icon name="check-circle" size="md" color="success" />
+                <Icon name="heart" size="md" color="success" />
                 <Text variant="metaStrong" color="success">
                   You have prayed this decree
                 </Text>
@@ -182,7 +182,7 @@ export default function DecreeSectionScreen() {
               />
             </>
           ) : (
-            <Button label="Amen — I have prayed this" icon="check" fullWidth onPress={markAndAdvance} />
+            <Button label="Amen — I have prayed this" icon="heart" fullWidth onPress={markAndAdvance} />
           )}
 
           <View style={styles.navRow}>
