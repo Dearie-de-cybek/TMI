@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     gap: space.sm,
   },
   title: {
-    fontFamily: fonts.serifSemiBold,
+    fontFamily: fonts.sansBold,
     fontSize: 24,
     lineHeight: 29,
   },
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
     gap: space.xs,
   },
   score: {
-    fontFamily: fonts.serifSemiBold,
+    fontFamily: fonts.sansBold,
     fontSize: 44,
     lineHeight: 50,
   },

@@ -1,53 +1,50 @@
 /**
  * TwainMan Ministry International — design tokens.
  *
- * The church's colours are purple and gold, so the app is built on them: a deep
- * aubergine purple for the ministry's own voice, warm gold for the marks that
- * organise a page, on a warm ivory ground. The language stays editorial — type
- * and space carry the hierarchy, not boxes — but colour now does one extra job:
- * it separates a long page into bands you can feel without reading, the way a
- * well-made book changes paper between its parts.
+ * One major colour, taken from the church's own logo: a deep maroon. Everything
+ * else is neutral — white cards on a light grey page, near-black type, black
+ * actions — so the colour in the app comes from the church's photographs and
+ * the maroon is saved for the few things that deserve to be noticed: the active
+ * tab, links, progress, the streak. Gold survives only as a small highlight.
  *
  * Every pairing below was checked against WCAG AA before it was written down.
  * Only semantic names are consumed by components; raw values live in `palette`.
  */
 
 const palette = {
-  // Ivory ground, warmed slightly so purple sits on it without going cold.
-  ivory50: '#FFFDF9',
-  ivory100: '#F8F5F0',
-  ivory200: '#F0EAF0',
-  ivory300: '#E4D9E6',
-  ivory400: '#CFC0D1',
+  // Neutral ground. Cool-leaning, never cream.
+  paper0: '#FFFFFF',
+  paper50: '#FAFAFA',
+  paper100: '#F3F3F4',
+  paper200: '#EAEAEC',
+  paper300: '#DEDEE2',
+  paper400: '#C9C9CF',
 
-  // Ink, carrying a trace of purple so text belongs to the same family.
-  ink900: '#15101A',
-  ink800: '#1C141F',
-  ink700: '#2A2133',
-  ink600: '#3A2F45',
-  ink400: '#5E5162',
-  ink300: '#8B7F8E',
-  ink200: '#9A8DA1',
+  // Ink.
+  ink900: '#111112',
+  ink800: '#161618',
+  ink700: '#232327',
+  ink600: '#2E2E33',
+  ink500: '#55555B',
+  ink300: '#74747B',
+  ink200: '#8A8A92',
 
-  // Purple — the ministry's voice.
-  purple900: '#1B0F24',
-  purple800: '#241430',
-  purple700: '#3A1F49',
-  purple600: '#4A2A5A',
-  purple500: '#5C3570',
-  purple300: '#C4A5D6',
-  purple200: '#D9C4E6',
-  purple100: '#EDE4F2',
-  purple50: '#F3EDF6',
+  // Maroon — the ministry's voice, from the logo.
+  maroon800: '#3D111C',
+  maroon700: '#6B1B2C',
+  maroon600: '#8A2236',
+  maroon500: '#A32D43',
+  maroon300: '#E39AA8',
+  maroon200: '#F0C7CF',
+  maroon100: '#F9E6EA',
 
-  // Gold — eyebrows, Scripture marks, the active indicator, the play button.
+  // Gold — the logo's flame. Small highlights only.
   gold700: '#7A5C1E',
   gold600: '#9A762F',
-  gold500: '#C19A38',
-  gold400: '#D9B463',
-  gold300: '#E8CE92',
+  gold500: '#D9A441',
+  gold400: '#E3B965',
+  gold300: '#EBCF93',
   gold100: '#F7EEDA',
-  gold50: '#FAF4E6',
 
   // Status — kept muted so they never compete with the church's own colours.
   clay700: '#8A3128',
@@ -73,51 +70,54 @@ export type ColorScheme = 'light' | 'dark';
  */
 export const colors = {
   light: {
-    /** Page ground — warm ivory. */
-    background: palette.ivory100,
-    /** Raised reading surface. */
-    surface: palette.ivory50,
+    /** Page ground — a light grey that lets white cards lift off it. */
+    background: palette.paper50,
+    /** Cards and reading surfaces. */
+    surface: palette.paper0,
     /** Tonal block used to group content without a border. */
-    surfaceMuted: palette.ivory200,
-    surfacePressed: palette.ivory300,
+    surfaceMuted: palette.paper100,
+    surfacePressed: palette.paper200,
     /**
-     * The plum plate: the player, the featured block, the live strip, a toast.
-     * It is deep purple in both schemes — bright contrast by day, a raised panel
-     * at night — because a white slab in a dark room is not a reading app.
+     * The dark plate: the player, the confession, the live strip. A maroon-black
+     * in both schemes, so photographs and gold read well on it.
      */
-    surfaceInverse: palette.purple800,
+    surfaceInverse: '#1A0C10',
 
     text: palette.ink800,
-    textSecondary: palette.ink400,
+    textSecondary: palette.ink500,
     textTertiary: palette.ink300,
-    textOnInverse: '#F6F1F7',
-    textOnInverseSecondary: '#C9B6D2',
+    textOnInverse: palette.white,
+    textOnInverseSecondary: 'rgba(255, 255, 255, 0.78)',
     /** Label colour on a filled primary or danger button. */
     textOnAccent: palette.white,
     /** Glyph colour on a filled gold control, where white would be too pale. */
-    onAccentFill: palette.ink800,
+    onAccentFill: palette.ink900,
 
-    border: palette.ivory300,
-    borderStrong: palette.ivory400,
+    /** The black of the primary button, and the white label on it. */
+    ink: palette.ink900,
+    onInk: palette.white,
 
-    primary: palette.purple600,
-    primaryHover: palette.purple500,
-    primarySoft: palette.purple100,
-    primaryOnSoft: palette.purple700,
+    border: palette.paper200,
+    borderStrong: palette.paper300,
+
+    primary: palette.maroon600,
+    primaryHover: palette.maroon500,
+    primarySoft: palette.maroon100,
+    primaryOnSoft: palette.maroon700,
 
     accent: palette.gold600,
     accentSoft: palette.gold100,
     accentOnSoft: palette.gold700,
-    /** Gold bright enough to read as a fill on the plum plate. */
+    /** Gold bright enough to read as a fill on the dark plate. */
     accentFill: palette.gold500,
 
     /**
-     * Section grounds. Barely over 1.05:1 against the page — enough to tell one
-     * part of Home from the next, never enough to shout.
+     * Section grounds. Barely tinted — enough to tell one part of a long page
+     * from the next, never enough to shout.
      */
-    bandPrimary: palette.purple50,
-    bandAccent: palette.gold50,
-    bandNeutral: palette.ivory200,
+    bandPrimary: '#F6F0F2',
+    bandAccent: palette.paper100,
+    bandNeutral: '#EFEFF1',
 
     danger: palette.clay600,
     dangerSoft: palette.clay100,
@@ -130,44 +130,46 @@ export const colors = {
     warningOnSoft: palette.amber700,
 
     /** Scrim over photographs so overlaid type stays legible. */
-    scrim: 'rgba(27, 15, 36, 0.52)',
-    scrimStrong: 'rgba(27, 15, 36, 0.78)',
-    skeleton: palette.ivory200,
-    skeletonHighlight: palette.ivory300,
-    overlay: 'rgba(27, 15, 36, 0.45)',
+    scrim: 'rgba(14, 6, 9, 0.5)',
+    scrimStrong: 'rgba(14, 6, 9, 0.8)',
+    skeleton: palette.paper100,
+    skeletonHighlight: palette.paper200,
+    overlay: 'rgba(14, 6, 9, 0.5)',
   },
   dark: {
-    background: palette.ink900,
-    surface: '#1E1726',
+    background: '#0E0E10',
+    surface: '#18181B',
     surfaceMuted: palette.ink700,
     surfacePressed: palette.ink600,
-    /** Raised plum, so the plate reads as a panel rather than a hole. */
-    surfaceInverse: '#2E2039',
+    surfaceInverse: '#2A1319',
 
-    text: '#F4EFF6',
-    textSecondary: '#C3B6C9',
+    text: '#F5F5F6',
+    textSecondary: '#B8B8BF',
     textTertiary: palette.ink200,
-    textOnInverse: '#F6F1F7',
-    textOnInverseSecondary: '#C9B6D2',
+    textOnInverse: palette.white,
+    textOnInverseSecondary: 'rgba(255, 255, 255, 0.78)',
     textOnAccent: palette.ink900,
     onAccentFill: palette.ink900,
 
-    border: palette.ink600,
-    borderStrong: palette.ink400,
+    ink: palette.white,
+    onInk: palette.ink900,
 
-    primary: palette.purple300,
-    primaryHover: palette.purple200,
-    primarySoft: '#2A1C35',
-    primaryOnSoft: palette.purple200,
+    border: '#2E2E33',
+    borderStrong: '#46464D',
+
+    primary: palette.maroon300,
+    primaryHover: palette.maroon200,
+    primarySoft: '#2B151B',
+    primaryOnSoft: palette.maroon200,
 
     accent: palette.gold400,
     accentSoft: '#2E2616',
     accentOnSoft: palette.gold300,
     accentFill: palette.gold400,
 
-    bandPrimary: '#221A2B',
-    bandAccent: '#241E14',
-    bandNeutral: '#1B1622',
+    bandPrimary: '#1A1517',
+    bandAccent: '#141416',
+    bandNeutral: '#1C1C1F',
 
     danger: palette.clay400,
     dangerSoft: '#30201D',
@@ -179,11 +181,11 @@ export const colors = {
     warningSoft: '#2C2416',
     warningOnSoft: palette.amber400,
 
-    scrim: 'rgba(10, 6, 14, 0.42)',
-    scrimStrong: 'rgba(10, 6, 14, 0.82)',
+    scrim: 'rgba(6, 3, 5, 0.45)',
+    scrimStrong: 'rgba(6, 3, 5, 0.85)',
     skeleton: palette.ink700,
     skeletonHighlight: palette.ink600,
-    overlay: 'rgba(0, 0, 0, 0.62)',
+    overlay: 'rgba(0, 0, 0, 0.66)',
   },
 } as const;
 
@@ -214,15 +216,14 @@ export const space = {
 } as const;
 
 /**
- * Corners are deliberately tight. Only avatars are fully round; nothing else
- * uses a pill shape except the audio progress rail.
+ * Soft, generous corners: cards are 24, controls and chips are fully round.
  */
 export const radius = {
   none: 0,
-  xs: 2,
-  sm: 4,
-  md: 6,
-  lg: 10,
+  xs: 6,
+  sm: 12,
+  md: 16,
+  lg: 24,
   pill: 999,
 } as const;
 
@@ -235,30 +236,31 @@ export const fonts = {
   sansMedium: 'Inter_500Medium',
   sansSemiBold: 'Inter_600SemiBold',
   sansBold: 'Inter_700Bold',
+  sansExtraBold: 'Inter_800ExtraBold',
 } as const;
 
 /**
- * Type ramp. `display`/`title`/`headline`/`scripture` are the editorial serif
- * voices; everything functional is Inter.
+ * Type ramp. Titles are bold, tight sans at a confident size; the serif is kept
+ * for Scripture and the church's own words (`scripture`, `quote`).
  */
 export const typeScale = {
-  display: { fontFamily: fonts.serifSemiBold, fontSize: 32, lineHeight: 38, letterSpacing: -0.5 },
-  title: { fontFamily: fonts.serifSemiBold, fontSize: 24, lineHeight: 30, letterSpacing: -0.3 },
-  headline: { fontFamily: fonts.serifSemiBold, fontSize: 19, lineHeight: 26, letterSpacing: -0.2 },
+  display: { fontFamily: fonts.sansExtraBold, fontSize: 34, lineHeight: 40, letterSpacing: -0.9 },
+  title: { fontFamily: fonts.sansBold, fontSize: 26, lineHeight: 32, letterSpacing: -0.6 },
+  headline: { fontFamily: fonts.sansBold, fontSize: 20, lineHeight: 26, letterSpacing: -0.35 },
   scripture: { fontFamily: fonts.serifRegular, fontSize: 20, lineHeight: 32, letterSpacing: 0 },
   quote: { fontFamily: fonts.serifItalic, fontSize: 17, lineHeight: 28, letterSpacing: 0 },
 
-  /** Small tracked uppercase label used above section titles. */
-  eyebrow: { fontFamily: fonts.sansSemiBold, fontSize: 11, lineHeight: 14, letterSpacing: 1.1 },
+  /** Small label used above section titles. */
+  eyebrow: { fontFamily: fonts.sansSemiBold, fontSize: 12, lineHeight: 16, letterSpacing: 0.6 },
   bodyLarge: { fontFamily: fonts.sansRegular, fontSize: 17, lineHeight: 26, letterSpacing: 0 },
-  body: { fontFamily: fonts.sansRegular, fontSize: 15, lineHeight: 23, letterSpacing: 0 },
-  bodyStrong: { fontFamily: fonts.sansSemiBold, fontSize: 15, lineHeight: 23, letterSpacing: 0 },
-  label: { fontFamily: fonts.sansMedium, fontSize: 14, lineHeight: 20, letterSpacing: 0 },
-  labelStrong: { fontFamily: fonts.sansSemiBold, fontSize: 14, lineHeight: 20, letterSpacing: 0 },
-  meta: { fontFamily: fonts.sansRegular, fontSize: 13, lineHeight: 18, letterSpacing: 0.1 },
-  metaStrong: { fontFamily: fonts.sansMedium, fontSize: 13, lineHeight: 18, letterSpacing: 0.1 },
-  caption: { fontFamily: fonts.sansRegular, fontSize: 12, lineHeight: 16, letterSpacing: 0.2 },
-  tab: { fontFamily: fonts.sansMedium, fontSize: 10, lineHeight: 13, letterSpacing: 0.4 },
+  body: { fontFamily: fonts.sansRegular, fontSize: 16, lineHeight: 24, letterSpacing: 0 },
+  bodyStrong: { fontFamily: fonts.sansSemiBold, fontSize: 16, lineHeight: 24, letterSpacing: 0 },
+  label: { fontFamily: fonts.sansMedium, fontSize: 15, lineHeight: 20, letterSpacing: 0 },
+  labelStrong: { fontFamily: fonts.sansSemiBold, fontSize: 15, lineHeight: 20, letterSpacing: 0 },
+  meta: { fontFamily: fonts.sansRegular, fontSize: 14, lineHeight: 19, letterSpacing: 0 },
+  metaStrong: { fontFamily: fonts.sansMedium, fontSize: 14, lineHeight: 19, letterSpacing: 0 },
+  caption: { fontFamily: fonts.sansRegular, fontSize: 12, lineHeight: 16, letterSpacing: 0.1 },
+  tab: { fontFamily: fonts.sansMedium, fontSize: 11, lineHeight: 14, letterSpacing: 0.1 },
 } as const;
 
 export type TypeToken = keyof typeof typeScale;

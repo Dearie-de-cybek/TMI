@@ -68,7 +68,7 @@ export function Avatar({
     >
       <Text
         color="primaryOnSoft"
-        style={{ fontFamily: fonts.serifSemiBold, fontSize: dimension * 0.38 }}
+        style={{ fontFamily: fonts.sansBold, fontSize: dimension * 0.38 }}
       >
         {initialsOf(name)}
       </Text>

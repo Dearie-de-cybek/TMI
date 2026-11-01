@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     gap: space.sm,
   },
   initial: {
-    fontFamily: fonts.serifSemiBold,
+    fontFamily: fonts.sansBold,
     fontSize: 26,
     lineHeight: 30,
   },

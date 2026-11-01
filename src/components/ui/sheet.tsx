@@ -53,6 +53,7 @@ export function Sheet({
             { backgroundColor: colors.surface, paddingBottom: insets.bottom + space.lg },
           ]}
         >
+          <View style={[styles.handle, { backgroundColor: colors.borderStrong }]} />
           <View style={[styles.header, { borderBottomColor: colors.border }]}>
             <View style={styles.headerText}>
               <Text variant="headline">{title}</Text>
@@ -94,12 +95,19 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: radius.lg,
     borderTopRightRadius: radius.lg,
   },
+  handle: {
+    alignSelf: 'center',
+    width: 40,
+    height: 4,
+    borderRadius: radius.pill,
+    marginTop: space.md,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: space.md,
     paddingHorizontal: space.gutter,
-    paddingTop: space.xl,
+    paddingTop: space.lg,
     paddingBottom: space.lg,
     borderBottomWidth: hairline,
   },

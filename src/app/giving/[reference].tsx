@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     gap: space.xs,
   },
   amount: {
-    fontFamily: fonts.serifSemiBold,
+    fontFamily: fonts.sansBold,
     fontSize: 34,
     lineHeight: 40,
     marginTop: space.xs,

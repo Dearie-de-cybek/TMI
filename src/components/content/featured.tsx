@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     paddingTop: space.giant,
   },
   featuredTitle: {
-    fontFamily: fonts.serifSemiBold,
+    fontFamily: fonts.sansBold,
     fontSize: 30,
     lineHeight: 35,
     letterSpacing: -0.6,

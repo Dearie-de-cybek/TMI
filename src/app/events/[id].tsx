@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
     gap: space.xs,
   },
   title: {
-    fontFamily: fonts.serifSemiBold,
+    fontFamily: fonts.sansBold,
     fontSize: 27,
     lineHeight: 32,
     letterSpacing: -0.5,

@@ -1,29 +1,31 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { type BottomTabBarProps } from 'expo-router/js-tabs';
 import { Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Icon, type IconName } from '@/components/ui/icon';
 import { Pressable } from '@/components/ui/pressable';
 import { Text } from '@/components/ui/text';
 import { useColors } from '@/design/theme';
 import { hairline, space } from '@/design/tokens';
 
 /**
- * The five primary destinations.
+ * The primary destinations.
  *
- * A custom bar rather than the platform default, because the app's identity
- * lives in its colour and type: parchment ground, hairline rule, forest for the
- * active destination and a short brass indicator above it.
+ * The active one is a solid, filled icon with a bold label; the others are
+ * outlines in grey. Nothing else marks the difference — no underline, no pill —
+ * so the bar stays quiet and the content above it does the talking.
  */
-const icons: Record<string, { active: IconName; label: string }> = {
-  index: { active: 'home', label: 'Home' },
-  discover: { active: 'compass', label: 'Discover' },
-  community: { active: 'users', label: 'Community' },
-  give: { active: 'gift', label: 'Give' },
-  profile: { active: 'user', label: 'Profile' },
+type IoniconName = keyof typeof Ionicons.glyphMap;
+
+const icons: Record<string, { filled: IoniconName; outline: IoniconName; label: string }> = {
+  index: { filled: 'home', outline: 'home-outline', label: 'Home' },
+  discover: { filled: 'compass', outline: 'compass-outline', label: 'Discover' },
+  community: { filled: 'people', outline: 'people-outline', label: 'Community' },
+  give: { filled: 'heart', outline: 'heart-outline', label: 'Give' },
+  profile: { filled: 'person', outline: 'person-outline', label: 'Me' },
 };
 
-export const TAB_BAR_HEIGHT = 56;
+export const TAB_BAR_HEIGHT = 64;
 
 export function ChurchTabBar({ state, descriptors, navigateToTab }: BottomTabBarProps) {
   const colors = useColors();
@@ -43,8 +45,15 @@ export function ChurchTabBar({ state, descriptors, navigateToTab }: BottomTabBar
     >
       {state.routes.map((route, index) => {
         const descriptor = descriptors[route.key];
+        // Screens hidden from the bar (`href: null`) stay reachable by route.
+        if ((descriptor?.options as { href?: string | null } | undefined)?.href === null) return null;
+
         const focused = state.index === index;
-        const config = icons[route.name] ?? { active: 'circle' as IconName, label: route.name };
+        const config = icons[route.name] ?? {
+          filled: 'ellipse' as IoniconName,
+          outline: 'ellipse-outline' as IoniconName,
+          label: route.name,
+        };
         const label =
           typeof descriptor?.options.title === 'string' ? descriptor.options.title : config.label;
 
@@ -59,14 +68,17 @@ export function ChurchTabBar({ state, descriptors, navigateToTab }: BottomTabBar
             onPress={() => navigateToTab(route.key)}
             style={styles.tab}
           >
-            <View
-              style={[
-                styles.indicator,
-                { backgroundColor: focused ? colors.accent : 'transparent' },
-              ]}
+            <Ionicons
+              name={focused ? config.filled : config.outline}
+              size={26}
+              color={focused ? colors.text : colors.textTertiary}
             />
-            <Icon name={config.active} size="md" color={focused ? 'primary' : 'textTertiary'} />
-            <Text variant="tab" color={focused ? 'text' : 'textTertiary'} numberOfLines={1}>
+            <Text
+              variant="tab"
+              color={focused ? 'text' : 'textTertiary'}
+              style={focused ? styles.activeLabel : undefined}
+              numberOfLines={1}
+            >
               {label}
             </Text>
           </Pressable>
@@ -80,20 +92,16 @@ const styles = StyleSheet.create({
   bar: {
     flexDirection: 'row',
     borderTopWidth: hairline,
-    paddingTop: space.xs,
+    paddingTop: space.sm,
   },
   tab: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    gap: 3,
-    minHeight: TAB_BAR_HEIGHT,
-    paddingTop: space.xs,
+    gap: 2,
+    minHeight: TAB_BAR_HEIGHT - space.sm,
   },
-  indicator: {
-    position: 'absolute',
-    top: 0,
-    width: 22,
-    height: 2,
+  activeLabel: {
+    fontWeight: '700',
   },
 });

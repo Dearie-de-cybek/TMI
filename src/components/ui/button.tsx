@@ -7,7 +7,7 @@ import { Icon, type IconName } from './icon';
 import { Pressable } from './pressable';
 import { Text } from './text';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'inverse';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'inverse' | 'brand';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export type ButtonProps = {
@@ -25,12 +25,12 @@ export type ButtonProps = {
   testID?: string;
 };
 
-const heights: Record<ButtonSize, number> = { sm: 38, md: 46, lg: 52 };
+const heights: Record<ButtonSize, number> = { sm: 40, md: 52, lg: 58 };
 
 /**
- * Buttons are rectangular with a 4pt corner — the app has no pill-shaped
- * controls. `primary` is the single filled treatment per screen; supporting
- * actions use `secondary` (hairline) or `ghost` (type only).
+ * Buttons are full pills. `primary` is the single black action per screen;
+ * `secondary` is a soft grey pill beside it; `ghost` is type only; `brand` is
+ * the one place the maroon fills a button (a call to give or to join).
  */
 export function Button({
   label,
@@ -50,35 +50,31 @@ export function Button({
   const inactive = disabled || loading;
 
   const surface: Record<ButtonVariant, ViewStyle> = {
-    primary: { backgroundColor: colors.primary },
-    secondary: {
-      backgroundColor: 'transparent',
-      borderWidth: StyleSheet.hairlineWidth * 2,
-      borderColor: colors.borderStrong,
-    },
+    primary: { backgroundColor: colors.ink },
+    secondary: { backgroundColor: colors.surfaceMuted },
     ghost: { backgroundColor: 'transparent' },
     danger: { backgroundColor: colors.danger },
     inverse: { backgroundColor: colors.surfaceInverse },
+    brand: { backgroundColor: colors.primary },
   };
 
   const labelColor: Record<ButtonVariant, ColorToken> = {
-    primary: 'textOnAccent',
+    primary: 'onInk',
     secondary: 'text',
     ghost: 'primary',
     danger: 'textOnAccent',
     inverse: 'textOnInverse',
+    brand: 'textOnAccent',
   };
 
-  // The filled variants invert their label; in dark mode `primary` is a light
-  // sage so the label has to switch back to ink for contrast.
-  const resolvedLabelColor: ColorToken =
-    variant === 'primary' || variant === 'danger' ? 'textOnAccent' : labelColor[variant];
+  const resolvedLabelColor = labelColor[variant];
+  const filled = variant !== 'secondary' && variant !== 'ghost';
 
   return (
     <Pressable
       onPress={inactive ? undefined : onPress}
       disabled={inactive}
-      haptic={variant === 'primary'}
+      haptic={variant === 'primary' || variant === 'brand'}
       feedback="opacity"
       accessibilityRole="button"
       accessibilityState={{ disabled: inactive, busy: loading }}
@@ -90,7 +86,7 @@ export function Button({
         surface[variant],
         {
           height: heights[size],
-          paddingHorizontal: variant === 'ghost' ? space.sm : space.xl,
+          paddingHorizontal: variant === 'ghost' ? space.md : space.xxl,
           opacity: inactive ? 0.5 : 1,
           alignSelf: fullWidth ? 'stretch' : 'flex-start',
         },
@@ -100,9 +96,7 @@ export function Button({
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={
-            variant === 'primary' || variant === 'danger' ? colors.textOnAccent : colors.primary
-          }
+          color={filled ? colors[resolvedLabelColor] : colors.primary}
         />
       ) : (
         <View style={styles.content}>
@@ -123,7 +117,7 @@ export function Button({
 
 const styles = StyleSheet.create({
   base: {
-    borderRadius: radius.sm,
+    borderRadius: radius.pill,
     alignItems: 'center',
     justifyContent: 'center',
   },

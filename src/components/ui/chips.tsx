@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { useColors } from '@/design/theme';
-import { hairline, radius, space } from '@/design/tokens';
+import { radius, space } from '@/design/tokens';
 
 import { Icon } from './icon';
 import { Pressable } from './pressable';
@@ -43,16 +43,15 @@ export function Chip({
       style={[
         styles.chip,
         {
-          backgroundColor: selected ? colors.primary : 'transparent',
-          borderColor: selected ? colors.primary : colors.border,
+          backgroundColor: selected ? colors.ink : colors.surfaceMuted,
         },
       ]}
     >
-      <Text variant="metaStrong" color={selected ? 'textOnAccent' : 'textSecondary'}>
+      <Text variant="metaStrong" color={selected ? 'onInk' : 'text'}>
         {label}
       </Text>
       {count != null ? (
-        <Text variant="caption" color={selected ? 'textOnAccent' : 'textTertiary'}>
+        <Text variant="caption" color={selected ? 'onInk' : 'textTertiary'}>
           {count}
         </Text>
       ) : null}
@@ -101,7 +100,8 @@ export function ChipRow<T extends string>({
 
 /**
  * Segmented control for switching between views of the same content
- * (for example Transcript / Study notes). Underline rather than a filled pill.
+ * (for example Transcript / Study notes): a grey track with a white pill on the
+ * chosen one.
  */
 export function SegmentedControl<T extends string>({
   options,
@@ -118,7 +118,7 @@ export function SegmentedControl<T extends string>({
 
   return (
     <View
-      style={[styles.segmented, { borderBottomColor: colors.border }]}
+      style={[styles.segmented, { backgroundColor: colors.surfaceMuted }]}
       accessibilityRole="tablist"
       accessibilityLabel={label}
     >
@@ -130,10 +130,11 @@ export function SegmentedControl<T extends string>({
             onPress={() => onChange(option.value)}
             accessibilityRole="tab"
             accessibilityState={{ selected }}
-            feedback="opacity"
+            feedback="none"
             style={[
               styles.segment,
-              { borderBottomColor: selected ? colors.primary : 'transparent' },
+              selected ? { backgroundColor: colors.surface } : null,
+              selected ? styles.segmentSelected : null,
             ]}
           >
             <Text variant="metaStrong" color={selected ? 'text' : 'textSecondary'}>
@@ -184,11 +185,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.xs,
-    paddingHorizontal: space.md,
-    height: 36,
-    minHeight: 36,
-    borderRadius: radius.sm,
-    borderWidth: hairline,
+    paddingHorizontal: space.lg,
+    height: 40,
+    minHeight: 40,
+    borderRadius: radius.pill,
   },
   row: {
     gap: space.sm,
@@ -201,14 +201,22 @@ const styles = StyleSheet.create({
   },
   segmented: {
     flexDirection: 'row',
-    borderBottomWidth: hairline,
+    padding: 4,
+    borderRadius: radius.pill,
   },
   segment: {
-    paddingHorizontal: space.lg,
-    paddingVertical: space.md,
-    borderBottomWidth: 2,
-    minHeight: 48,
+    flex: 1,
+    alignItems: 'center',
     justifyContent: 'center',
+    minHeight: 44,
+    borderRadius: radius.pill,
+  },
+  segmentSelected: {
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
   },
   tag: {
     flexDirection: 'row',

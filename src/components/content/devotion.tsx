@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
     gap: space.sm,
   },
   verseQuote: {
-    fontFamily: fonts.serifSemiBold,
+    fontFamily: fonts.sansBold,
     fontSize: 26,
     lineHeight: 33,
     letterSpacing: -0.4,

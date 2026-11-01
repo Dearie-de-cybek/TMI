@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     gap: space.xs,
   },
   tagline: {
-    fontFamily: fonts.serifSemiBold,
+    fontFamily: fonts.sansBold,
     fontSize: 26,
     lineHeight: 31,
     letterSpacing: -0.5,

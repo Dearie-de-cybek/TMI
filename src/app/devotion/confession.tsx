@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     gap: space.md,
   },
   lead: {
-    fontFamily: fonts.serifSemiBold,
+    fontFamily: fonts.sansBold,
     fontSize: 24,
     lineHeight: 31,
     letterSpacing: -0.3,

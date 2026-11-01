@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.xs,
   },
   dateDay: {
-    fontFamily: fonts.serifSemiBold,
+    fontFamily: fonts.sansBold,
     fontSize: 24,
     lineHeight: 28,
   },
