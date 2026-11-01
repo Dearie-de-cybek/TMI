@@ -57,6 +57,8 @@ export default function ProfileScreen() {
               onPress={() => router.push('/settings/appearance')}
             />
             <Rule inset={space.gutter} />
+            <SettingsRow label="About TwainMan" icon="info" onPress={() => router.push('/about')} />
+            <Rule inset={space.gutter} />
             <SettingsRow label="Help and contact" icon="help-circle" onPress={() => router.push('/settings/help')} />
             <Rule inset={space.gutter} />
             <SettingsRow label="Privacy policy" icon="shield" onPress={() => router.push('/legal/privacy')} />
@@ -162,6 +164,8 @@ export default function ProfileScreen() {
         </Group>
 
         <Group label="Help">
+          <SettingsRow label="About TwainMan" icon="info" onPress={() => router.push('/about')} />
+          <Rule inset={space.gutter} />
           <SettingsRow label="Help and contact" icon="help-circle" onPress={() => router.push('/settings/help')} />
           <Rule inset={space.gutter} />
           <SettingsRow label="Privacy policy" icon="shield" onPress={() => router.push('/legal/privacy')} />

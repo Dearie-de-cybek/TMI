@@ -4,8 +4,8 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Platform, StyleSheet, View } from 'react-native';
 
 import { queryKeys } from '@/api/query-client';
-import { useToast } from '@/components/app/toast';
 import { Button } from '@/components/ui/button';
+import { useDialog } from '@/components/ui/dialog';
 import { Tag } from '@/components/ui/chips';
 import { NavBar } from '@/components/ui/header';
 import { Icon } from '@/components/ui/icon';
@@ -32,7 +32,7 @@ export default function DecreeSectionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const colors = useColors();
-  const toast = useToast();
+  const { celebrate } = useDialog();
 
   useDevotionSync();
 
@@ -96,12 +96,19 @@ export default function DecreeSectionScreen() {
 
     if (next) {
       router.replace(`/devotion/section/${next.id}`);
-    } else if (decree.data?.confession) {
-      toast('Every decree prayed this month.', { tone: 'success', icon: 'check' });
-      router.replace('/devotion/confession');
-    } else {
-      router.replace('/devotion');
+      return;
     }
+
+    // The last decree: every one of them has now been prayed.
+    const destination = decree.data?.confession ? '/devotion/confession' : '/devotion';
+    void celebrate({
+      eyebrow: decree.data?.month_label,
+      title: 'Every decree prayed',
+      message: decree.data?.confession
+        ? 'One thing is left — declare the corporate confession.'
+        : 'Keep returning to them through the month.',
+      confirmLabel: decree.data?.confession ? 'To the confession' : 'Amen',
+    }).then(() => router.replace(destination));
   }
 
   return (

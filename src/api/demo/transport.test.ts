@@ -451,7 +451,7 @@ describe('giving', () => {
 
 describe('search', () => {
   it('covers several content types at once', async () => {
-    const results = await search({ query: 'mercy' });
+    const results = await search({ query: 'discipleship' });
     const kinds = new Set(results.results.map((result) => result.type));
     expect(results.results.length).toBeGreaterThan(1);
     expect(kinds.size).toBeGreaterThan(1);

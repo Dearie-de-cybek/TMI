@@ -122,7 +122,7 @@ function initialState(): DemoState {
     quizAttempts: {},
     eventRegistrations: {},
     prayerRequests: [],
-    groupMemberships: { 'gr-1': 'member' },
+    groupMemberships: {},
     giving: [],
     readAnnouncementIds: [],
     notifications: [

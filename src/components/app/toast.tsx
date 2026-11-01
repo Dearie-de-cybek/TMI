@@ -1,5 +1,13 @@
-import { useEffect, useMemo } from 'react';
-import { Animated, StyleSheet } from 'react-native';
+import { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
+import Animated, {
+  Easing,
+  SlideInUp,
+  SlideOutUp,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { create } from 'zustand';
 
@@ -12,6 +20,9 @@ import { radius, space } from '@/design/tokens';
  * Brief confirmation for an action that succeeded and does not need a screen of
  * its own ("Saved", "Marked as read"). Failures are never shown here — they get
  * an inline error next to the control that failed, so the member can act on it.
+ *
+ * It drops in from the top on a spring, carries a coloured edge and a glyph for
+ * its tone, and a thin line runs down as the time to read it runs out.
  */
 export type ToastTone = 'neutral' | 'success' | 'warning';
 
@@ -24,6 +35,7 @@ type ToastState = {
 };
 
 let nextId = 1;
+const DURATION_MS = 2_800;
 
 export const useToastStore = create<ToastState>((set) => ({
   current: null,
@@ -36,54 +48,67 @@ export function useToast() {
   return useToastStore((state) => state.show);
 }
 
+const defaultIcons: Record<ToastTone, IconName> = {
+  neutral: 'info',
+  success: 'check',
+  warning: 'alert-triangle',
+};
+
 export function ToastHost() {
   const { colors, reduceMotion } = useTheme();
   const insets = useSafeAreaInsets();
   const toast = useToastStore((state) => state.current);
   const dismiss = useToastStore((state) => state.dismiss);
-  // Created once per mount; `useRef().current` would be a ref read during render.
-  const opacity = useMemo(() => new Animated.Value(0), []);
 
   useEffect(() => {
     if (!toast) return;
-    const timer = setTimeout(dismiss, 2_600);
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: reduceMotion ? 0 : 160,
-      useNativeDriver: true,
-    }).start();
-    return () => {
-      clearTimeout(timer);
-      opacity.setValue(0);
-    };
-  }, [dismiss, opacity, reduceMotion, toast]);
+    const timer = setTimeout(dismiss, DURATION_MS);
+    return () => clearTimeout(timer);
+  }, [dismiss, toast]);
 
   if (!toast) return null;
 
-  const background =
-    toast.tone === 'success'
-      ? colors.successSoft
-      : toast.tone === 'warning'
-        ? colors.warningSoft
-        : colors.surfaceInverse;
-  const textColor =
-    toast.tone === 'success' ? 'successOnSoft' : toast.tone === 'warning' ? 'warningOnSoft' : 'textOnInverse';
+  const edge =
+    toast.tone === 'success' ? colors.success : toast.tone === 'warning' ? colors.warning : colors.accentFill;
 
   return (
     <Animated.View
+      key={toast.id}
       pointerEvents="none"
       accessibilityLiveRegion="polite"
+      entering={reduceMotion ? undefined : SlideInUp.springify().damping(15).stiffness(160)}
+      exiting={reduceMotion ? undefined : SlideOutUp.duration(180)}
       style={[
         styles.toast,
-        { backgroundColor: background, bottom: insets.bottom + 72, opacity },
+        {
+          top: insets.top + space.sm,
+          backgroundColor: colors.surfaceInverse,
+        },
       ]}
     >
-      {toast.icon ? <Icon name={toast.icon} size="sm" color={textColor} /> : null}
-      <Text variant="metaStrong" color={textColor} numberOfLines={2} style={styles.label}>
-        {toast.message}
-      </Text>
+      <View style={[styles.edge, { backgroundColor: edge }]} />
+      <View style={styles.row}>
+        <Icon name={toast.icon ?? defaultIcons[toast.tone]} size="md" color="accentFill" />
+        <Text variant="metaStrong" color="textOnInverse" numberOfLines={2} style={styles.label}>
+          {toast.message}
+        </Text>
+      </View>
+      <Countdown color={edge} reduceMotion={reduceMotion} />
     </Animated.View>
   );
+}
+
+function Countdown({ color, reduceMotion }: { color: string; reduceMotion: boolean }) {
+  const progress = useSharedValue(1);
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    progress.value = withTiming(0, { duration: DURATION_MS, easing: Easing.linear });
+  }, [progress, reduceMotion]);
+
+  const animated = useAnimatedStyle(() => ({ width: `${progress.value * 100}%` }));
+
+  return <Animated.View style={[styles.countdown, { backgroundColor: color }, animated]} />;
 }
 
 const styles = StyleSheet.create({
@@ -91,14 +116,33 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: space.gutter,
     right: space.gutter,
+    borderRadius: radius.md,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOpacity: 0.28,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 10,
+  },
+  edge: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 4,
+  },
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: space.sm,
-    paddingHorizontal: space.lg,
-    paddingVertical: space.md,
-    borderRadius: radius.sm,
+    gap: space.md,
+    paddingLeft: space.lg + 4,
+    paddingRight: space.lg,
+    paddingVertical: space.lg,
   },
   label: {
     flex: 1,
+  },
+  countdown: {
+    height: 2,
   },
 });

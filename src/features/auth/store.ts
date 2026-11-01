@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 import { notifyUnauthorized, onUnauthorized, setAuthToken } from '@/api/session';
 import { type Member } from '@/api/schemas';
+import { env } from '@/config/env';
 import { preferences, secureStorage, storageKeys } from '@/lib/storage';
 
 import { fetchMember, signIn, signOutRequest, signUp, type SignInInput, type SignUpInput } from './api';
@@ -66,7 +67,7 @@ export const useAuth = create<AuthState>((set, get) => ({
       preferences.getString(storageKeys.onboardingSeen),
     ]);
 
-    set({ onboardingSeen: onboardingSeen === 'true' });
+    set({ onboardingSeen: !env.alwaysShowWelcome && onboardingSeen === 'true' });
 
     if (!token) {
       set({ status: 'signedOut', member: null });

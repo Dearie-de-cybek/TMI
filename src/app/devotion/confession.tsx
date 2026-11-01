@@ -4,8 +4,8 @@ import { useRouter } from 'expo-router';
 import { Platform, StyleSheet, View } from 'react-native';
 
 import { queryKeys } from '@/api/query-client';
-import { useToast } from '@/components/app/toast';
 import { Button } from '@/components/ui/button';
+import { useDialog } from '@/components/ui/dialog';
 import { NavBar } from '@/components/ui/header';
 import { Icon } from '@/components/ui/icon';
 import { Screen, ScreenScroll } from '@/components/ui/screen';
@@ -31,7 +31,7 @@ import { useDevotionSync } from '@/features/devotion/use-devotion-sync';
 export default function ConfessionScreen() {
   const router = useRouter();
   const colors = useColors();
-  const toast = useToast();
+  const { celebrate } = useDialog();
 
   useDevotionSync();
 
@@ -85,7 +85,11 @@ export default function ConfessionScreen() {
         () => undefined
       );
     }
-    toast('Declared. Come back and say it again tomorrow.', { tone: 'success', icon: 'check' });
+    void celebrate({
+      eyebrow: decree.data?.month_label,
+      title: 'Declared in faith',
+      message: 'Come back and say it again tomorrow. The church declares this through the month.',
+    });
   }
 
   return (

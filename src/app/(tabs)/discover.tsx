@@ -24,6 +24,12 @@ import { fetchSermons } from '@/features/sermons/api';
  */
 const destinations: { href: Href; icon: IconName; title: string; description: string }[] = [
   {
+    href: '/devotion',
+    icon: 'sun',
+    title: 'Prayer and devotion',
+    description: 'The monthly decree, a daily word, and your streak.',
+  },
+  {
     href: '/sermons',
     icon: 'mic',
     title: 'Sermons',
@@ -52,6 +58,12 @@ const destinations: { href: Href; icon: IconName; title: string; description: st
     icon: 'users',
     title: 'Ministries and groups',
     description: 'Where to serve and who to meet.',
+  },
+  {
+    href: '/about',
+    icon: 'info',
+    title: 'About TwainMan',
+    description: 'Who we are, when we meet and what we believe.',
   },
 ];
 

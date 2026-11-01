@@ -5,13 +5,14 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { queryKeys } from '@/api/query-client';
 import { SignInPrompt } from '@/components/app/sign-in-prompt';
 import { TAB_BAR_HEIGHT } from '@/components/app/tab-bar';
-import { DevotionCard } from '@/components/content/devotion';
-import { FeaturedSermon, LiveSessionStrip, ScripturePlate } from '@/components/content/featured';
+import { DevotionCard, VerseCard } from '@/components/content/devotion';
+import { FeaturedSermon, LiveSessionStrip } from '@/components/content/featured';
 import { AnnouncementRow, CourseRow, EventRow, SermonTile } from '@/components/content/rows';
 import { Band } from '@/components/ui/band';
 import { Banner } from '@/components/ui/banner';
 import { PageHeader } from '@/components/ui/header';
 import { Icon } from '@/components/ui/icon';
+import { Rise } from '@/components/ui/motion';
 import { Pressable } from '@/components/ui/pressable';
 import { Rule, Screen, ScreenScroll } from '@/components/ui/screen';
 import { SectionHeader } from '@/components/ui/section';
@@ -21,6 +22,7 @@ import { Text } from '@/components/ui/text';
 import { useColors } from '@/design/theme';
 import { space } from '@/design/tokens';
 import { useAuth } from '@/features/auth/store';
+import { useDevotionProgress } from '@/features/devotion/progress-store';
 import { fetchHomeFeed } from '@/features/home/api';
 
 function greeting(date = new Date()): string {
@@ -57,6 +59,7 @@ export default function HomeScreen() {
   });
 
   const feed = home.data;
+  const readDevotionalIds = useDevotionProgress((state) => state.readDevotionalIds);
   const firstName = feed?.member_first_name ?? member?.name.split(' ')[0] ?? null;
 
   return (
@@ -112,20 +115,44 @@ export default function HomeScreen() {
             ) : null}
           </Band>
 
-          {/* Scripture — the warmest band on the page. */}
+          {/* Scripture — the way into the daily devotional. */}
           {feed.devotional ? (
             <Band tone="accent">
-              <View style={styles.gutter}>
-                <ScripturePlate devotional={feed.devotional} bare />
-              </View>
+              <Rise style={styles.gutter}>
+                <VerseCard
+                  devotional={feed.devotional}
+                  read={readDevotionalIds.includes(feed.devotional.id)}
+                  onPress={() => router.push(`/devotion/devotional/${feed.devotional!.id}`)}
+                />
+                <View style={styles.devotionLinks}>
+                  <Pressable
+                    onPress={() => router.push('/devotion/devotionals')}
+                    accessibilityLabel="Earlier devotionals"
+                    inline
+                  >
+                    <Text variant="labelStrong" color="primary">
+                      Earlier days
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    onPress={() => router.push('/devotion')}
+                    accessibilityLabel="Prayer and devotion"
+                    inline
+                  >
+                    <Text variant="labelStrong" color="primary">
+                      Prayer and devotion
+                    </Text>
+                  </Pressable>
+                </View>
+              </Rise>
             </Band>
           ) : null}
 
           {/* Prayer — where the member left off in this month's decree. */}
           <Band>
-            <View style={styles.gutter}>
+            <Rise delay={80} style={styles.gutter}>
               <DevotionCard />
-            </View>
+            </Rise>
           </Band>
 
           {/* Formation. */}
@@ -271,6 +298,11 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  devotionLinks: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: space.lg,
+  },
   gutter: {
     paddingHorizontal: space.gutter,
   },

@@ -1,11 +1,16 @@
-import { Modal, StyleSheet, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import * as Haptics from 'expo-haptics';
+import { useEffect } from 'react';
+import { Modal, Platform, StyleSheet, View } from 'react-native';
+import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
 import { create } from 'zustand';
 
-import { useColors } from '@/design/theme';
-import { radius, space } from '@/design/tokens';
+import { useTheme } from '@/design/theme';
+import { fonts, radius, space } from '@/design/tokens';
 
 import { Button } from './button';
 import { Icon, type IconName } from './icon';
+import { Confetti } from './motion';
 import { Eyebrow, Text } from './text';
 
 /**
@@ -13,8 +18,9 @@ import { Eyebrow, Text } from './text';
  *
  * `Alert.alert` hands the most consequential moments in the app — signing out,
  * withdrawing a prayer request, asking for an account to be deleted — to a
- * system control that knows nothing about this church. These are ours: the
- * serif title, the gold eyebrow, the purple buttons.
+ * system control that knows nothing about this church. These are ours: a plum
+ * header carrying the serif title, the gold eyebrow, the purple buttons, and a
+ * spring when it arrives. Good news ("celebrate") arrives with confetti.
  *
  * The API stays as easy to call as the one it replaces:
  *
@@ -33,6 +39,8 @@ export type DialogRequest = {
   destructive?: boolean;
   /** A single acknowledge button instead of confirm/cancel. */
   acknowledge?: boolean;
+  /** Good news: gold header, confetti, a success haptic. */
+  celebrate?: boolean;
 };
 
 type DialogState = {
@@ -70,75 +78,113 @@ export function useDialog() {
     /** Shows a single acknowledge button. Always resolves true. */
     notice: (request: Omit<DialogRequest, 'acknowledge' | 'destructive'>) =>
       open({ ...request, acknowledge: true }),
+    /** Good news, with confetti. Always resolves true. */
+    celebrate: (request: Omit<DialogRequest, 'acknowledge' | 'destructive' | 'celebrate'>) =>
+      open({ ...request, acknowledge: true, celebrate: true, confirmLabel: request.confirmLabel ?? 'Amen' }),
   };
 }
 
+function defaultIcon(request: DialogRequest): IconName {
+  if (request.celebrate) return 'award';
+  if (request.destructive) return 'alert-triangle';
+  if (request.acknowledge) return 'info';
+  return 'help-circle';
+}
+
 export function DialogHost() {
-  const colors = useColors();
+  const { colors, reduceMotion } = useTheme();
   const request = useDialogStore((state) => state.request);
   const close = useDialogStore((state) => state.close);
+
+  useEffect(() => {
+    if (request?.celebrate && Platform.OS !== 'web') {
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(
+        () => undefined
+      );
+    }
+  }, [request]);
+
+  const headerColors: [string, string] = request?.destructive
+    ? [colors.dangerOnSoft, colors.danger]
+    : request?.celebrate
+      ? [colors.surfaceInverse, colors.primary]
+      : [colors.surfaceInverse, colors.primary];
 
   return (
     <Modal
       visible={request !== null}
       transparent
-      animationType="fade"
+      animationType="none"
       statusBarTranslucent
       // Android back dismisses as a cancel, like tapping outside would.
       onRequestClose={() => close(false)}
     >
-      <View style={[styles.backdrop, { backgroundColor: colors.overlay }]}>
+      <Animated.View
+        key={request?.id}
+        entering={reduceMotion ? undefined : FadeIn.duration(180)}
+        style={[styles.backdrop, { backgroundColor: colors.overlay }]}
+      >
+        {request?.celebrate ? <Confetti /> : null}
         {request ? (
-          <View
+          <Animated.View
+            key={`card-${request.id}`}
+            entering={reduceMotion ? undefined : ZoomIn.springify().damping(14).stiffness(170)}
             accessibilityViewIsModal
             accessibilityRole="alert"
             style={[styles.card, { backgroundColor: colors.surface }]}
           >
-            {request.icon ? (
-              <View style={styles.iconWrap}>
-                <Icon name={request.icon} size="md" color={request.destructive ? 'danger' : 'primary'} />
-              </View>
-            ) : null}
+            <LinearGradient
+              colors={headerColors}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.header}
+            >
+              <Icon
+                name={request.icon ?? defaultIcon(request)}
+                size="xl"
+                color={request.celebrate ? 'accentFill' : 'textOnInverse'}
+              />
+              {request.eyebrow ? (
+                <Eyebrow style={{ color: colors.accentFill }}>{request.eyebrow}</Eyebrow>
+              ) : null}
+              <Text style={[styles.title, { color: colors.textOnInverse }]}>{request.title}</Text>
+            </LinearGradient>
 
-            {request.eyebrow ? <Eyebrow>{request.eyebrow}</Eyebrow> : null}
+            <View style={styles.body}>
+              {request.message ? (
+                <Text variant="body" color="textSecondary">
+                  {request.message}
+                </Text>
+              ) : null}
 
-            <Text variant="title" style={styles.title}>
-              {request.title}
-            </Text>
-
-            {request.message ? (
-              <Text variant="body" color="textSecondary">
-                {request.message}
-              </Text>
-            ) : null}
-
-            <View style={styles.actions}>
-              {request.acknowledge ? (
-                <Button
-                  label={request.confirmLabel ?? 'Close'}
-                  fullWidth
-                  onPress={() => close(true)}
-                />
-              ) : (
-                <>
+              <View style={styles.actions}>
+                {request.acknowledge ? (
                   <Button
-                    label={request.confirmLabel ?? 'Confirm'}
-                    variant={request.destructive ? 'danger' : 'primary'}
+                    label={request.confirmLabel ?? 'Close'}
                     fullWidth
                     onPress={() => close(true)}
                   />
-                  <Button
-                    label={request.cancelLabel ?? 'Cancel'}
-                    variant="ghost"
-                    fullWidth
-                    onPress={() => close(false)}
-                  />
-                </>
-              )}
+                ) : (
+                  <>
+                    <Button
+                      label={request.confirmLabel ?? 'Confirm'}
+                      variant={request.destructive ? 'danger' : 'primary'}
+                      fullWidth
+                      onPress={() => close(true)}
+                    />
+                    <Button
+                      label={request.cancelLabel ?? 'Cancel'}
+                      variant="ghost"
+                      fullWidth
+                      onPress={() => close(false)}
+                    />
+                  </>
+                )}
+              </View>
             </View>
-          </View>
+          </Animated.View>
         ) : null}
-      </View>
+      </Animated.View>
     </Modal>
   );
 }
@@ -153,18 +199,30 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     maxWidth: 420,
-    padding: space.xxl,
     borderRadius: radius.lg,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    shadowRadius: 24,
+    shadowOffset: { width: 0, height: 12 },
+    elevation: 12,
+  },
+  header: {
+    padding: space.xxl,
     gap: space.sm,
   },
-  iconWrap: {
-    marginBottom: space.xs,
-  },
   title: {
-    marginBottom: space.xxs,
+    fontFamily: fonts.serifSemiBold,
+    fontSize: 26,
+    lineHeight: 31,
+    letterSpacing: -0.5,
+  },
+  body: {
+    padding: space.xxl,
+    gap: space.sm,
   },
   actions: {
-    paddingTop: space.lg,
+    paddingTop: space.sm,
     gap: space.sm,
   },
 });

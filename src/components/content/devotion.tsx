@@ -1,15 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
+import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { queryKeys } from '@/api/query-client';
+import { type Devotional } from '@/api/schemas';
 import { Button } from '@/components/ui/button';
+import { Pressable } from '@/components/ui/pressable';
 
 import { Icon } from '@/components/ui/icon';
 import { ProgressBar } from '@/components/ui/progress';
 import { Eyebrow, Text } from '@/components/ui/text';
 import { useColors } from '@/design/theme';
-import { radius, space } from '@/design/tokens';
+import { fonts, radius, space } from '@/design/tokens';
+import { resolveArtwork } from '@/lib/artwork';
 import { fetchCurrentDecree } from '@/features/devotion/api';
 import { type Milestone } from '@/features/devotion/milestones';
 import { dayKey, useDevotionProgress } from '@/features/devotion/progress-store';
@@ -104,6 +109,65 @@ export function DecreeProgress({
         tone="accent"
       />
     </View>
+  );
+}
+
+/**
+ * The verse of the day: a full-bleed photograph, the verse set large over it,
+ * and a plain invitation to read the devotional. This is the way into the daily
+ * devotional from Home.
+ */
+export function VerseCard({
+  devotional,
+  onPress,
+  read,
+}: {
+  devotional: Devotional;
+  onPress: () => void;
+  read: boolean;
+}) {
+  const colors = useColors();
+  const artwork = resolveArtwork(devotional.artwork_url);
+
+  return (
+    <Pressable
+      onPress={onPress}
+      feedback="opacity"
+      haptic
+      accessibilityLabel={`Today's devotional: ${devotional.title}. ${devotional.scripture_reference}`}
+      style={[styles.verse, { backgroundColor: colors.surfaceInverse }]}
+    >
+      {artwork ? (
+        <Image
+          source={'local' in artwork ? artwork.local : { uri: artwork.uri }}
+          style={StyleSheet.absoluteFill}
+          contentFit="cover"
+          contentPosition="top center"
+          transition={240}
+        />
+      ) : null}
+      <LinearGradient
+        colors={['rgba(27,15,36,0.15)', colors.scrim, colors.scrimStrong]}
+        locations={[0, 0.45, 1]}
+        style={StyleSheet.absoluteFill}
+        pointerEvents="none"
+      />
+      <View style={styles.verseText}>
+        <Eyebrow style={{ color: colors.accentFill }}>Verse of the day</Eyebrow>
+        <Text style={[styles.verseQuote, { color: colors.textOnInverse }]}>
+          “{devotional.scripture_text}”
+        </Text>
+        <Text variant="metaStrong" style={{ color: colors.accentFill }}>
+          {devotional.scripture_reference}
+        </Text>
+        <View style={styles.verseCta}>
+          <Text variant="labelStrong" style={{ color: colors.textOnInverse }}>
+            {read ? 'Read — open again' : `Read today’s devotional: ${devotional.title}`}
+          </Text>
+          <Icon name={read ? 'check' : 'arrow-right'} size="sm" color="accentFill" />
+        </View>
+      </View>
+    </Pressable>
   );
 }
 
@@ -268,6 +332,28 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   progress: {
+    paddingTop: space.md,
+  },
+  verse: {
+    minHeight: 320,
+    justifyContent: 'flex-end',
+    overflow: 'hidden',
+    borderRadius: radius.lg,
+  },
+  verseText: {
+    padding: space.xl,
+    gap: space.sm,
+  },
+  verseQuote: {
+    fontFamily: fonts.serifSemiBold,
+    fontSize: 26,
+    lineHeight: 33,
+    letterSpacing: -0.4,
+  },
+  verseCta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.sm,
     paddingTop: space.md,
   },
   card: {
