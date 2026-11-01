@@ -7,8 +7,8 @@ import { useAuth } from './store';
  * Guards member-only actions.
  *
  * Public content (sermons, events, announcements, groups) stays browsable while
- * signed out; only actions that belong to a member — saving, enrolling, giving,
- * prayer, registration — go through this. It returns false and sends the member
+ * signed out; only actions that belong to a member - saving, enrolling, giving,
+ * prayer, registration - go through this. It returns false and sends the member
  * to sign-in with a reason, so the sign-in screen can say why they are there.
  */
 export function useRequireAuth() {

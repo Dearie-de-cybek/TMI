@@ -23,7 +23,7 @@ import { churchImages } from '@/lib/artwork';
  * First launch.
  *
  * Three photographs of the church, edge to edge, one short line each. The first
- * thing a member should meet is people they recognise, not a logo — so each
+ * thing a member should meet is people they recognise, not a logo - so each
  * slide is the church's own picture filling the screen, with a single idea set
  * large over it. The buttons float on the picture; the sign-up choices wait on
  * the last slide.
@@ -48,7 +48,7 @@ const slides: Slide[] = [
     position: 'center',
     eyebrow: 'TwainMan Ministry International',
     title: 'Welcome to the house',
-    body: 'Services, ministries, notices and giving — all in one place.',
+    body: 'Services, ministries, notices and giving, all in one place.',
     label: 'Members of TwainMan Ministry International worshipping together',
   },
   {

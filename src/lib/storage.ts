@@ -5,11 +5,11 @@ import { Platform } from 'react-native';
 /**
  * Two storage tiers:
  *
- * - `secureStorage` — authentication credentials only. Backed by the iOS keychain
+ * - `secureStorage` - authentication credentials only. Backed by the iOS keychain
  *   and Android keystore. On web there is no equivalent, so it degrades to
  *   `AsyncStorage` and the caller is warned once; web builds are development aids,
  *   not a supported production target for signed-in members.
- * - `preferences`    — non-sensitive member preferences and caches.
+ * - `preferences`    - non-sensitive member preferences and caches.
  *
  * Nothing in here may be used for passwords. Passwords are sent to the API and
  * never persisted on the device.

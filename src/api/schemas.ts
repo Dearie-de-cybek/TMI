@@ -180,7 +180,7 @@ export const devotionalSchema = z.object({
   body: z.string(),
   author: z.string().nullable().optional(),
   artwork_url: z.string().nullable().optional(),
-  /** One question to sit with. Optional — not every devotional has one. */
+  /** One question to sit with. Optional - not every devotional has one. */
   reflection: z.string().nullable().optional(),
 });
 

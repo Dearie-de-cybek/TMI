@@ -75,7 +75,7 @@ export default function GivingStatusScreen() {
         <View style={styles.block}>
           <Banner
             tone="info"
-            message="If you completed a payment, it is safe to close this screen — the church will still receive it. Your giving history will show the confirmed result."
+            message="If you completed a payment, it is safe to close this screen, the church will still receive it. Your giving history will show the confirmed result."
           />
         </View>
       </Screen>

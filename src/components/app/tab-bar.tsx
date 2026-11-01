@@ -12,7 +12,7 @@ import { hairline, space } from '@/design/tokens';
  * The primary destinations.
  *
  * The active one is a solid, filled icon with a bold label; the others are
- * outlines in grey. Nothing else marks the difference — no underline, no pill —
+ * outlines in grey. Nothing else marks the difference, no underline, no pill:
  * so the bar stays quiet and the content above it does the talking.
  */
 type IoniconName = keyof typeof Ionicons.glyphMap;

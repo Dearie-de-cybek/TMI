@@ -67,7 +67,7 @@ export function SermonRow({ sermon, onPress }: { sermon: Sermon; onPress: () => 
 }
 
 /**
- * Events lead with a date plate rather than artwork — the date is the thing a
+ * Events lead with a date plate rather than artwork - the date is the thing a
  * member scans for, and most church events have no image.
  */
 export function EventRow({ event, onPress }: { event: ChurchEvent; onPress: () => void }) {

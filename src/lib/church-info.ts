@@ -43,7 +43,7 @@ export const churchInfo = {
   beliefs: [
     'We believe in the Bible as the infallible Word of God and final authority over all matters of life, time and eternity, and hold the same as the foundation upon which we build all things.',
     'We believe in the efficacy of prayer and all dimensions of prayer as revealed in the Word of God by the Holy Ghost, and hold the same as the very life of this ministry.',
-    'We believe in all the doctrines of Christ, the Captain of our salvation and High Priest of our profession — that is, Holy Communion, Feet Washing, and Anointing with oil.',
+    'We believe in all the doctrines of Christ, the Captain of our salvation and High Priest of our profession, that is, Holy Communion, Feet Washing, and Anointing with oil.',
     'We believe in modesty, moderacy and decency, and all such things that pertain to an exemplary lifestyle of the believer as instructed in God’s Word.',
     'We believe in Jesus Christ as the first begotten of the Father and as the foundation upon which we build.',
     'We believe in the Baptism of Water by immersion and the Baptism of and in the Holy Ghost.',

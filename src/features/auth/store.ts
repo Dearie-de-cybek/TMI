@@ -83,7 +83,7 @@ export const useAuth = create<AuthState>((set, get) => ({
       set({ member });
       await preferences.setJson(storageKeys.authMember, member);
     } catch {
-      // A failed refresh does not sign the member out — the 401 handler does
+      // A failed refresh does not sign the member out - the 401 handler does
       // that, and an offline start should keep the cached session.
     }
   },

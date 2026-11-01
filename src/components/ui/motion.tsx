@@ -40,7 +40,7 @@ export function Rise({
 const PIECES = 28;
 
 /**
- * A burst of confetti for the moments the church would clap — a month of
+ * A burst of confetti for the moments the church would clap - a month of
  * decrees prayed, a milestone reached. Square pieces in the app's own colours,
  * one fall and done.
  */

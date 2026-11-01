@@ -16,8 +16,8 @@ import { Eyebrow, Text } from './text';
 /**
  * The app's own dialogs.
  *
- * `Alert.alert` hands the most consequential moments in the app — signing out,
- * withdrawing a prayer request, asking for an account to be deleted — to a
+ * `Alert.alert` hands the most consequential moments in the app - signing out,
+ * withdrawing a prayer request, asking for an account to be deleted - to a
  * system control that knows nothing about this church. These are ours: a plum
  * header carrying the serif title, the gold eyebrow, the purple buttons, and a
  * spring when it arrives. Good news ("celebrate") arrives with confetti.

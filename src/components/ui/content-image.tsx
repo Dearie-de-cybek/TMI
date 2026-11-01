@@ -13,7 +13,7 @@ import { Text } from './text';
  * The church's photographs carry this app, so almost every slot has one: a URL
  * from the API, or `asset:<key>` for one of the bundled photographs.
  *
- * When there is genuinely nothing, the slot becomes a quiet tonal plate — the
+ * When there is genuinely nothing, the slot becomes a quiet tonal plate - the
  * title's initial in the editorial serif above a gold rule. No invented shapes,
  * no decoration standing in for content.
  */
@@ -54,7 +54,7 @@ export function ContentImage({
   width?: DimensionValue;
   height?: DimensionValue;
   rounded?: boolean;
-  /** Where to anchor the crop — faces usually want `top center`. */
+  /** Where to anchor the crop - faces usually want `top center`. */
   contentPosition?: 'center' | 'top center' | 'bottom center';
   style?: ArtworkStyle;
 }) {

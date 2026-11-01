@@ -92,7 +92,7 @@ function greeting(date = new Date()): string {
  * Home.
  *
  * A long page of unrelated things, so colour divides it into bands you can feel
- * without reading — and the tone means something rather than alternating for
+ * without reading - and the tone means something rather than alternating for
  * decoration:
  *
  *   gold    → Scripture and the daily reading
@@ -270,12 +270,12 @@ export default function HomeScreen() {
             </View>
           ) : null}
 
-          {/* The verse, the teaching, the month's decree — swipe through them. */}
+          {/* The verse, the teaching, the month's decree - swipe through them. */}
           <Rise style={styles.carousel}>
             <HeroCarousel items={heroItems} />
           </Rise>
 
-          {/* Prayer — where the member left off in this month's decree. */}
+          {/* Prayer - where the member left off in this month's decree. */}
           <Rise delay={80} style={[styles.gutter, styles.block]}>
             <DevotionCard />
           </Rise>
@@ -306,7 +306,7 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          {/* Discipleship — teaching by topic. */}
+          {/* Discipleship - teaching by topic. */}
           {topics.length > 0 ? (
             <View style={styles.block}>
               <View style={styles.gutter}>

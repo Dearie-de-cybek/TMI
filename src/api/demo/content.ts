@@ -86,7 +86,7 @@ export const demoSermons: DemoSermon[] = [
     series: demoSeries[0],
     preached_at: at(-3, 9, 30),
     summary:
-      'Mercy in Scripture is rarely tidy. It interrupts a plan, a prejudice, or a schedule — and asks us to stay.',
+      'Mercy in Scripture is rarely tidy. It interrupts a plan, a prejudice, or a schedule, and asks us to stay.',
     description:
       'Opening the series on mercy, we read the parable of the Samaritan traveller slowly, paying attention to what each passer-by was on their way to do. Mercy is not an emotion we wait to feel; it is a decision to be interrupted.',
     topics: ['Mercy', 'Discipleship'],
@@ -210,7 +210,7 @@ export const demoSermons: DemoSermon[] = [
     title: 'Sabbath for People Who Cannot Stop',
     speaker: demoSpeakers[2],
     preached_at: at(-52, 9, 30),
-    summary: 'Rest is commanded, not earned — and that is harder than it sounds.',
+    summary: 'Rest is commanded, not earned, and that is harder than it sounds.',
     description: 'A teaching on sabbath practice for members in demanding work.',
     topics: ['Rest', 'Discipleship'],
     scripture_references: ['Deuteronomy 5:12-15', 'Mark 2:27'],
@@ -297,7 +297,7 @@ export const demoStudyNotes: Record<
     summary:
       'Working from Luke 10, the teaching argues that mercy in Scripture is characteristically an interruption rather than a feeling, and that the parable’s passers-by are portrayed as busy rather than wicked.',
     key_points: [
-      'The priest and Levite are depicted as occupied, not malicious — proximity to religious duty did not produce mercy.',
+      'The priest and Levite are depicted as occupied, not malicious, proximity to religious duty did not produce mercy.',
       'The Samaritan’s response is made of four ordinary, costly actions: looking, crossing, paying and returning.',
       'The parable reframes the lawyer’s question from "who qualifies as my neighbour" to "what will I allow to interrupt me".',
     ],
@@ -307,7 +307,7 @@ export const demoStudyNotes: Record<
     ],
     applications: [
       'Name one interruption this week you would normally route around.',
-      'Decide in advance what you are willing to spend — time or money — when mercy costs something.',
+      'Decide in advance what you are willing to spend (time or money) when mercy costs something.',
     ],
     reflection_questions: [
       'Where has busyness become a respectable reason not to stop?',
@@ -534,7 +534,7 @@ export const demoCourses: DemoCourse[] = [
     requirements: ['A Bible in any translation', 'About 30 minutes of reading each week'],
     cohort: { id: 'ch-1', name: 'Spring cohort', starts_at: at(-21, 18) },
     whatsapp_group_url: 'https://chat.whatsapp.com/sample-foundations-group',
-    whatsapp_group_name: 'Foundations — TwainMan cohort',
+    whatsapp_group_name: 'Foundations: TwainMan cohort',
   },
   {
     id: 'co-2',
@@ -586,9 +586,9 @@ type DemoLesson = {
 };
 
 export const demoModules = [
-  { id: 'mo-1', course_id: 'co-1', title: 'Week 1 — The Gospel', position: 1, summary: null },
-  { id: 'mo-2', course_id: 'co-1', title: 'Week 2 — Scripture', position: 2, summary: null },
-  { id: 'mo-3', course_id: 'co-2', title: 'Module 1 — Facilitating', position: 1, summary: null },
+  { id: 'mo-1', course_id: 'co-1', title: 'Week 1: The Gospel', position: 1, summary: null },
+  { id: 'mo-2', course_id: 'co-1', title: 'Week 2: Scripture', position: 2, summary: null },
+  { id: 'mo-3', course_id: 'co-2', title: 'Module 1: Facilitating', position: 1, summary: null },
 ];
 
 export const demoLessons: DemoLesson[] = [
@@ -606,7 +606,7 @@ export const demoLessons: DemoLesson[] = [
     id: 'ls-2',
     module_id: 'mo-1',
     course_id: 'co-1',
-    title: 'Live session — Q&A on week one',
+    title: 'Live session: Q&A on week one',
     position: 2,
     kind: 'live',
     duration_minutes: 60,
@@ -635,7 +635,7 @@ export const demoLessons: DemoLesson[] = [
     id: 'ls-5',
     module_id: 'mo-2',
     course_id: 'co-1',
-    title: 'Teaching video — Scripture in the early church',
+    title: 'Teaching video: Scripture in the early church',
     position: 2,
     kind: 'video',
     duration_minutes: 18,
@@ -691,7 +691,7 @@ export const demoQuizzes = [
           { id: 'qo-3', label: 'A philosophy of life' },
         ],
         correct: ['qo-2'],
-        explanation: 'Paul lists death, burial, resurrection and appearances — a report, not advice.',
+        explanation: 'Paul lists death, burial, resurrection and appearances, a report, not advice.',
       },
       {
         id: 'qq-2',
@@ -725,7 +725,7 @@ export const demoLiveSessions = [
   {
     id: 'lv-1',
     course_id: 'co-1',
-    title: 'Foundations — Week 3 live session',
+    title: 'Foundations: Week 3 live session',
     starts_at: at(3, 18, 0),
     ends_at: at(3, 19, 0),
     timezone: 'Africa/Lagos',
@@ -736,7 +736,7 @@ export const demoLiveSessions = [
   {
     id: 'lv-2',
     course_id: 'co-1',
-    title: 'Foundations — Week 2 live session',
+    title: 'Foundations: Week 2 live session',
     starts_at: at(-4, 18, 0),
     ends_at: at(-4, 19, 0),
     timezone: 'Africa/Lagos',

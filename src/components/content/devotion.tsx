@@ -21,7 +21,7 @@ import { useDevotionSync } from '@/features/devotion/use-devotion-sync';
  *
  * Seven dots for the last seven days, filled where the member prayed or read.
  * It is deliberately quiet: this is a church, not a fitness app, and a broken
- * streak should read as an invitation rather than a failure — so there is no
+ * streak should read as an invitation rather than a failure - so there is no
  * red, no scolding, and the copy for zero is "start today".
  */
 export function StreakRibbon({
@@ -101,7 +101,7 @@ export function DecreeProgress({
     <View style={styles.progress}>
       <ProgressBar
         value={total === 0 ? 0 : prayed / total}
-        label={`${label} — ${prayed} of ${total}`}
+        label={`${label}: ${prayed} of ${total}`}
         tone="accent"
       />
     </View>
@@ -109,7 +109,7 @@ export function DecreeProgress({
 }
 
 /**
- * Home-screen entry to the month's decree: a maroon card with the month's theme,
+ * Home-screen entry to the month's decree: a purple-and-gold card with the month's theme,
  * one block per decree (gold when prayed), and a single button that resumes at
  * the next one. It answers "where did I stop?" at a glance.
  */
@@ -179,7 +179,7 @@ export function DevotionCard() {
             ? 'Open this month’s decree'
             : prayedCount === 0
               ? 'Begin the first decree'
-              : `Continue — decree ${next.position}`
+              : `Continue to decree ${next.position}`
         }
         variant="light"
         icon="arrow-right"

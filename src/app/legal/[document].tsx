@@ -26,7 +26,7 @@ const documents = {
       'The terms cover your church account, acceptable use of the community areas, and the limits of what the app provides.',
     points: [
       'Your account is personal to you. Do not share your sign-in details.',
-      'Content in the app — teaching, course material, artwork — belongs to the church.',
+      'Content in the app (teaching, course material, artwork) belongs to the church.',
       'The community areas are moderated by the church, which may remove access.',
     ],
   },

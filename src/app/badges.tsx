@@ -34,7 +34,7 @@ export default function BadgesScreen() {
             {earned} of {badges.length}
           </Text>
           <Text variant="body" color="textSecondary">
-            Badges are marks along the way — for praying the monthly decree, reading the daily
+            Badges are marks along the way, for praying the monthly decree, reading the daily
             word and keeping the altar from day to day. There is nothing to lose here: a
             badge, once earned, stays.
           </Text>

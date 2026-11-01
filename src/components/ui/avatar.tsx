@@ -76,7 +76,7 @@ export function DefaultAvatar({
 
 /**
  * Avatars are the only circular element in the app. A photograph if there is
- * one, otherwise one of the default avatars — chosen by `choice` when the person
+ * one, otherwise one of the default avatars - chosen by `choice` when the person
  * has picked one, or by their name so it stays the same every time.
  */
 export function Avatar({

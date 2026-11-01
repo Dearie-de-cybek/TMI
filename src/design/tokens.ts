@@ -1,11 +1,11 @@
 /**
- * TwainMan Ministry International — design tokens.
+ * TwainMan Ministry International - design tokens.
  *
- * One major colour, taken from the church's own logo: a deep maroon. Everything
- * else is neutral — white cards on a light grey page, near-black type, black
- * actions — so the colour in the app comes from the church's photographs and
- * the maroon is saved for the few things that deserve to be noticed: the active
- * tab, links, progress, the streak. Gold survives only as a small highlight.
+ * One major colour, taken from the church's own logo: a deep purple. Everything
+ * else is neutral - white cards on a light grey page, near-black type, black
+ * actions - so the colour in the app comes from the church's photographs and
+ * the purple is saved for the things that deserve to be noticed: buttons, the
+ * active tab, links, progress, the streak. Gold is the highlight beside it.
  *
  * Every pairing below was checked against WCAG AA before it was written down.
  * Only semantic names are consumed by components; raw values live in `palette`.
@@ -29,16 +29,16 @@ const palette = {
   ink300: '#74747B',
   ink200: '#8A8A92',
 
-  // Maroon — the ministry's voice, from the logo.
-  maroon800: '#3D111C',
-  maroon700: '#6B1B2C',
-  maroon600: '#8A2236',
-  maroon500: '#A32D43',
-  maroon300: '#E39AA8',
-  maroon200: '#F0C7CF',
-  maroon100: '#F9E6EA',
+  // Purple - the ministry's voice.
+  purple800: '#2A1342',
+  purple700: '#3A1F49',
+  purple600: '#4A2A5A',
+  purple500: '#5C3570',
+  purple300: '#C4A5D6',
+  purple200: '#D9C4E6',
+  purple100: '#EDE4F2',
 
-  // Gold — the logo's flame. Small highlights only.
+  // Gold - the logo's flame. Small highlights only.
   gold700: '#7A5C1E',
   gold600: '#9A762F',
   gold500: '#D9A441',
@@ -46,7 +46,7 @@ const palette = {
   gold300: '#EBCF93',
   gold100: '#F7EEDA',
 
-  // Status — kept muted so they never compete with the church's own colours.
+  // Status - kept muted so they never compete with the church's own colours.
   clay700: '#8A3128',
   clay600: '#A33B33',
   clay400: '#DE9289',
@@ -65,12 +65,12 @@ const palette = {
 export type ColorScheme = 'light' | 'dark';
 
 /**
- * Semantic colour roles. The two schemes are designed independently — the dark
+ * Semantic colour roles. The two schemes are designed independently - the dark
  * one is a plum-ink reading theme, not an inversion of the light one.
  */
 export const colors = {
   light: {
-    /** Page ground — a light grey that lets white cards lift off it. */
+    /** Page ground - a light grey that lets white cards lift off it. */
     background: palette.paper50,
     /** Cards and reading surfaces. */
     surface: palette.paper0,
@@ -78,10 +78,10 @@ export const colors = {
     surfaceMuted: palette.paper100,
     surfacePressed: palette.paper200,
     /**
-     * The dark plate: the player, the confession, the live strip. A maroon-black
+     * The dark plate: the player, the confession, the live strip. A purple-black
      * in both schemes, so photographs and gold read well on it.
      */
-    surfaceInverse: '#1A0C10',
+    surfaceInverse: '#1B0F24',
 
     text: palette.ink800,
     textSecondary: palette.ink500,
@@ -93,17 +93,17 @@ export const colors = {
     /** Glyph colour on a filled gold control, where white would be too pale. */
     onAccentFill: palette.ink900,
 
-    /** The black of the primary button, and the white label on it. */
-    ink: palette.ink900,
+    /** The strong fill: primary buttons and selected chips, and the label on it. */
+    ink: palette.purple600,
     onInk: palette.white,
 
     border: palette.paper200,
     borderStrong: palette.paper300,
 
-    primary: palette.maroon600,
-    primaryHover: palette.maroon500,
-    primarySoft: palette.maroon100,
-    primaryOnSoft: palette.maroon700,
+    primary: palette.purple600,
+    primaryHover: palette.purple500,
+    primarySoft: palette.purple100,
+    primaryOnSoft: palette.purple700,
 
     accent: palette.gold600,
     accentSoft: palette.gold100,
@@ -112,10 +112,10 @@ export const colors = {
     accentFill: palette.gold500,
 
     /**
-     * Section grounds. Barely tinted — enough to tell one part of a long page
+     * Section grounds. Barely tinted - enough to tell one part of a long page
      * from the next, never enough to shout.
      */
-    bandPrimary: '#F6F0F2',
+    bandPrimary: '#F4F0F7',
     bandAccent: palette.paper100,
     bandNeutral: '#EFEFF1',
 
@@ -130,18 +130,18 @@ export const colors = {
     warningOnSoft: palette.amber700,
 
     /** Scrim over photographs so overlaid type stays legible. */
-    scrim: 'rgba(14, 6, 9, 0.5)',
-    scrimStrong: 'rgba(14, 6, 9, 0.8)',
+    scrim: 'rgba(16, 8, 24, 0.5)',
+    scrimStrong: 'rgba(16, 8, 24, 0.8)',
     skeleton: palette.paper100,
     skeletonHighlight: palette.paper200,
-    overlay: 'rgba(14, 6, 9, 0.5)',
+    overlay: 'rgba(16, 8, 24, 0.5)',
   },
   dark: {
     background: '#0E0E10',
     surface: '#18181B',
     surfaceMuted: palette.ink700,
     surfacePressed: palette.ink600,
-    surfaceInverse: '#2A1319',
+    surfaceInverse: '#2E2039',
 
     text: '#F5F5F6',
     textSecondary: '#B8B8BF',
@@ -151,23 +151,23 @@ export const colors = {
     textOnAccent: palette.ink900,
     onAccentFill: palette.ink900,
 
-    ink: palette.white,
+    ink: palette.gold400,
     onInk: palette.ink900,
 
     border: '#2E2E33',
     borderStrong: '#46464D',
 
-    primary: palette.maroon300,
-    primaryHover: palette.maroon200,
-    primarySoft: '#2B151B',
-    primaryOnSoft: palette.maroon200,
+    primary: palette.purple300,
+    primaryHover: palette.purple200,
+    primarySoft: '#2A1C35',
+    primaryOnSoft: palette.purple200,
 
     accent: palette.gold400,
     accentSoft: '#2E2616',
     accentOnSoft: palette.gold300,
     accentFill: palette.gold400,
 
-    bandPrimary: '#1A1517',
+    bandPrimary: '#1B1722',
     bandAccent: '#141416',
     bandNeutral: '#1C1C1F',
 
@@ -191,7 +191,7 @@ export const colors = {
 
 /**
  * Structural shape of a scheme. Declared as `string` values so the light and
- * dark objects are interchangeable while the key set stays exhaustive — adding a
+ * dark objects are interchangeable while the key set stays exhaustive - adding a
  * role to one scheme and not the other is a compile error.
  */
 export type ThemeColors = { readonly [Role in keyof typeof colors.light]: string };

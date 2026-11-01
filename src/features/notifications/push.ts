@@ -13,8 +13,8 @@ import { loadNotifications, pushEnvironment, pushUnavailableReason } from './mod
  *
  * The permission prompt is never shown on first launch: `settings/notifications`
  * explains what the church sends and the member asks for it. Everything that
- * could fail — no notifications module in this runtime, no device support, a
- * denied prompt, a missing EAS project id — returns a reason the UI can show
+ * could fail - no notifications module in this runtime, no device support, a
+ * denied prompt, a missing EAS project id - returns a reason the UI can show
  * instead of throwing.
  *
  * `expo-notifications` is reached only through `./module`, which loads it lazily;
@@ -78,7 +78,7 @@ export async function registerForPush(appVersion: string): Promise<PushRegistrat
   if (!Device.isDevice) {
     return {
       status: 'unsupported',
-      reason: 'Push notifications need a physical device — a simulator cannot receive them.',
+      reason: 'Push notifications need a physical device, a simulator cannot receive them.',
     };
   }
 

@@ -106,7 +106,7 @@ export function useSermonPlayer(sermon: Sermon | undefined, signedIn: boolean): 
       }
 
       // A stored position can outlive the file it came from (a re-upload, a
-      // shorter edit), so never resume into the last few seconds — start again.
+      // shorter edit), so never resume into the last few seconds - start again.
       const length = status.duration > 0 ? status.duration : null;
       const resumable =
         position >= RESUME_THRESHOLD_SECONDS &&

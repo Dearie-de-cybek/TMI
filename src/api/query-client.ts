@@ -24,7 +24,7 @@ export function createQueryClient(): QueryClient {
         refetchOnWindowFocus: false,
       },
       mutations: {
-        // Mutations are never retried automatically — a repeated POST could
+        // Mutations are never retried automatically - a repeated POST could
         // double-register or double-charge. Members retry explicitly.
         retry: false,
       },

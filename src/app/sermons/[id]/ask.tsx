@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { NavBar } from '@/components/ui/header';
 import { Icon } from '@/components/ui/icon';
 import { Pressable } from '@/components/ui/pressable';
+import { QuoteBlock } from '@/components/ui/quote';
 import { KeyboardAware, Screen } from '@/components/ui/screen';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorState } from '@/components/ui/states';
@@ -228,21 +229,20 @@ function MessageBubble({ message }: { message: AskMessage }) {
         <View style={styles.citations}>
           <Eyebrow color="textTertiary">From the sermon</Eyebrow>
           {message.citations.map((citation, index) => (
-            <View key={index} style={[styles.citation, { borderLeftColor: colors.accent }]}>
-              {citation.start_seconds != null ? (
-                <Text variant="caption" color="accent">
-                  {formatDuration(citation.start_seconds)}
-                </Text>
-              ) : null}
-              <Text variant="quote" color="textSecondary">
-                “{citation.quote}”
-              </Text>
-              {citation.scripture_reference ? (
-                <Text variant="caption" color="textTertiary">
-                  {citation.scripture_reference}
-                </Text>
-              ) : null}
-            </View>
+            <QuoteBlock
+              key={index}
+              compact
+              label={
+                [
+                  citation.start_seconds != null ? formatDuration(citation.start_seconds) : null,
+                  citation.scripture_reference ?? null,
+                ]
+                  .filter(Boolean)
+                  .join(' · ') || undefined
+              }
+            >
+              {citation.quote}
+            </QuoteBlock>
           ))}
         </View>
       ) : null}
@@ -296,11 +296,6 @@ const styles = StyleSheet.create({
   citations: {
     gap: space.sm,
     paddingTop: space.xs,
-  },
-  citation: {
-    borderLeftWidth: 2,
-    paddingLeft: space.md,
-    gap: 2,
   },
   citationNote: {
     paddingTop: 2,

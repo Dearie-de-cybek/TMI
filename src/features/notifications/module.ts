@@ -8,7 +8,7 @@ import type * as NotificationsModule from 'expo-notifications';
  *
  * The package cannot be imported at module scope. Its entry point re-exports
  * `topicSubscription`, which calls `requireNativeModule('ExpoTopicSubscriptionModule')`
- * while the module is being evaluated — so in any runtime without that native
+ * while the module is being evaluated - so in any runtime without that native
  * module (Expo Go, and web) the *import itself* throws. Because the root layout
  * sits above everything, that failure took the whole app down rather than
  * disabling one feature.

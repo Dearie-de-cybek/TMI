@@ -119,7 +119,7 @@ export function CoverTile({
 
 /**
  * A ministry or fellowship card. The card takes its tint from its own photograph
- * — the picture, blurred and washed back, fills the card — so the colour comes
+ * - the picture, blurred and washed back, fills the card - so the colour comes
  * from the church and the interface stays neutral.
  */
 export function MinistryCard({

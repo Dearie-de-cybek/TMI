@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, View } from 'react-native';
@@ -17,7 +18,7 @@ import { joinMeta } from '@/lib/format';
  *
  * With artwork it is full-bleed with an ink scrim; without, it becomes a
  * typographic plate on the inverted forest surface. Both treatments put the
- * serif title first — this is the one place per screen that is allowed to be big.
+ * serif title first - this is the one place per screen that is allowed to be big.
  */
 export function FeaturedSermon({
   sermon,
@@ -96,7 +97,7 @@ export function FeaturedSermon({
 
 /**
  * The daily devotional: Scripture set in the editorial serif on a tonal plate,
- * with the reflection below it. No decoration — the passage is the design.
+ * with the reflection below it. No decoration - the passage is the design.
  */
 export function ScripturePlate({
   devotional,
@@ -153,26 +154,38 @@ export function LiveSessionStrip({
   session: LiveSession;
   onPress: () => void;
 }) {
-  const colors = useColors();
   const soon = isWithinNextHours(session.starts_at, 2);
 
   return (
     <Pressable
       onPress={onPress}
       accessibilityLabel={`${session.title}, ${formatDateTimeWithZone(session.starts_at, session.timezone)}`}
-      style={[styles.live, { backgroundColor: colors.surfaceInverse }]}
+      style={styles.liveWrap}
       feedback="opacity"
     >
-      <View style={[styles.liveDot, { backgroundColor: soon ? colors.accent : colors.textOnInverseSecondary }]} />
-      <View style={styles.liveBody}>
-        <Text variant="metaStrong" color="textOnInverse" numberOfLines={1}>
-          {session.title}
-        </Text>
-        <Text variant="caption" color="textOnInverseSecondary" numberOfLines={1}>
-          {formatDateTimeWithZone(session.starts_at, session.timezone)}
-        </Text>
-      </View>
-      <Icon name="arrow-right" size="sm" color="textOnInverse" />
+      <LinearGradient
+        colors={['#2A1342', '#4A2A5A', '#8A6A2A']}
+        locations={[0, 0.65, 1]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.live}
+      >
+        <View style={styles.liveIcon}>
+          <Ionicons name="videocam" size={22} color="#E3B965" />
+        </View>
+        <View style={styles.liveBody}>
+          <Text variant="caption" style={styles.liveKicker}>
+            {soon ? 'LIVE SOON' : 'LIVE SESSION'}
+          </Text>
+          <Text variant="labelStrong" color="textOnInverse" numberOfLines={1}>
+            {session.title}
+          </Text>
+          <Text variant="caption" color="textOnInverseSecondary" numberOfLines={1}>
+            {formatDateTimeWithZone(session.starts_at, session.timezone)}
+          </Text>
+        </View>
+        <Ionicons name="arrow-forward" size={20} color="#FFFFFF" />
+      </LinearGradient>
     </Pressable>
   );
 }
@@ -244,18 +257,28 @@ const styles = StyleSheet.create({
   plateBody: {
     marginTop: space.xxs,
   },
+  liveWrap: {
+    borderRadius: radius.lg,
+    overflow: 'hidden',
+  },
   live: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.md,
     paddingHorizontal: space.lg,
     paddingVertical: space.md,
-    borderRadius: radius.sm,
   },
-  liveDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+  liveIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: radius.sm,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.14)',
+  },
+  liveKicker: {
+    color: '#E3B965',
+    letterSpacing: 0.8,
   },
   liveBody: {
     flex: 1,

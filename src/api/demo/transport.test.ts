@@ -31,7 +31,7 @@ import { resetDemoState } from './state';
  * Integration tests over the development data provider.
  *
  * They exercise the journeys the brief calls out, through the same typed client
- * and schema validation the screens use — so a demo payload that drifts from the
+ * and schema validation the screens use - so a demo payload that drifts from the
  * API contract fails here rather than in the UI.
  */
 jest.setTimeout(20_000);

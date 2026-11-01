@@ -5,8 +5,8 @@ import { ChurchTabBar } from '@/components/app/tab-bar';
 /**
  * Four destinations in the bar: Home, Discover, Give, Me. Community is a pushed screen
  * at `/community`, reached from Home and Discover, so the bar stays short.
- * Everything else — sermons, courses, events, prayer, announcements, giving
- * history, settings — is reached from these through nested navigation.
+ * Everything else - sermons, courses, events, prayer, announcements, giving
+ * history, settings - is reached from these through nested navigation.
  */
 export default function TabsLayout() {
   return (

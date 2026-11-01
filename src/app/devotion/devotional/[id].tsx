@@ -11,6 +11,7 @@ import { ContentImage } from '@/components/ui/content-image';
 import { NavBar } from '@/components/ui/header';
 import { Icon } from '@/components/ui/icon';
 import { LikeButton } from '@/components/ui/like-button';
+import { QuoteBlock } from '@/components/ui/quote';
 import { Screen, ScreenScroll } from '@/components/ui/screen';
 import { ShareButton } from '@/components/ui/share-button';
 import { SkeletonList } from '@/components/ui/skeleton';
@@ -27,7 +28,7 @@ import { formatDate } from '@/lib/datetime';
  * One day's devotional.
  *
  * The scripture first, then the word, then one question to sit with. Marking it
- * read is a deliberate tap at the end — reading counts toward the streak, so it
+ * read is a deliberate tap at the end - reading counts toward the streak, so it
  * should be something the member chose, not something opening the page did.
  */
 export default function DevotionalScreen() {
@@ -134,16 +135,15 @@ export default function DevotionalScreen() {
         </View>
 
         {item.reflection ? (
-          <View style={[styles.reflection, { borderColor: colors.accent }]}>
-            <Eyebrow>Sit with this</Eyebrow>
-            <Text variant="quote">{item.reflection}</Text>
+          <View style={[styles.gutter, styles.reflection]}>
+            <QuoteBlock label="Sit with this">{item.reflection}</QuoteBlock>
           </View>
         ) : null}
 
         <View style={[styles.gutter, styles.reactions]}>
           <LikeButton id={`devotional-${item.id}`} />
           <ShareButton
-            message={`“${item.scripture_text}”\n— ${item.scripture_reference}\n\n${item.title}`}
+            message={`“${item.scripture_text}”\n${item.scripture_reference}\n\n${item.title}`}
           />
         </View>
 
@@ -197,12 +197,7 @@ const styles = StyleSheet.create({
     marginBottom: space.lg,
   },
   reflection: {
-    marginTop: space.lg,
-    paddingVertical: space.lg,
-    borderLeftWidth: 2,
-    marginHorizontal: space.gutter,
-    paddingLeft: space.lg,
-    gap: space.sm,
+    paddingTop: space.lg,
   },
   reactions: {
     flexDirection: 'row',

@@ -23,8 +23,8 @@ import { fetchQuiz, submitQuizAttempt } from '@/features/learning/api';
 /**
  * A quiz.
  *
- * Answers are marked on the server — correct options are never sent to the
- * device — and the score shown is the one the server returned.
+ * Answers are marked on the server - correct options are never sent to the
+ * device - and the score shown is the one the server returned.
  */
 export default function QuizScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

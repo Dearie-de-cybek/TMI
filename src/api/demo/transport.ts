@@ -227,7 +227,7 @@ function requireMember(state: DemoState) {
 /* -------------------------------------------------------------------------- */
 
 /**
- * Function words and framing words that must not count as a transcript match —
+ * Function words and framing words that must not count as a transcript match -
  * otherwise "which team should I support" matches any segment containing "which".
  */
 const STOP_WORDS = new Set([
@@ -1650,7 +1650,7 @@ const routes: Route[] = [
     pattern: /^\/giving\/transactions$/,
     handler: ({ query, state }) => {
       requireMember(state);
-      // Demo mode shows only what was created in this demo session — never a
+      // Demo mode shows only what was created in this demo session - never a
       // fabricated giving history.
       return paginate(
         state.giving.map((intent) => ({

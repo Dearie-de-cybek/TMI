@@ -26,7 +26,7 @@ type IoniconName = keyof typeof Ionicons.glyphMap;
 /**
  * Discover is the way into everything the church publishes: six quick links,
  * then shelves of covers you can swipe through. The tabs do not try to hold
- * every feature — this screen is the index.
+ * every feature - this screen is the index.
  */
 const quickLinks: { href: Href; icon: IoniconName; title: string }[] = [
   { href: '/devotion', icon: 'sunny-outline', title: 'Devotion' },

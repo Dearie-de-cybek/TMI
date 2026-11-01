@@ -18,7 +18,7 @@ export function fetchGroup(id: string, signal?: AbortSignal): Promise<Group> {
 
 /**
  * Asks to join. Group leaders approve requests, so the result is normally
- * `pending` — the app never shows a member as joined before the server says so.
+ * `pending` - the app never shows a member as joined before the server says so.
  */
 export function requestGroupMembership(id: string): Promise<Group> {
   return apiPost(groupSchema, `/groups/${id}/membership`);

@@ -21,7 +21,7 @@ export function formatMoney(amountMinor: number, currency = 'NGN'): string {
   }
 }
 
-/** Joins non-empty parts with a separator — avoids "·  · " gaps in metadata rows. */
+/** Joins non-empty parts with a separator - avoids "·  · " gaps in metadata rows. */
 export function joinMeta(parts: (string | null | undefined | false)[], separator = ' · '): string {
   return parts.filter((part): part is string => Boolean(part && part.length > 0)).join(separator);
 }
@@ -74,7 +74,7 @@ const givingStatusLabels: Record<string, { label: string; description: string }>
   failed: { label: 'Failed', description: 'The payment did not go through. Nothing was taken.' },
   cancelled: { label: 'Cancelled', description: 'This gift was cancelled before payment.' },
   demo_not_processed: {
-    label: 'Demo — not processed',
+    label: 'Demo: not processed',
     description: 'Demo mode does not take payments. No money was moved.',
   },
 };

@@ -4,7 +4,7 @@ import { type Href } from 'expo-router';
  * Deep-link handling.
  *
  * Links arrive from push notifications, announcements and the notification
- * centre — all of them server-supplied strings. They are checked against an
+ * centre - all of them server-supplied strings. They are checked against an
  * allowlist of in-app prefixes before being handed to the router, so a
  * malformed or hostile payload cannot push an arbitrary URL or an external
  * scheme into the app.

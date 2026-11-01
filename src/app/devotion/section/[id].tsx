@@ -27,7 +27,7 @@ import { useDevotionSync } from '@/features/devotion/use-devotion-sync';
  *
  * Everything that is not the words is pushed out of the way: no artwork, no
  * cards, a long measure and a generous line height. The only control is at the
- * bottom — "Amen, I have prayed this" — and taking it moves straight to the
+ * bottom - "Amen, I have prayed this" - and taking it moves straight to the
  * next decree, so a member can pray through without hunting for a back button.
  */
 export default function DecreeSectionScreen() {
@@ -107,7 +107,7 @@ export default function DecreeSectionScreen() {
       eyebrow: decree.data?.month_label,
       title: 'Every decree prayed',
       message: decree.data?.confession
-        ? 'One thing is left — declare the corporate confession.'
+        ? 'One thing is left: declare the corporate confession.'
         : 'Keep returning to them through the month.',
       confirmLabel: decree.data?.confession ? 'To the confession' : 'Amen',
     }).then(() => router.replace(destination));
@@ -153,7 +153,7 @@ export default function DecreeSectionScreen() {
         <View style={styles.reactions}>
           <LikeButton id={`decree-${section.id}`} />
           <ShareButton
-            message={`${section.title}\n${decree.data.theme} — ${decree.data.month_label}\n\n${section.body[0] ?? ''}`}
+            message={`${section.title}\n${decree.data.theme}, ${decree.data.month_label}\n\n${section.body[0] ?? ''}`}
           />
         </View>
 
@@ -168,7 +168,7 @@ export default function DecreeSectionScreen() {
               </View>
               {next ? (
                 <Button
-                  label={`Next — decree ${next.position}`}
+                  label={`Next: decree ${next.position}`}
                   icon="arrow-right"
                   iconPosition="trailing"
                   fullWidth
@@ -191,7 +191,7 @@ export default function DecreeSectionScreen() {
               />
             </>
           ) : (
-            <Button label="Amen — I have prayed this" icon="heart" fullWidth onPress={markAndAdvance} />
+            <Button label="Amen, I have prayed this" icon="heart" fullWidth onPress={markAndAdvance} />
           )}
 
           <View style={styles.navRow}>

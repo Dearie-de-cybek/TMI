@@ -97,7 +97,7 @@ export default function AppearanceSettingsScreen() {
           <SectionHeader title="Text size" />
           <Text variant="body" color="textSecondary">
             TwainMan Ministry follows the text size you set for your whole device, so changing it
-            there changes it here. Reading screens — sermons, transcripts, lessons — are laid out to
+            there changes it here. Reading screens (sermons, transcripts, lessons) are laid out to
             stay readable at the largest sizes.
           </Text>
           <Text variant="caption" color="textTertiary">

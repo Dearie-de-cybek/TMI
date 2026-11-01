@@ -35,7 +35,7 @@ import { pluralise } from '@/lib/format';
  * Me.
  *
  * Who you are, how you are keeping the altar, and everything you have made your
- * own — in that order. The numbers sit in white cards, the lists are grouped
+ * own - in that order. The numbers sit in white cards, the lists are grouped
  * rounded blocks, and the one coloured thing is the streak. A Give button stays
  * pinned under the lists.
  */
@@ -292,7 +292,7 @@ export default function ProfileScreen() {
         <Text variant="meta" color="textSecondary" style={styles.stickyCopy}>
           The work of the house is carried by people like you.
         </Text>
-        <Button label="Give" icon="heart" size="lg" fullWidth onPress={() => router.push('/give')} />
+        <Button label="Give" variant="gold" icon="heart" size="lg" fullWidth onPress={() => router.push('/give')} />
       </View>
     </Screen>
   );

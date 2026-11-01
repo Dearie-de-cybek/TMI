@@ -19,7 +19,7 @@ import { accessCodeSchema, validate } from '@/lib/validation';
  * One-time access code activation.
  *
  * The code is sent to the server, which validates it, checks eligibility and
- * consumes it. The app only renders the outcome — it never decides whether a
+ * consumes it. The app only renders the outcome - it never decides whether a
  * code is valid, and a successful screen here always means the server granted
  * the enrolment.
  */
@@ -30,7 +30,7 @@ const outcomeMessages: Record<string, { title: string; message: string }> = {
   },
   access_code_expired: {
     title: 'That code has expired',
-    message: 'Ask the discipleship team for a new one — codes are issued per cohort.',
+    message: 'Ask the discipleship team for a new one, codes are issued per cohort.',
   },
   access_code_used: {
     title: 'That code has already been used',
@@ -143,7 +143,7 @@ export default function ActivateCourseScreen() {
         <Banner
           tone="info"
           title="Demo codes"
-          message="KH-LEAD-2026 is accepted. KH-LEAD-OLD1 is expired, KH-LEAD-USED is already used, and KH-FOUND-123 is not eligible — so each outcome can be checked."
+          message="KH-LEAD-2026 is accepted. KH-LEAD-OLD1 is expired, KH-LEAD-USED is already used, and KH-FOUND-123 is not eligible, so each outcome can be checked."
         />
       ) : null}
     </AuthShell>

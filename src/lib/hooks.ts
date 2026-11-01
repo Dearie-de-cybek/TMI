@@ -16,7 +16,7 @@ export function useDebouncedValue<T>(value: T, delayMs = 300): T {
   return debounced;
 }
 
-/** Runs an effect only after the first render — useful for "on change" saves. */
+/** Runs an effect only after the first render - useful for "on change" saves. */
 export function useUpdateEffect(effect: () => void | (() => void), deps: unknown[]): void {
   const mounted = useRef(false);
 

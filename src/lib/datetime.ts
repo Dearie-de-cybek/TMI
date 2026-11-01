@@ -3,7 +3,7 @@
  *
  * All timestamps from the API are ISO-8601 in UTC. Events additionally carry the
  * IANA zone the church scheduled them in, so an event is shown in the church's
- * zone with the abbreviation attached — a member travelling abroad still reads
+ * zone with the abbreviation attached - a member travelling abroad still reads
  * the right start time, and the zone is never silently assumed.
  */
 
@@ -35,7 +35,7 @@ export function formatDate(iso: string | null | undefined, timeZone?: string | n
   return safeFormat(date, { day: 'numeric', month: 'long', year: 'numeric' }, timeZone);
 }
 
-/** "Thu 12 Mar" — compact form for rows and chips. */
+/** "Thu 12 Mar" - compact form for rows and chips. */
 export function formatDateShort(iso: string | null | undefined, timeZone?: string | null): string {
   const date = toDate(iso);
   if (!date) return '';
@@ -145,7 +145,7 @@ export function isWithinNextHours(
   return diff >= 0 && diff <= hours * 3_600_000;
 }
 
-/** "42:10" or "1:02:30" — for media positions and durations. */
+/** "42:10" or "1:02:30" - for media positions and durations. */
 export function formatDuration(totalSeconds: number | null | undefined): string {
   if (totalSeconds == null || !Number.isFinite(totalSeconds) || totalSeconds < 0) return '--:--';
   const seconds = Math.floor(totalSeconds % 60);
@@ -155,7 +155,7 @@ export function formatDuration(totalSeconds: number | null | undefined): string 
   return hours > 0 ? `${hours}:${pad(minutes)}:${pad(seconds)}` : `${minutes}:${pad(seconds)}`;
 }
 
-/** "38 min" — rough length for list metadata. */
+/** "38 min" - rough length for list metadata. */
 export function formatMinutes(seconds: number | null | undefined): string {
   if (seconds == null || !Number.isFinite(seconds) || seconds <= 0) return '';
   const minutes = Math.round(seconds / 60);

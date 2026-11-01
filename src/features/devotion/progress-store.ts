@@ -7,7 +7,7 @@ import { preferences, storageKeys } from '@/lib/storage';
  * What the member has prayed and read.
  *
  * Held on the device first. Praying happens on a bus, in a bedroom at 5am, on a
- * phone with no signal — so ticking a decree must never depend on a request
+ * phone with no signal - so ticking a decree must never depend on a request
  * succeeding. When the member is signed in the store is mirrored to the backend
  * (`features/devotion/api.ts`), which is what carries it between devices.
  *

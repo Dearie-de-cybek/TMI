@@ -48,7 +48,7 @@ export default function LessonScreen() {
     onSuccess: (progress) => {
       toast(
         progress.certificate_issued
-          ? 'Course complete — the church has issued your certificate.'
+          ? 'Course complete. The church has issued your certificate.'
           : `Lesson complete. ${progress.enrollment.completed_lessons} of ${progress.enrollment.total_lessons} done.`,
         { tone: 'success', icon: 'award' }
       );

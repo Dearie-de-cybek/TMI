@@ -25,8 +25,8 @@ import { useDevotionSync } from '@/features/devotion/use-devotion-sync';
  * set like a page to be read from: the plum plate, large serif lines, one
  * declaration per line, nothing else on the screen competing for attention.
  *
- * It can be declared again each day — the church says it daily through the
- * month — so the button resets every morning rather than locking after once.
+ * It can be declared again each day - the church says it daily through the
+ * month - so the button resets every morning rather than locking after once.
  */
 export default function ConfessionScreen() {
   const router = useRouter();

@@ -4,7 +4,7 @@ import { z } from 'zod';
  * Form validation.
  *
  * Schemas live here rather than in screens so the rules are unit-testable and
- * the messages stay consistent. Server-side validation is authoritative — these
+ * the messages stay consistent. Server-side validation is authoritative - these
  * checks only save the member a round trip.
  */
 

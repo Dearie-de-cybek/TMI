@@ -35,7 +35,7 @@ export function NoticeStrip() {
       >
         <Icon name="tool" size="xs" color="accentOnSoft" />
         <Text variant="caption" color="accentOnSoft" style={styles.label} numberOfLines={1}>
-          Demo data — nothing here is saved to the church server
+          Demo data: nothing here is saved to the church server
           {offline ? ' · offline' : ''}
         </Text>
         {env.allowModeSwitch ? <Icon name="chevron-right" size="xs" color="accentOnSoft" /> : null}

@@ -15,7 +15,7 @@ export type PressableProps = Omit<RNPressableProps, 'style'> & {
   style?: StyleProp<ViewStyle>;
   /** Style merged in while the press is active. Defaults to a tonal fill. */
   pressedStyle?: StyleProp<ViewStyle>;
-  /** Opacity feedback instead of a tonal fill — used over imagery. */
+  /** Opacity feedback instead of a tonal fill - used over imagery. */
   feedback?: 'tonal' | 'opacity' | 'none';
   haptic?: boolean;
   /** Skips the 44pt minimum height, for inline text links inside paragraphs. */

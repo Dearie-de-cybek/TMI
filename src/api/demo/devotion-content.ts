@@ -219,7 +219,7 @@ export const demoDecree = {
   ],
   confession: {
     title: 'Our corporate prophetic confession',
-    lead: 'NOVEMBER — MY MONTH OF TAKING CAPTIVITY CAPTIVE!',
+    lead: 'NOVEMBER: MY MONTH OF TAKING CAPTIVITY CAPTIVE!',
     lines: [
       'I AM NOT A CAPTIVE; I AM A CONQUEROR!',
       'I shall not be stranded; I shall be strategically positioned.',
@@ -249,7 +249,7 @@ export const demoDevotionals = [
     title: 'Enough for Today',
     scripture_reference: 'Matthew 6:11',
     scripture_text: 'Give us this day our daily bread.',
-    body: 'The prayer is for today. Not for the quarter, not for the five-year plan. Daily bread is a discipline of trust as much as a request for provision — it asks us to come back tomorrow.\n\nAsk the Father for what today needs. Then come back in the morning and ask again. That returning is the point.',
+    body: 'The prayer is for today. Not for the quarter, not for the five-year plan. Daily bread is a discipline of trust as much as a request for provision, it asks us to come back tomorrow.\n\nAsk the Father for what today needs. Then come back in the morning and ask again. That returning is the point.',
     author: null,
     artwork_url: 'asset:prayerQuiet',
     reflection: 'What is the one thing today needs that you have been trying to secure for the whole year?',
@@ -261,7 +261,7 @@ export const demoDevotionals = [
     scripture_reference: 'Ephesians 4:8',
     scripture_text:
       'When he ascended on high, he led captivity captive, and gave gifts unto men.',
-    body: 'Notice the order. The ascent came first, then the captives were led, then the gifts were given. What held you did not simply lose its grip — it was taken.\n\nThis month, do not only pray to be free. Pray as one whose freedom has already been purchased, and who is now being handed gifts.',
+    body: 'Notice the order. The ascent came first, then the captives were led, then the gifts were given. What held you did not simply lose its grip, it was taken.\n\nThis month, do not only pray to be free. Pray as one whose freedom has already been purchased, and who is now being handed gifts.',
     author: null,
     artwork_url: 'asset:praiseShout',
     reflection: 'Name one thing you have been asking to escape. Thank God for it as something already taken captive.',

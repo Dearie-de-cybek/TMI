@@ -45,7 +45,7 @@ const categories: { key: keyof NotificationPreferences; label: string; hint: str
  * Notification settings.
  *
  * The permission prompt is only ever raised from the button here, after the
- * member has read what the church sends — never on first launch. A denied
+ * member has read what the church sends - never on first launch. A denied
  * prompt is explained with the route to the OS settings, not re-asked.
  */
 export default function NotificationSettingsScreen() {

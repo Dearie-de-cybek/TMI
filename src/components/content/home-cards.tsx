@@ -190,7 +190,7 @@ export function VerseHero({
   const resolved = resolveArtwork(artwork);
 
   function share() {
-    void Share.share({ message: `“${verse}”\n— ${reference}\n\nTwainMan Ministry International` }).catch(
+    void Share.share({ message: `“${verse}”\n${reference}\n\nTwainMan Ministry International` }).catch(
       () => undefined
     );
   }
@@ -259,7 +259,7 @@ export function VerseHero({
   );
 }
 
-const tileColors = ['#B3392F', '#4A2C5C', '#0B7A75', '#2D5B8C', '#7A7A1F', '#8A2236', '#C26A1B', '#3B4CB8'];
+const tileColors = ['#B3392F', '#4A2C5C', '#0B7A75', '#2D5B8C', '#9A762F', '#6B3FA0', '#C26A1B', '#3B4CB8'];
 
 const topicIcons: Record<string, keyof typeof Ionicons.glyphMap> = {
   prayer: 'heart',

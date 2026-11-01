@@ -5,7 +5,7 @@
  * is what both `expo-image` and `Image` accept directly.
  *
  * Every file here is resized from the church's original into the size the app
- * actually displays — the originals run to 2560px and 700KB apiece, which have
+ * actually displays - the originals run to 2560px and 700KB apiece, which have
  * no business in a phone bundle. Originals are kept in `assets/images/church/`
  * for re-cropping.
  *
@@ -16,7 +16,7 @@
  * is how the app looks right before the backend exists.
  */
 export const churchImages = {
-  /** The congregation dancing — the welcome screen and the featured teaching. */
+  /** The congregation dancing - the welcome screen and the featured teaching. */
   congregationPortrait: require('@/assets/images/church/congregation-portrait.jpg') as number,
   congregationBanner: require('@/assets/images/church/congregation-banner.jpg') as number,
 
@@ -36,7 +36,7 @@ export const churchImages = {
   worshipSinging: require('@/assets/images/church/lib/worship-singing.jpg') as number,
   worshipWoman: require('@/assets/images/church/lib/worship-woman.jpg') as number,
 
-  /** Prayer — the decrees, the devotional, the prayer screens. */
+  /** Prayer - the decrees, the devotional, the prayer screens. */
   prayerCongregation: require('@/assets/images/church/lib/prayer-congregation.jpg') as number,
   prayerHandsRaised: require('@/assets/images/church/lib/prayer-hands-raised.jpg') as number,
   prayerWeeping: require('@/assets/images/church/lib/prayer-weeping.jpg') as number,

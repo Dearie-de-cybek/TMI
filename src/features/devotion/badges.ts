@@ -11,7 +11,7 @@ import { useDevotionProgress, type DevotionSnapshot } from './progress-store';
  *
  * Each one is a marker the member reaches by praying or reading, never a score to
  * lose. All of them derive from the progress snapshot, so there is nothing extra
- * to store or sync. Every badge is listed — earned or not — with what it is for,
+ * to store or sync. Every badge is listed - earned or not - with what it is for,
  * so a member always knows what is there to reach.
  */
 export type Badge = {
@@ -98,7 +98,7 @@ const definitions: Definition[] = [
     icon: 'flash',
     rim: '#C23A3A',
     face: '#F6C9C9',
-    description: () => 'Keep the altar seven days in a row — pray a decree or read the word each day.',
+    description: () => 'Keep the altar seven days in a row, pray a decree or read the word each day.',
     progress: (state) => ({ count: state.longestStreakDays, target: 7 }),
   },
   {

@@ -23,7 +23,7 @@ import {
  *
  * A streak only means something if the member is gently called back to it, so
  * this is where they choose when. Nothing is scheduled until a switch is turned
- * on, and the permission prompt appears then — not before.
+ * on, and the permission prompt appears then - not before.
  */
 export default function RemindersScreen() {
   const toast = useToast();

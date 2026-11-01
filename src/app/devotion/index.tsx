@@ -14,6 +14,7 @@ import { Band } from '@/components/ui/band';
 import { NavBar } from '@/components/ui/header';
 import { Icon } from '@/components/ui/icon';
 import { Pressable } from '@/components/ui/pressable';
+import { QuoteBlock } from '@/components/ui/quote';
 import { Rule, Screen, ScreenScroll } from '@/components/ui/screen';
 import { SectionHeader } from '@/components/ui/section';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -33,7 +34,7 @@ import { formatDate } from '@/lib/datetime';
  *
  * One place for the two rhythms the church keeps: the word for today, and the
  * decree for the month. The screen's job is to answer "where did I stop?" in
- * the first second — the streak, how far through the decrees you are, and a
+ * the first second - the streak, how far through the decrees you are, and a
  * single button that takes you to the next one you have not prayed.
  */
 export default function DevotionScreen() {
@@ -148,7 +149,7 @@ export default function DevotionScreen() {
                     label={
                       prayedCount === 0
                         ? 'Begin the first decree'
-                        : `Continue — decree ${nextSection.position}`
+                        : `Continue to decree ${nextSection.position}`
                     }
                     icon="arrow-right"
                     iconPosition="trailing"
@@ -183,7 +184,7 @@ export default function DevotionScreen() {
                   tone="success"
                   icon="award"
                   title="You have prayed every decree this month"
-                  message="Keep returning to them — the month is not over, and a decree prayed once is not a decree prayed through."
+                  message="Keep returning to them, the month is not over, and a decree prayed once is not a decree prayed through."
                 />
               </View>
             ) : null}
@@ -238,16 +239,14 @@ export default function DevotionScreen() {
           </Band>
 
           <View style={styles.gutter}>
-            <SectionHeader eyebrow="From the desk" title={decree.data.author} />
+            <SectionHeader title="From the desk" />
             {decree.data.closing_word ? (
-              <Text variant="bodyLarge" style={styles.closing}>
+              <QuoteBlock
+                attribution={`${decree.data.author}${decree.data.author_role ? `, ${decree.data.author_role}` : ''}`}
+              >
                 {decree.data.closing_word}
-              </Text>
+              </QuoteBlock>
             ) : null}
-            <Text variant="caption" color="textTertiary" style={styles.byline}>
-              {decree.data.author}
-              {decree.data.author_role ? ` · ${decree.data.author_role}` : ''}
-            </Text>
           </View>
 
           <Rule style={styles.footerRule} />

@@ -125,7 +125,7 @@ export default function EventDetailScreen() {
             onPress: () => {
               void Share.share({
                 title: data.title,
-                message: `${data.title} — ${formatDate(data.starts_at, data.timezone)}, TwainMan Ministry`,
+                message: `${data.title}, ${formatDate(data.starts_at, data.timezone)}, TwainMan Ministry`,
               }).catch(() => undefined);
             },
           },
@@ -227,7 +227,7 @@ export default function EventDetailScreen() {
             <Banner
               tone="info"
               icon="info"
-              message="No registration needed — come along."
+              message="No registration needed, come along."
             />
           )}
 

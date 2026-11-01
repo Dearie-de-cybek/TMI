@@ -11,7 +11,7 @@ import { useDevotionProgress } from './progress-store';
  * The device leads. On sign-in the server's copy is merged in (union, never
  * subtraction), and afterwards changes are pushed up on a short debounce.
  * Every failure here is swallowed on purpose: a dropped request must never
- * interrupt someone mid-prayer, and nothing is lost — the device still holds it.
+ * interrupt someone mid-prayer, and nothing is lost - the device still holds it.
  */
 const PUSH_DELAY_MS = 1_500;
 

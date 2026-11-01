@@ -10,7 +10,7 @@ import { radius, space } from '@/design/tokens';
 /**
  * Sermon and lesson video.
  *
- * Uses the platform's own controls — members already know them, and they handle
+ * Uses the platform's own controls - members already know them, and they handle
  * seeking, captions, AirPlay and full screen better than a hand-rolled bar.
  * The surrounding frame only adds the load/error states.
  */

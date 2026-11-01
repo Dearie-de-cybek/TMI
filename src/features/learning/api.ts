@@ -61,7 +61,7 @@ export function enrollInCourse(id: string): Promise<EnrollmentResult> {
 /**
  * Redeems a one-time access code.
  *
- * Validation and consumption happen on the server — the app only forwards what
+ * Validation and consumption happen on the server - the app only forwards what
  * the member typed and renders whichever outcome comes back (invalid, expired,
  * already used, not eligible, or granted).
  */

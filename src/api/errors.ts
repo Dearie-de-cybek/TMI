@@ -116,7 +116,7 @@ function defaultMessageFor(kind: ApiErrorKind): string {
 type Presentation = { title: string; message: string };
 
 /**
- * Member-facing copy. Each entry says what happened and what to do next —
+ * Member-facing copy. Each entry says what happened and what to do next -
  * never a status code, and never "something went wrong".
  */
 const presentation: Record<ApiErrorKind, Presentation> = {

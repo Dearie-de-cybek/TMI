@@ -7,7 +7,7 @@ import { Icon, type IconName } from './icon';
 import { Pressable } from './pressable';
 import { Text } from './text';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'inverse' | 'brand' | 'light' | 'glass' | 'ghostLight';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'inverse' | 'brand' | 'gold' | 'light' | 'glass' | 'ghostLight';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export type ButtonProps = {
@@ -28,9 +28,9 @@ export type ButtonProps = {
 const heights: Record<ButtonSize, number> = { sm: 40, md: 52, lg: 58 };
 
 /**
- * Buttons are full pills. `primary` is the single black action per screen;
- * `secondary` is a soft grey pill beside it; `ghost` is type only; `brand` is
- * the one place the maroon fills a button (a call to give or to join).
+ * Buttons are full pills. `primary` is the single purple action per screen;
+ * `gold` is the warm alternative for a call to give or to join; `secondary` is a
+ * soft grey pill beside them; `ghost` is type only.
  */
 export function Button({
   label,
@@ -56,6 +56,7 @@ export function Button({
     danger: { backgroundColor: colors.danger },
     inverse: { backgroundColor: colors.surfaceInverse },
     brand: { backgroundColor: colors.primary },
+    gold: { backgroundColor: colors.accentFill },
     light: { backgroundColor: '#FFFFFF' },
     glass: { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
     ghostLight: { backgroundColor: 'transparent' },
@@ -68,6 +69,7 @@ export function Button({
     danger: 'textOnAccent',
     inverse: 'textOnInverse',
     brand: 'textOnAccent',
+    gold: 'onAccentFill',
     light: 'onAccentFill',
     glass: 'textOnInverse',
     ghostLight: 'textOnInverse',
@@ -80,7 +82,7 @@ export function Button({
     <Pressable
       onPress={inactive ? undefined : onPress}
       disabled={inactive}
-      haptic={variant === 'primary' || variant === 'brand'}
+      haptic={variant === 'primary' || variant === 'brand' || variant === 'gold'}
       feedback="opacity"
       accessibilityRole="button"
       accessibilityState={{ disabled: inactive, busy: loading }}

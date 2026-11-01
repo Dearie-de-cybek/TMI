@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { preferences, storageKeys } from '@/lib/storage';
 
 /**
- * What the member has liked — verses, devotionals — kept on the device.
+ * What the member has liked - verses, devotionals - kept on the device.
  *
  * There is no like count here on purpose: a count would be invented by the app,
  * and the backend does not provide one. When it does, the count belongs next to

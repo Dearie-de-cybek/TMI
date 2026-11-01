@@ -45,7 +45,7 @@ const typeFilters: { value: SearchType; label: string }[] = [
  *
  * The query goes to the server, so results cover everything published rather
  * than whatever a screen had already loaded. Results keep the layout of their
- * own content type — a sermon still looks like a sermon.
+ * own content type - a sermon still looks like a sermon.
  */
 export default function SearchScreen() {
   const router = useRouter();

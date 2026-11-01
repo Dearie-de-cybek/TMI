@@ -10,7 +10,7 @@ import { Text } from './text';
 /**
  * The recurring section head: a bold title, and an optional "See all ›" link on
  * the right. Used on Home, Discover and detail screens. The `eyebrow` prop is
- * kept for callers that still pass one, but it is no longer drawn — the title
+ * kept for callers that still pass one, but it is no longer drawn - the title
  * says what the section is.
  */
 export function SectionHeader({

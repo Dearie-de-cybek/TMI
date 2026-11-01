@@ -4,7 +4,7 @@ import { useColors } from '@/design/theme';
 import { type ColorToken } from '@/design/tokens';
 
 /**
- * Feather is the only icon set in the app — its 1.5px stroke matches the
+ * Feather is the only icon set in the app - its 1.5px stroke matches the
  * hairline rules used throughout the layout. Emoji are never used as icons.
  */
 export type IconName = keyof typeof Feather.glyphMap;

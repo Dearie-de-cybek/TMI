@@ -15,7 +15,7 @@ import {
  *
  * `/prayer-requests` returns only the signed-in member's own requests. Requests
  * are never read into search results, the announcement feed or notifications,
- * and visibility is enforced by the backend — the app only states what the
+ * and visibility is enforced by the backend - the app only states what the
  * member chose.
  */
 export function fetchMyPrayerRequests(signal?: AbortSignal): Promise<Paginated<PrayerRequest>> {

@@ -119,7 +119,7 @@ export default function SermonDetailScreen() {
     try {
       await Share.share({
         title: sermon!.title,
-        message: `${sermon!.title} — ${sermon!.speaker.name}, TwainMan Ministry`,
+        message: `${sermon!.title} by ${sermon!.speaker.name}, TwainMan Ministry`,
       });
     } catch {
       // The member dismissed the share sheet.
@@ -395,7 +395,7 @@ function StudyPanel({ sermonId }: { sermonId: string }) {
         }
         message={
           data.generated_by === 'ai'
-            ? 'These notes summarise the recording. They are not the preacher’s own words — check the transcript for what was actually said.'
+            ? 'These notes summarise the recording. They are not the preacher’s own words, check the transcript for what was actually said.'
             : 'Prepared alongside the teaching.'
         }
       />

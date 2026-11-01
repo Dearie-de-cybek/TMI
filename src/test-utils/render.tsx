@@ -8,8 +8,8 @@ import { ThemeProvider } from '@/design/theme';
 /**
  * Test render that mounts the providers every screen and primitive expects.
  *
- * React Native Testing Library 14 is asynchronous — `render` and `fireEvent`
- * both return promises — so call sites await this. Query retries are off so a
+ * React Native Testing Library 14 is asynchronous - `render` and `fireEvent`
+ * both return promises - so call sites await this. Query retries are off so a
  * failing request surfaces immediately in assertions.
  */
 const metrics: Metrics = {

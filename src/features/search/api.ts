@@ -7,7 +7,7 @@ import { preferences, storageKeys } from '@/lib/storage';
 export type SearchType = 'sermon' | 'course' | 'event' | 'announcement' | 'group';
 
 /**
- * Global search runs on the server across every published content type — it is
+ * Global search runs on the server across every published content type - it is
  * not a filter over whatever a screen happens to have loaded.
  */
 export function search(

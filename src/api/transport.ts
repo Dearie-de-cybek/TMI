@@ -6,7 +6,7 @@ import { type ApiError } from './errors';
  * Both the HTTP transport (Laravel) and the development data provider implement
  * this interface, so features are written once and never branch on the mode.
  * Transports are responsible for authentication, timeouts, cancellation and for
- * throwing `ApiError` — nothing else in the app inspects status codes.
+ * throwing `ApiError` - nothing else in the app inspects status codes.
  */
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 

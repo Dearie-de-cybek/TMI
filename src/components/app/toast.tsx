@@ -11,7 +11,7 @@ import { radius, space } from '@/design/tokens';
 
 /**
  * Brief confirmation for an action that succeeded and does not need a screen of
- * its own ("Saved", "Marked as read"). Failures are never shown here — they get
+ * its own ("Saved", "Marked as read"). Failures are never shown here - they get
  * an inline error next to the control that failed, so the member can act on it.
  *
  * A single white pill at the top, an icon in the tone's colour and one line of

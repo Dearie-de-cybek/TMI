@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { Rise } from '@/components/ui/motion';
+import { QuoteBlock } from '@/components/ui/quote';
 import { Band } from '@/components/ui/band';
 import { Button } from '@/components/ui/button';
 import { NavBar } from '@/components/ui/header';
@@ -16,7 +17,7 @@ import { churchImages } from '@/lib/artwork';
 import { churchInfo } from '@/lib/church-info';
 
 /**
- * About the church — who we are, when we meet, what we believe. All of it is the
+ * About the church - who we are, when we meet, what we believe. All of it is the
  * church's own printed wording (see `lib/church-info`).
  */
 export default function AboutScreen() {
@@ -57,12 +58,8 @@ export default function AboutScreen() {
                 {line}
               </Text>
             ))}
-            <View style={[styles.quote, { borderColor: colors.accent }]}>
-              {churchInfo.whoWeAreLines.map((line) => (
-                <Text key={line} variant="quote">
-                  {line}
-                </Text>
-              ))}
+            <View style={styles.quoteWrap}>
+              <QuoteBlock>{churchInfo.whoWeAreLines.join('\n')}</QuoteBlock>
             </View>
             {churchInfo.whoWeAreCreed.map((line) => (
               <Text key={line} variant="body" color="textSecondary" style={styles.creed}>
@@ -179,10 +176,7 @@ const styles = StyleSheet.create({
   paragraph: {
     maxWidth: 620,
   },
-  quote: {
-    borderLeftWidth: 2,
-    paddingLeft: space.lg,
-    paddingVertical: space.sm,
+  quoteWrap: {
     marginVertical: space.sm,
   },
   creed: {

@@ -128,7 +128,7 @@ export function updateProfile(input: {
  * Uploads a new profile picture as multipart form data.
  *
  * The file never leaves the device except in this request, and the backend
- * decides what it accepts — the app does not resize or re-encode it beyond the
+ * decides what it accepts - the app does not resize or re-encode it beyond the
  * picker's own compression.
  */
 export function uploadAvatar(input: {

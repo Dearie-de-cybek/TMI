@@ -48,7 +48,7 @@ export function EmptyState({
 
 /**
  * Error state for a failed load. Only offers a retry when retrying could
- * plausibly help — an authorisation failure gets different wording and no button.
+ * plausibly help - an authorisation failure gets different wording and no button.
  */
 export function ErrorState({
   error,

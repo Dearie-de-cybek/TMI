@@ -36,7 +36,7 @@ export default function HelpScreen() {
           <Text variant="title">Help and contact</Text>
           <Text variant="body" color="textSecondary">
             For anything about your membership record, a course, a gift or a prayer request, the
-            church office is the right place — they can see what this app cannot.
+            church office is the right place, they can see what this app cannot.
           </Text>
         </View>
 

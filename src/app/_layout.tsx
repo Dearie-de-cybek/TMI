@@ -57,7 +57,7 @@ export default function RootLayout() {
     void hydrateConfig().then(() => restore());
   }, [hydrateConfig, restore]);
 
-  // A font failure should not block the app — the system face is an acceptable
+  // A font failure should not block the app - the system face is an acceptable
   // fallback, and `fontError` is surfaced in development by expo-font itself.
   const ready = (fontsLoaded || Boolean(fontError)) && configHydrated && authStatus !== 'restoring';
 

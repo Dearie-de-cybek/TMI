@@ -14,7 +14,7 @@ export type ChipOption<T extends string = string> = {
 };
 
 /**
- * Filter chips are rectangular with a 4pt corner, selected by a forest fill —
+ * Filter chips are rectangular with a 4pt corner, selected by a forest fill -
  * deliberately not pills, and never used for navigation.
  */
 export function Chip({

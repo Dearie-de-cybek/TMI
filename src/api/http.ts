@@ -9,7 +9,7 @@ import { type RequestOptions, type Transport } from './transport';
  *
  * Responsibilities: build the URL, attach credentials, enforce a timeout,
  * honour cancellation, and normalise every failure into `ApiError`. It never
- * retries — retry policy belongs to the query layer, which knows whether a call
+ * retries - retry policy belongs to the query layer, which knows whether a call
  * is safe to repeat.
  */
 

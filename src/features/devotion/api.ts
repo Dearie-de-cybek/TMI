@@ -17,7 +17,7 @@ import { toWireProgress, type DevotionSnapshot } from './progress-store';
  *
  * Both are published by the church. Progress is owned by the device (see
  * `progress-store`) and mirrored here so it follows a signed-in member between
- * devices — the sync is best-effort by design, because a failed request must
+ * devices - the sync is best-effort by design, because a failed request must
  * never stop someone praying.
  */
 

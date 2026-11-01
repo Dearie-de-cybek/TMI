@@ -37,7 +37,7 @@ import { isSafeExternalUrl } from '@/lib/deep-links';
  * Choosing what to give is separate from paying for it. This screen only builds
  * an intent; the backend creates it with the payment provider and returns a
  * hosted checkout URL. Verification happens on the status screen, against the
- * server — never from the fact that the browser came back.
+ * server - never from the fact that the browser came back.
  */
 export default function GiveScreen() {
   const router = useRouter();
@@ -107,7 +107,7 @@ export default function GiveScreen() {
             <Banner
               tone="info"
               icon="info"
-              message="You can also give in person or by bank transfer — the church office has the details."
+              message="You can also give in person or by bank transfer, the church office has the details."
             />
           </View>
         </ScreenScroll>
@@ -238,6 +238,7 @@ export default function GiveScreen() {
 
                 <Button
                   label={giveLabel}
+                  variant="gold"
                   size="lg"
                   fullWidth
                   icon="heart"

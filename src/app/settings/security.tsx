@@ -115,7 +115,7 @@ export default function SecuritySettingsScreen() {
           How your session is kept
         </Text>
         <Text variant="meta" color="textSecondary">
-          Signing in stores a single access token in your device’s keychain — not your password. The
+          Signing in stores a single access token in your device’s keychain, not your password. The
           token is sent only to the church API, and signing out removes it from this device and
           revokes it on the server.
         </Text>

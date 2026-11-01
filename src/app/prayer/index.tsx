@@ -15,12 +15,12 @@ import { Tag } from '@/components/ui/chips';
 import { NavBar } from '@/components/ui/header';
 import { Icon, type IconName } from '@/components/ui/icon';
 import { Pressable } from '@/components/ui/pressable';
+import { QuoteBlock } from '@/components/ui/quote';
 import { Rule, Screen, ScreenScroll } from '@/components/ui/screen';
 import { SectionHeader } from '@/components/ui/section';
 import { SkeletonList } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/states';
 import { Text } from '@/components/ui/text';
-import { useColors } from '@/design/theme';
 import { radius, space } from '@/design/tokens';
 import { useIsSignedIn } from '@/features/auth/use-require-auth';
 import { fetchMyPrayerRequests, fetchPastoralCare, withdrawPrayerRequest } from '@/features/prayer/api';
@@ -65,7 +65,7 @@ export default function PrayerScreen() {
         <View style={styles.intro}>
           <Text variant="title">Ask the church to pray with you</Text>
           <Text variant="body" color="textSecondary">
-            Requests go to the people you choose — the pastoral team, the prayer team, or the
+            Requests go to the people you choose: the pastoral team, the prayer team, or the
             approved prayer community. They are never posted publicly in the app.
           </Text>
           <Button
@@ -145,7 +145,6 @@ export default function PrayerScreen() {
 }
 
 function RequestCard({ request }: { request: PrayerRequest }) {
-  const colors = useColors();
   const toast = useToast();
   const queryClient = useQueryClient();
   const { confirm } = useDialog();
@@ -194,14 +193,15 @@ function RequestCard({ request }: { request: PrayerRequest }) {
       </View>
 
       {request.follow_ups.length > 0 ? (
-        <View style={[styles.followUps, { borderLeftColor: colors.border }]}>
+        <View style={styles.followUps}>
           {request.follow_ups.map((followUp) => (
-            <View key={followUp.id} style={styles.followUp}>
-              <Text variant="caption" color="textTertiary">
-                Update · {formatRelative(followUp.created_at)}
-              </Text>
+            <QuoteBlock
+              key={followUp.id}
+              compact
+              label={`Update · ${formatRelative(followUp.created_at)}`}
+            >
               <Text variant="meta">{followUp.body}</Text>
-            </View>
+            </QuoteBlock>
           ))}
         </View>
       ) : null}
@@ -320,13 +320,8 @@ const styles = StyleSheet.create({
     gap: space.xs,
   },
   followUps: {
-    borderLeftWidth: 2,
-    paddingLeft: space.md,
     gap: space.sm,
     marginTop: space.xs,
-  },
-  followUp: {
-    gap: 2,
   },
   withdraw: {
     minHeight: 0,
