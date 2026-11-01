@@ -1,70 +1,40 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter, type Href } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { queryKeys } from '@/api/query-client';
 import { TAB_BAR_HEIGHT } from '@/components/app/tab-bar';
-import { CourseRow, SermonRow } from '@/components/content/rows';
+import { CoverTile, MinistryCard, QuickTile, Shelf } from '@/components/content/discover-cards';
 import { PageHeader } from '@/components/ui/header';
-import { Icon, type IconName } from '@/components/ui/icon';
+import { Rise } from '@/components/ui/motion';
 import { Pressable } from '@/components/ui/pressable';
-import { Rule, Screen, ScreenScroll } from '@/components/ui/screen';
-import { Section, SectionHeader } from '@/components/ui/section';
+import { Screen, ScreenScroll } from '@/components/ui/screen';
 import { SkeletonList } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/states';
 import { Text } from '@/components/ui/text';
 import { useColors } from '@/design/theme';
 import { radius, space } from '@/design/tokens';
+import { fetchGroups } from '@/features/community/api';
+import { fetchEvents } from '@/features/events/api';
 import { fetchCourses } from '@/features/learning/api';
 import { fetchSermons } from '@/features/sermons/api';
+import { formatDate } from '@/lib/datetime';
+
+type IoniconName = keyof typeof Ionicons.glyphMap;
 
 /**
- * Discover is the way into everything the church publishes. The five tabs do not
- * try to hold every feature — this screen is the index.
+ * Discover is the way into everything the church publishes: six quick links,
+ * then shelves of covers you can swipe through. The tabs do not try to hold
+ * every feature — this screen is the index.
  */
-const destinations: { href: Href; icon: IconName; title: string; description: string }[] = [
-  {
-    href: '/devotion',
-    icon: 'sun',
-    title: 'Prayer and devotion',
-    description: 'The monthly decree, a daily word, and your streak.',
-  },
-  {
-    href: '/sermons',
-    icon: 'mic',
-    title: 'Sermons',
-    description: 'Every teaching, by speaker, series, topic or passage.',
-  },
-  {
-    href: '/courses',
-    icon: 'book-open',
-    title: 'Courses and programmes',
-    description: 'Discipleship courses, lessons and live sessions.',
-  },
-  {
-    href: '/events',
-    icon: 'calendar',
-    title: 'Events',
-    description: 'Gatherings, classes and anything you can register for.',
-  },
-  {
-    href: '/announcements',
-    icon: 'file-text',
-    title: 'Announcements',
-    description: 'Notices from the church and from your ministries.',
-  },
-  {
-    href: '/community',
-    icon: 'users',
-    title: 'Ministries and groups',
-    description: 'Where to serve and who to meet.',
-  },
-  {
-    href: '/about',
-    icon: 'info',
-    title: 'About TwainMan',
-    description: 'Who we are, when we meet and what we believe.',
-  },
+const quickLinks: { href: Href; icon: IoniconName; title: string }[] = [
+  { href: '/devotion', icon: 'sunny-outline', title: 'Devotion' },
+  { href: '/sermons', icon: 'mic-outline', title: 'Sermons' },
+  { href: '/courses', icon: 'book-outline', title: 'Courses' },
+  { href: '/events', icon: 'calendar-outline', title: 'Events' },
+  { href: '/community', icon: 'people-outline', title: 'Ministries' },
+  { href: '/announcements', icon: 'megaphone-outline', title: 'Notices' },
 ];
 
 export default function DiscoverScreen() {
@@ -74,115 +44,152 @@ export default function DiscoverScreen() {
   const recentSermons = useQuery({
     queryKey: queryKeys.sermons({ scope: 'discover-recent' }),
     queryFn: ({ signal }) => fetchSermons({ page: 1 }, signal),
-    select: (response) => response.data.slice(0, 4),
+    select: (response) => response.data.slice(0, 8),
+  });
+
+  const ministries = useQuery({
+    queryKey: queryKeys.groups({ scope: 'discover' }),
+    queryFn: ({ signal }) => fetchGroups({}, signal),
+    select: (response) => response.data.slice(0, 10),
+  });
+
+  const upcoming = useQuery({
+    queryKey: queryKeys.events('discover-upcoming'),
+    queryFn: ({ signal }) => fetchEvents('upcoming', 1, signal),
+    select: (response) => response.data.slice(0, 8),
   });
 
   const openCourses = useQuery({
     queryKey: queryKeys.courses({ scope: 'discover-open' }),
     queryFn: ({ signal }) => fetchCourses({ page: 1 }, signal),
     select: (response) =>
-      response.data.filter((course) => course.enrollment_mode !== 'closed').slice(0, 3),
+      response.data.filter((course) => course.enrollment_mode !== 'closed').slice(0, 8),
   });
+
+  const pairs: (typeof quickLinks)[] = [];
+  for (let i = 0; i < quickLinks.length; i += 2) pairs.push(quickLinks.slice(i, i + 2));
 
   return (
     <Screen>
-      <PageHeader eyebrow="Explore" title="Discover" />
+      <PageHeader title="Discover" />
 
       <ScreenScroll bottomSpace={TAB_BAR_HEIGHT + space.xxl}>
-        <Pressable
-          onPress={() => router.push('/search')}
-          accessibilityRole="search"
-          accessibilityLabel="Search sermons, courses, events and more"
-          style={[
-            styles.searchField,
-            { borderColor: colors.border, backgroundColor: colors.surface },
-          ]}
-        >
-          <Icon name="search" size="sm" color="textTertiary" />
-          <Text variant="body" color="textTertiary">
-            Search teaching, courses, events…
-          </Text>
-        </Pressable>
-
-        <View style={styles.destinations}>
-          {destinations.map((destination, index) => (
-            <View key={destination.title}>
-              {index > 0 ? <Rule /> : null}
-              <Pressable
-                onPress={() => router.push(destination.href)}
-                accessibilityLabel={destination.title}
-                style={styles.destination}
-              >
-                <Icon name={destination.icon} size="md" color="primary" />
-                <View style={styles.destinationText}>
-                  <Text variant="bodyStrong">{destination.title}</Text>
-                  <Text variant="meta" color="textSecondary">
-                    {destination.description}
-                  </Text>
-                </View>
-                <Icon name="chevron-right" size="sm" color="textTertiary" />
-              </Pressable>
-            </View>
-          ))}
+        <View style={styles.gutter}>
+          <Pressable
+            onPress={() => router.push('/search')}
+            accessibilityRole="search"
+            accessibilityLabel="Search sermons, courses, events and more"
+            feedback="opacity"
+            style={[styles.search, { backgroundColor: colors.surfaceMuted }]}
+          >
+            <Ionicons name="search" size={20} color={colors.textTertiary} />
+            <Text variant="body" color="textTertiary">
+              Search teaching, courses, events…
+            </Text>
+          </Pressable>
         </View>
 
-        <Section>
-          <View style={styles.gutter}>
-            <SectionHeader
-              eyebrow="Teaching"
-              title="Recently preached"
-              action={{ label: 'All sermons', onPress: () => router.push('/sermons') }}
-            />
-          </View>
-          {recentSermons.isPending ? (
-            <SkeletonList count={3} />
-          ) : recentSermons.isError ? (
-            <ErrorState compact error={recentSermons.error} onRetry={() => void recentSermons.refetch()} />
-          ) : recentSermons.data.length === 0 ? (
-            <EmptyState
-              compact
-              icon="mic"
-              title="No sermons published yet"
-              message="Teaching will appear here as soon as the media team publishes it."
-            />
-          ) : (
-            recentSermons.data.map((sermon, index) => (
-              <View key={sermon.id}>
-                {index > 0 ? <Rule inset={space.gutter} /> : null}
-                <SermonRow sermon={sermon} onPress={() => router.push(`/sermons/${sermon.id}`)} />
-              </View>
-            ))
-          )}
-        </Section>
+        <Rise style={[styles.gutter, styles.quickGrid]}>
+          {pairs.map((pair, rowIndex) => (
+            <View key={rowIndex} style={styles.quickRow}>
+              {pair.map((link) => (
+                <QuickTile
+                  key={link.title}
+                  icon={link.icon}
+                  title={link.title}
+                  onPress={() => router.push(link.href)}
+                />
+              ))}
+            </View>
+          ))}
+        </Rise>
 
-        <Section>
-          <View style={styles.gutter}>
-            <SectionHeader
-              eyebrow="Discipleship"
-              title="Courses you can join"
-              action={{ label: 'All courses', onPress: () => router.push('/courses') }}
-            />
-          </View>
-          {openCourses.isPending ? (
-            <SkeletonList count={2} />
-          ) : openCourses.isError ? (
-            <ErrorState compact error={openCourses.error} onRetry={() => void openCourses.refetch()} />
-          ) : openCourses.data.length === 0 ? (
-            <EmptyState
-              compact
-              icon="book-open"
-              title="No open enrolments"
-              message="The discipleship team opens courses through the year. Check back, or ask about the next cohort."
-            />
+        <Shelf
+          title="Recently preached"
+          action={{ label: 'See all', onPress: () => router.push('/sermons') }}
+        >
+          {recentSermons.isPending ? (
+            <View style={styles.shelfState}>
+              <SkeletonList count={1} />
+            </View>
+          ) : recentSermons.isError ? (
+            <View style={styles.shelfState}>
+              <ErrorState compact error={recentSermons.error} onRetry={() => void recentSermons.refetch()} />
+            </View>
+          ) : recentSermons.data.length === 0 ? (
+            <View style={styles.shelfState}>
+              <EmptyState
+                compact
+                icon="mic"
+                title="No sermons published yet"
+                message="Teaching will appear here as soon as the media team publishes it."
+              />
+            </View>
           ) : (
-            openCourses.data.map((course, index) => (
-              <View key={course.id}>
-                {index > 0 ? <Rule inset={space.gutter} /> : null}
-                <CourseRow course={course} onPress={() => router.push(`/courses/${course.id}`)} />
-              </View>
+            recentSermons.data.map((sermon) => (
+              <CoverTile
+                key={sermon.id}
+                artwork={sermon.artwork_url}
+                seed={sermon.title}
+                kicker={sermon.speaker.name}
+                title={sermon.title}
+                onPress={() => router.push(`/sermons/${sermon.id}`)}
+              />
             ))
           )}
-        </Section>
+        </Shelf>
+
+        {ministries.data && ministries.data.length > 0 ? (
+          <Shelf
+            title="Ministries"
+            action={{ label: 'See all', onPress: () => router.push('/community') }}
+          >
+            {ministries.data.map((group) => (
+              <MinistryCard
+                key={group.id}
+                group={group}
+                width={168}
+                onPress={() => router.push(`/community/${group.id}`)}
+              />
+            ))}
+          </Shelf>
+        ) : null}
+
+        {upcoming.data && upcoming.data.length > 0 ? (
+          <Shelf
+            title="Coming up"
+            action={{ label: 'See all', onPress: () => router.push('/events') }}
+          >
+            {upcoming.data.map((event) => (
+              <CoverTile
+                key={event.id}
+                artwork={event.artwork_url}
+                seed={event.title}
+                kicker={formatDate(event.starts_at)}
+                title={event.title}
+                onPress={() => router.push(`/events/${event.id}`)}
+              />
+            ))}
+          </Shelf>
+        ) : null}
+
+        {openCourses.data && openCourses.data.length > 0 ? (
+          <Shelf
+            title="Courses you can join"
+            action={{ label: 'See all', onPress: () => router.push('/courses') }}
+          >
+            {openCourses.data.map((course) => (
+              <CoverTile
+                key={course.id}
+                artwork={course.artwork_url}
+                seed={course.title}
+                kicker="Course"
+                title={course.title}
+                onPress={() => router.push(`/courses/${course.id}`)}
+              />
+            ))}
+          </Shelf>
+        ) : null}
       </ScreenScroll>
     </Screen>
   );
@@ -192,29 +199,23 @@ const styles = StyleSheet.create({
   gutter: {
     paddingHorizontal: space.gutter,
   },
-  searchField: {
+  search: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: space.sm,
-    marginHorizontal: space.gutter,
-    marginBottom: space.xl,
+    gap: space.md,
+    height: 52,
     paddingHorizontal: space.lg,
-    height: 48,
-    borderWidth: 1,
-    borderRadius: radius.sm,
+    borderRadius: radius.pill,
   },
-  destinations: {
-    paddingTop: space.xs,
+  quickGrid: {
+    paddingTop: space.lg,
+    gap: space.md,
   },
-  destination: {
+  quickRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.lg,
-    paddingHorizontal: space.gutter,
-    paddingVertical: space.lg,
+    gap: space.md,
   },
-  destinationText: {
-    flex: 1,
-    gap: 2,
+  shelfState: {
+    width: 320,
   },
 });

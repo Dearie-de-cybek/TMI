@@ -1,8 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { idempotencyKey } from '@/api/client';
 import { describeError, fieldError } from '@/api/errors';
@@ -13,20 +16,17 @@ import { TAB_BAR_HEIGHT } from '@/components/app/tab-bar';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Chip, SegmentedControl } from '@/components/ui/chips';
-import { PageHeader } from '@/components/ui/header';
 import { Icon } from '@/components/ui/icon';
-import { Pressable } from '@/components/ui/pressable';
 import { Screen, ScreenScroll } from '@/components/ui/screen';
-import { SectionHeader } from '@/components/ui/section';
 import { SkeletonList } from '@/components/ui/skeleton';
 import { ErrorState } from '@/components/ui/states';
 import { Text } from '@/components/ui/text';
 import { TextField } from '@/components/ui/text-field';
 import { useRuntimeConfig } from '@/config/runtime';
-import { useColors } from '@/design/theme';
-import { radius, space } from '@/design/tokens';
+import { fonts, radius, space } from '@/design/tokens';
 import { useIsSignedIn, useRequireAuth } from '@/features/auth/use-require-auth';
 import { createGivingIntent, fetchGivingCategories } from '@/features/giving/api';
+import { churchImages } from '@/lib/artwork';
 import { formatMoney } from '@/lib/format';
 import { givingAmountError, parseAmountToMinor } from '@/lib/validation';
 import { isSafeExternalUrl } from '@/lib/deep-links';
@@ -41,7 +41,6 @@ import { isSafeExternalUrl } from '@/lib/deep-links';
  */
 export default function GiveScreen() {
   const router = useRouter();
-  const colors = useColors();
   const signedIn = useIsSignedIn();
   const requireAuth = useRequireAuth();
   const demoMode = useRuntimeConfig((state) => state.apiMode) === 'demo';
@@ -87,18 +86,24 @@ export default function GiveScreen() {
     },
   });
 
+  const hero = (
+    <GiveHero
+      onHistory={signedIn ? () => router.push('/giving/history') : undefined}
+    />
+  );
+
   if (!signedIn) {
     return (
       <Screen>
-        <PageHeader eyebrow="Generosity" title="Give" />
-        <ScreenScroll padded bottomSpace={TAB_BAR_HEIGHT + space.xxl}>
-          <SignInPrompt
-            title="Sign in to give"
-            message="Giving is recorded against your account so the church can issue your receipts and you can see your own history."
-            reason="give"
-            next="/give"
-          />
-          <View style={styles.offlineNote}>
+        <ScreenScroll bottomSpace={TAB_BAR_HEIGHT + space.xxl}>
+          {hero}
+          <View style={styles.block}>
+            <SignInPrompt
+              title="Sign in to give"
+              message="Giving is recorded against your account so the church can issue your receipts and you can see your own history."
+              reason="give"
+              next="/give"
+            />
             <Banner
               tone="info"
               icon="info"
@@ -112,69 +117,76 @@ export default function GiveScreen() {
 
   const createError = create.error ? describeError(create.error) : null;
   const parsedMinor = parseAmountToMinor(amount);
+  const giveLabel =
+    parsedMinor && category
+      ? `${demoMode ? 'Give (demo)' : 'Give'} ${formatMoney(parsedMinor, category.currency)}`
+      : 'Enter an amount to give';
 
   return (
     <Screen>
-      <PageHeader
-        eyebrow="Generosity"
-        title="Give"
-        actions={[
-          { icon: 'clock', label: 'Giving history', onPress: () => router.push('/giving/history') },
-        ]}
-      />
-
       {categories.isPending ? (
-        <SkeletonList count={4} withThumbnail={false} />
+        <ScreenScroll bottomSpace={TAB_BAR_HEIGHT + space.xxl}>
+          {hero}
+          <SkeletonList count={3} withThumbnail={false} />
+        </ScreenScroll>
       ) : categories.isError ? (
-        <ErrorState error={categories.error} onRetry={() => void categories.refetch()} />
+        <ScreenScroll bottomSpace={TAB_BAR_HEIGHT + space.xxl}>
+          {hero}
+          <ErrorState error={categories.error} onRetry={() => void categories.refetch()} />
+        </ScreenScroll>
       ) : (
         <ScreenScroll bottomSpace={TAB_BAR_HEIGHT + space.xxl}>
-          <View style={styles.block}>
-            <SectionHeader title="What is this for?" />
-          </View>
+          {hero}
 
-          <View style={styles.categories}>
-            {categories.data.map((item) => {
-              const selected = category?.id === item.id;
-              return (
-                <Pressable
-                  key={item.id}
-                  onPress={() => {
-                    setCategoryId(item.id);
-                    if (!item.recurring_supported) setRecurrence('one_time');
-                  }}
-                  accessibilityRole="radio"
-                  accessibilityState={{ checked: selected }}
-                  accessibilityLabel={item.name}
-                  feedback="none"
-                  style={[
-                    styles.category,
-                    {
-                      borderColor: selected ? colors.primary : colors.border,
-                      backgroundColor: selected ? colors.primarySoft : 'transparent',
-                    },
-                  ]}
-                >
-                  <View style={styles.categoryText}>
-                    <Text variant="bodyStrong" color={selected ? 'primaryOnSoft' : 'text'}>
-                      {item.name}
-                    </Text>
-                    {item.description ? (
-                      <Text variant="caption" color={selected ? 'primaryOnSoft' : 'textSecondary'}>
-                        {item.description}
-                      </Text>
-                    ) : null}
-                  </View>
-                  {selected ? <Icon name="heart" size="sm" color="primaryOnSoft" /> : null}
-                </Pressable>
-              );
-            })}
+          <View style={styles.block}>
+            <Text variant="title">Give to</Text>
           </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.pills}
+            style={styles.pillScroller}
+            accessibilityRole="radiogroup"
+          >
+            {categories.data.map((item) => (
+              <Chip
+                key={item.id}
+                label={item.name}
+                selected={category?.id === item.id}
+                onPress={() => {
+                  setCategoryId(item.id);
+                  if (!item.recurring_supported) setRecurrence('one_time');
+                }}
+              />
+            ))}
+          </ScrollView>
+          {category?.description ? (
+            <Text variant="meta" color="textSecondary" style={styles.description}>
+              {category.description}
+            </Text>
+          ) : null}
 
           {category ? (
             <>
+              {category.recurring_supported ? (
+                <View style={styles.block}>
+                  <SegmentedControl
+                    label="How often"
+                    value={recurrence}
+                    onChange={setRecurrence}
+                    options={[
+                      { value: 'one_time', label: 'One-time' },
+                      { value: 'monthly', label: 'Monthly' },
+                    ]}
+                  />
+                </View>
+              ) : (
+                <Text variant="caption" color="textTertiary" style={styles.description}>
+                  This category accepts one-off gifts only.
+                </Text>
+              )}
+
               <View style={styles.block}>
-                <SectionHeader title="How much?" />
                 {category.suggested_amounts.length > 0 ? (
                   <View style={styles.suggestions}>
                     {category.suggested_amounts.map((suggested) => (
@@ -200,7 +212,7 @@ export default function GiveScreen() {
                   }}
                   error={amountError}
                   keyboardType="decimal-pad"
-                  placeholder="0.00"
+                  placeholder="Other amount"
                   icon="credit-card"
                   hint={
                     category.minimum_amount > 0
@@ -208,24 +220,6 @@ export default function GiveScreen() {
                       : undefined
                   }
                 />
-
-                {category.recurring_supported ? (
-                  <View style={styles.recurrence}>
-                    <SegmentedControl
-                      label="How often"
-                      value={recurrence}
-                      onChange={setRecurrence}
-                      options={[
-                        { value: 'one_time', label: 'One-off' },
-                        { value: 'monthly', label: 'Every month' },
-                      ]}
-                    />
-                  </View>
-                ) : (
-                  <Text variant="caption" color="textTertiary">
-                    This category accepts one-off gifts only.
-                  </Text>
-                )}
               </View>
 
               <View style={styles.block}>
@@ -243,8 +237,10 @@ export default function GiveScreen() {
                 ) : null}
 
                 <Button
-                  label={demoMode ? 'Continue (demo)' : 'Continue to payment'}
+                  label={giveLabel}
+                  size="lg"
                   fullWidth
+                  icon="heart"
                   loading={create.isPending}
                   onPress={() => {
                     if (!requireAuth({ reason: 'give', next: '/give' })) return;
@@ -262,10 +258,13 @@ export default function GiveScreen() {
                   }}
                 />
 
-                <Text variant="caption" color="textTertiary">
-                  Payment is handled on the provider’s own secure page. TwainMan Ministry does not see
-                  or store your card details, and this app never asks for them.
-                </Text>
+                <View style={styles.secure}>
+                  <Icon name="lock" size="sm" color="textTertiary" />
+                  <Text variant="caption" color="textTertiary" style={styles.secureText}>
+                    Payment is handled on the provider’s own secure page. TwainMan Ministry does not
+                    see or store your card details, and this app never asks for them.
+                  </Text>
+                </View>
               </View>
             </>
           ) : null}
@@ -275,38 +274,97 @@ export default function GiveScreen() {
   );
 }
 
+/** A photograph of the church with the page's one promise over it. */
+function GiveHero({ onHistory }: { onHistory?: () => void }) {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <View style={styles.hero}>
+      <Image
+        source={churchImages.praiseJoy}
+        style={StyleSheet.absoluteFill}
+        contentFit="cover"
+        contentPosition="top center"
+        accessibilityLabel="Members of the church rejoicing"
+        accessibilityRole="image"
+        accessible
+      />
+      <LinearGradient
+        colors={['rgba(0,0,0,0.35)', 'transparent', 'rgba(8,3,5,0.85)']}
+        locations={[0, 0.35, 1]}
+        style={StyleSheet.absoluteFill}
+        pointerEvents="none"
+      />
+      {onHistory ? (
+        <View style={[styles.historyButton, { top: insets.top + space.sm }]}>
+          <Button label="History" variant="glass" size="sm" icon="clock" onPress={onHistory} />
+        </View>
+      ) : null}
+      <View style={[styles.heroText, { paddingTop: insets.top + space.xxl }]}>
+        <Text style={styles.heroTitle}>Give</Text>
+        <Text variant="bodyLarge" style={styles.heroSubtitle}>
+          Your giving carries the work of the house.
+        </Text>
+      </View>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
+  hero: {
+    height: 300,
+    justifyContent: 'flex-end',
+    overflow: 'hidden',
+    borderBottomLeftRadius: radius.lg,
+    borderBottomRightRadius: radius.lg,
+  },
+  historyButton: {
+    position: 'absolute',
+    right: space.gutter,
+  },
+  heroText: {
+    paddingHorizontal: space.gutter,
+    paddingBottom: space.xl,
+    gap: space.xs,
+  },
+  heroTitle: {
+    color: '#FFFFFF',
+    fontFamily: fonts.sansExtraBold,
+    fontSize: 44,
+    lineHeight: 48,
+    letterSpacing: -1.4,
+  },
+  heroSubtitle: {
+    color: 'rgba(255,255,255,0.88)',
+  },
   block: {
     paddingHorizontal: space.gutter,
+    paddingTop: space.xl,
     gap: space.md,
-    paddingBottom: space.md,
   },
-  categories: {
-    paddingHorizontal: space.gutter,
+  pillScroller: {
+    flexGrow: 0,
+  },
+  pills: {
     gap: space.sm,
-    paddingBottom: space.lg,
+    paddingHorizontal: space.gutter,
+    paddingTop: space.md,
   },
-  category: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.md,
-    padding: space.lg,
-    borderWidth: 1,
-    borderRadius: radius.sm,
-  },
-  categoryText: {
-    flex: 1,
-    gap: 2,
+  description: {
+    paddingHorizontal: space.gutter,
+    paddingTop: space.md,
   },
   suggestions: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: space.sm,
   },
-  recurrence: {
-    alignSelf: 'flex-start',
+  secure: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: space.sm,
   },
-  offlineNote: {
-    paddingTop: space.xl,
+  secureText: {
+    flex: 1,
   },
 });

@@ -8,7 +8,7 @@ import { hairline, space } from '@/design/tokens';
 
 import { Icon, type IconName } from './icon';
 import { Pressable } from './pressable';
-import { Eyebrow, Text } from './text';
+import { Text } from './text';
 
 export type HeaderAction = {
   icon: IconName;
@@ -40,11 +40,10 @@ function ActionButton({ action }: { action: HeaderAction }) {
 }
 
 /**
- * Header for the five tab roots: a brass eyebrow over a serif title, with the
- * page actions kept on the same baseline as the eyebrow.
+ * Header for the tab roots: one big bold title, with the page actions on the
+ * same line. The `eyebrow` prop is accepted for older callers and not drawn.
  */
 export function PageHeader({
-  eyebrow,
   title,
   actions = [],
 }: {
@@ -56,17 +55,14 @@ export function PageHeader({
 
   return (
     <View style={[styles.page, { paddingTop: insets.top + space.md }]}>
-      <View style={styles.pageTopRow}>
-        {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : <View />}
-        <View style={styles.actionRow}>
-          {actions.map((action) => (
-            <ActionButton key={action.label} action={action} />
-          ))}
-        </View>
-      </View>
       <Text variant="display" style={styles.pageTitle}>
         {title}
       </Text>
+      <View style={styles.actionRow}>
+        {actions.map((action) => (
+          <ActionButton key={action.label} action={action} />
+        ))}
+      </View>
     </View>
   );
 }
@@ -143,17 +139,14 @@ export function NavBarSpacer({ children }: { children?: ReactNode }) {
 
 const styles = StyleSheet.create({
   page: {
-    paddingHorizontal: space.gutter,
-    paddingBottom: space.md,
-  },
-  pageTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    minHeight: 28,
+    paddingHorizontal: space.gutter,
+    paddingBottom: space.lg,
   },
   pageTitle: {
-    marginTop: space.xs,
+    flex: 1,
   },
   nav: {
     flexDirection: 'row',

@@ -20,7 +20,6 @@ type IoniconName = keyof typeof Ionicons.glyphMap;
 const icons: Record<string, { filled: IoniconName; outline: IoniconName; label: string }> = {
   index: { filled: 'home', outline: 'home-outline', label: 'Home' },
   discover: { filled: 'compass', outline: 'compass-outline', label: 'Discover' },
-  community: { filled: 'people', outline: 'people-outline', label: 'Community' },
   give: { filled: 'heart', outline: 'heart-outline', label: 'Give' },
   profile: { filled: 'person', outline: 'person-outline', label: 'Me' },
 };

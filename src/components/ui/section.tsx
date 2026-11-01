@@ -1,20 +1,19 @@
 import { type PropsWithChildren } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { useColors } from '@/design/theme';
-import { hairline, space } from '@/design/tokens';
+import { space } from '@/design/tokens';
 
 import { Icon } from './icon';
 import { Pressable } from './pressable';
-import { Eyebrow, Text } from './text';
+import { Text } from './text';
 
 /**
- * The recurring editorial section head: brass eyebrow, serif title on a rule,
- * and an optional link on the right. Used on Home, Discover and detail screens
- * so sections read as chapters rather than as a grid of cards.
+ * The recurring section head: a bold title, and an optional "See all ›" link on
+ * the right. Used on Home, Discover and detail screens. The `eyebrow` prop is
+ * kept for callers that still pass one, but it is no longer drawn — the title
+ * says what the section is.
  */
 export function SectionHeader({
-  eyebrow,
   title,
   action,
   description,
@@ -24,14 +23,10 @@ export function SectionHeader({
   description?: string;
   action?: { label: string; onPress: () => void };
 }) {
-  const colors = useColors();
-
   return (
     <View style={styles.wrapper}>
-      <View style={[styles.rule, { backgroundColor: colors.borderStrong }]} />
-      {eyebrow ? <Eyebrow style={styles.eyebrow}>{eyebrow}</Eyebrow> : null}
       <View style={styles.titleRow}>
-        <Text variant="headline" style={styles.title}>
+        <Text variant="title" style={styles.title}>
           {title}
         </Text>
         {action ? (
@@ -42,10 +37,10 @@ export function SectionHeader({
             inline
             style={styles.action}
           >
-            <Text variant="metaStrong" color="primary">
+            <Text variant="metaStrong" color="text">
               {action.label}
             </Text>
-            <Icon name="arrow-right" size="xs" color="primary" />
+            <Icon name="chevron-right" size="sm" color="text" />
           </Pressable>
         ) : null}
       </View>
@@ -66,18 +61,11 @@ export function Section({ children }: PropsWithChildren) {
 const styles = StyleSheet.create({
   wrapper: {
     paddingTop: space.xxl,
-    paddingBottom: space.md,
-  },
-  rule: {
-    height: hairline * 2,
-    marginBottom: space.md,
-  },
-  eyebrow: {
-    marginBottom: space.xs,
+    paddingBottom: space.lg,
   },
   titleRow: {
     flexDirection: 'row',
-    alignItems: 'baseline',
+    alignItems: 'center',
     justifyContent: 'space-between',
     gap: space.md,
   },
@@ -87,7 +75,7 @@ const styles = StyleSheet.create({
   action: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: space.xs,
+    gap: 2,
     minHeight: 0,
   },
   description: {

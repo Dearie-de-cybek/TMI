@@ -1,21 +1,20 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View, useWindowDimensions } from 'react-native';
 
 import { queryKeys } from '@/api/query-client';
-import { TAB_BAR_HEIGHT } from '@/components/app/tab-bar';
-import { GroupRow } from '@/components/content/rows';
+import { MinistryCard } from '@/components/content/discover-cards';
 import { ChipRow } from '@/components/ui/chips';
-import { PageHeader } from '@/components/ui/header';
-import { Icon } from '@/components/ui/icon';
+import { NavBar } from '@/components/ui/header';
 import { Pressable } from '@/components/ui/pressable';
-import { Rule, Screen } from '@/components/ui/screen';
+import { Screen } from '@/components/ui/screen';
 import { SkeletonList } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/states';
 import { Text } from '@/components/ui/text';
 import { useColors } from '@/design/theme';
-import { space } from '@/design/tokens';
+import { radius, space } from '@/design/tokens';
 import { fetchGroups } from '@/features/community/api';
 
 const types = [
@@ -25,14 +24,18 @@ const types = [
 ] as const;
 
 /**
- * Community lists the ministries and groups the church runs, and the routes into
- * prayer and pastoral care. It is not a social network: there is no member
- * directory and no member-to-member messaging, because the backend does not
- * provide either.
+ * Ministries and fellowships, as a two-column grid of cards. It is not a social
+ * network: there is no member directory and no member-to-member messaging,
+ * because the backend does not provide either. Prayer and pastoral care sit at
+ * the top because it is the other thing people come here for.
+ *
+ * The screen is reached from Discover and Home rather than from the tab bar, so
+ * it has a back button.
  */
 export default function CommunityScreen() {
   const router = useRouter();
   const colors = useColors();
+  const { width } = useWindowDimensions();
   const [type, setType] = useState<string | null>(null);
 
   const groups = useQuery({
@@ -40,35 +43,16 @@ export default function CommunityScreen() {
     queryFn: ({ signal }) => fetchGroups({ type }, signal),
   });
 
+  // Two columns with the gutter on both sides and a gap between.
+  const cardWidth = (width - space.gutter * 2 - space.md) / 2;
+
   const mine = groups.data?.data.filter((group) => group.membership.status === 'member') ?? [];
   const others = groups.data?.data.filter((group) => group.membership.status !== 'member') ?? [];
+  const ordered = [...mine, ...others];
 
   return (
     <Screen>
-      <PageHeader eyebrow="Together" title="Community" />
-
-      <Pressable
-        onPress={() => router.push('/prayer')}
-        style={[styles.prayerRow, { borderColor: colors.border }]}
-        accessibilityLabel="Prayer and pastoral care"
-      >
-        <Icon name="heart" size="md" color="primary" />
-        <View style={styles.prayerText}>
-          <Text variant="labelStrong">Prayer and pastoral care</Text>
-          <Text variant="caption" color="textSecondary">
-            Send a request, or find how to reach the pastoral team.
-          </Text>
-        </View>
-        <Icon name="chevron-right" size="sm" color="textTertiary" />
-      </Pressable>
-
-      <ChipRow
-        label="Filter groups by kind"
-        allowClear
-        value={type}
-        onChange={setType}
-        options={types.map((item) => ({ value: item.value, label: item.label }))}
-      />
+      <NavBar title="Ministries and groups" />
 
       {groups.isPending ? (
         <SkeletonList count={4} />
@@ -76,18 +60,45 @@ export default function CommunityScreen() {
         <ErrorState error={groups.error} onRetry={() => void groups.refetch()} />
       ) : (
         <FlatList
-          data={[...mine, ...others]}
+          data={ordered}
           keyExtractor={(item) => item.id}
+          numColumns={2}
           refreshing={groups.isRefetching}
           onRefresh={() => void groups.refetch()}
-          ItemSeparatorComponent={() => <Rule inset={space.gutter} />}
-          contentContainerStyle={{ paddingBottom: TAB_BAR_HEIGHT + space.xxl }}
+          columnWrapperStyle={styles.column}
+          contentContainerStyle={styles.list}
           ListHeaderComponent={
-            mine.length > 0 ? (
-              <Text variant="eyebrow" color="accent" uppercase style={styles.sectionLabel}>
-                Where you serve
-              </Text>
-            ) : undefined
+            <View>
+              <Pressable
+                onPress={() => router.push('/prayer')}
+                feedback="opacity"
+                accessibilityLabel="Prayer and pastoral care"
+                style={[styles.prayer, { backgroundColor: colors.surface, borderColor: colors.border }]}
+              >
+                <Ionicons name="heart-outline" size={26} color={colors.primary} />
+                <View style={styles.prayerText}>
+                  <Text variant="bodyStrong">Prayer and pastoral care</Text>
+                  <Text variant="meta" color="textSecondary">
+                    Send a request, or find how to reach the pastoral team.
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
+              </Pressable>
+
+              <ChipRow
+                label="Filter groups by kind"
+                allowClear
+                value={type}
+                onChange={setType}
+                options={types.map((item) => ({ value: item.value, label: item.label }))}
+              />
+
+              {mine.length > 0 ? (
+                <Text variant="meta" color="textSecondary" style={styles.note}>
+                  Groups you serve in are shown first.
+                </Text>
+              ) : null}
+            </View>
           }
           ListEmptyComponent={
             <EmptyState
@@ -101,15 +112,12 @@ export default function CommunityScreen() {
               action={type ? { label: 'Show all', onPress: () => setType(null) } : undefined}
             />
           }
-          renderItem={({ item, index }) => (
-            <>
-              {mine.length > 0 && index === mine.length ? (
-                <Text variant="eyebrow" color="textTertiary" uppercase style={styles.sectionLabel}>
-                  Ministries and groups
-                </Text>
-              ) : null}
-              <GroupRow group={item} onPress={() => router.push(`/community/${item.id}`)} />
-            </>
+          renderItem={({ item }) => (
+            <MinistryCard
+              group={item}
+              width={cardWidth}
+              onPress={() => router.push(`/community/${item.id}`)}
+            />
           )}
         />
       )}
@@ -118,22 +126,31 @@ export default function CommunityScreen() {
 }
 
 const styles = StyleSheet.create({
-  prayerRow: {
+  list: {
+    paddingBottom: space.giant,
+    gap: space.md,
+  },
+  column: {
+    gap: space.md,
+    paddingHorizontal: space.gutter,
+  },
+  prayer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.md,
-    paddingHorizontal: space.gutter,
-    paddingVertical: space.lg,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    marginHorizontal: space.gutter,
+    marginBottom: space.lg,
+    padding: space.lg,
+    borderRadius: radius.md,
+    borderWidth: 1,
   },
   prayerText: {
     flex: 1,
     gap: 2,
   },
-  sectionLabel: {
+  note: {
     paddingHorizontal: space.gutter,
-    paddingTop: space.xl,
-    paddingBottom: space.sm,
+    paddingTop: space.sm,
+    paddingBottom: space.xs,
   },
 });
