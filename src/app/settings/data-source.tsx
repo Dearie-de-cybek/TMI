@@ -1,11 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { resetDemoState } from '@/api/demo/state';
 import { AuthShell } from '@/components/app/auth-shell';
 import { useToast } from '@/components/app/toast';
+import { useDialog } from '@/components/ui/dialog';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
@@ -45,6 +46,7 @@ export default function DataSourceScreen() {
   const setApiMode = useRuntimeConfig((state) => state.setApiMode);
   const signOut = useAuth((state) => state.signOut);
   const [busy, setBusy] = useState(false);
+  const { confirm } = useDialog();
 
   if (!env.allowModeSwitch) {
     return (
@@ -132,23 +134,21 @@ export default function DataSourceScreen() {
           icon="refresh-cw"
           fullWidth
           onPress={() =>
-            Alert.alert(
-              'Reset demo data?',
-              'Saved sermons, enrolments, prayer requests and demo gifts created on this device will be cleared.',
-              [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                  text: 'Reset',
-                  style: 'destructive',
-                  onPress: () => {
-                    void resetDemoState().then(() => {
-                      queryClient.clear();
-                      toast('Demo data reset.', { icon: 'refresh-cw' });
-                    });
-                  },
-                },
-              ]
-            )
+            void confirm({
+              eyebrow: 'Development',
+              icon: 'refresh-cw',
+              title: 'Reset demo data?',
+              message:
+                'Saved sermons, enrolments, prayer requests and demo gifts created on this device will be cleared.',
+              confirmLabel: 'Reset',
+              destructive: true,
+            }).then((confirmed) => {
+              if (!confirmed) return;
+              void resetDemoState().then(() => {
+                queryClient.clear();
+                toast('Demo data reset.', { icon: 'refresh-cw' });
+              });
+            })
           }
         />
       ) : null}

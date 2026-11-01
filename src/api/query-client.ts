@@ -39,6 +39,9 @@ export function createQueryClient(): QueryClient {
 export const queryKeys = {
   home: ['home'] as const,
   devotional: ['devotional', 'today'] as const,
+  devotionals: ['devotional', 'recent'] as const,
+  decree: (period: string) => ['decree', period] as const,
+  devotionProgress: ['devotion', 'progress'] as const,
 
   session: ['session'] as const,
   profile: ['profile'] as const,

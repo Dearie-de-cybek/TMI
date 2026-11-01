@@ -334,17 +334,8 @@ export const demoStudyNotes: Record<
   },
 };
 
-export const demoDevotionals = [
-  {
-    id: 'dv-1',
-    date: at(0, 5),
-    title: 'Enough for Today',
-    scripture_reference: 'Matthew 6:11',
-    scripture_text: 'Give us this day our daily bread.',
-    body: 'The prayer is for today. Not for the quarter, not for the five-year plan. Daily bread is a discipline of trust as much as a request for provision — it asks us to come back tomorrow.',
-    author: null,
-  },
-];
+// The devotionals and the monthly decree live in `devotion-content.ts`.
+export { demoDevotionals, demoDecree } from './devotion-content';
 
 export const demoEvents = [
   {

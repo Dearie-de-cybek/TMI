@@ -24,6 +24,7 @@ import {
   demoStudyNotes,
   demoTranscripts,
 } from './content';
+import { demoDecree } from './devotion-content';
 import { demoId, getDemoState, mutateDemoState, type DemoState } from './state';
 
 /**
@@ -569,6 +570,75 @@ const routes: Route[] = [
     pattern: /^\/devotionals\/today$/,
     anonymous: true,
     handler: () => demoDevotionals[0] ?? notFound('Today’s devotional'),
+  },
+  {
+    method: 'GET',
+    pattern: /^\/devotionals$/,
+    anonymous: true,
+    handler: () => ({ data: demoDevotionals }),
+  },
+
+  /* ------------------------- prophetic decree --------------------------- */
+  {
+    method: 'GET',
+    pattern: /^\/devotions\/decree\/current$/,
+    anonymous: true,
+    handler: () => demoDecree,
+  },
+  {
+    method: 'GET',
+    pattern: /^\/devotions\/decree\/([^/]+)$/,
+    anonymous: true,
+    handler: ({ params }) => {
+      if (params[0] !== demoDecree.period) notFound('A decree for that month');
+      return demoDecree;
+    },
+  },
+  {
+    method: 'GET',
+    pattern: /^\/devotions\/progress$/,
+    handler: ({ state }) => {
+      requireMember(state);
+      return state.devotion;
+    },
+  },
+  {
+    method: 'PUT',
+    pattern: /^\/devotions\/progress$/,
+    handler: async ({ body, state }) => {
+      requireMember(state);
+      // The device is the source of truth; the server mirrors what it is told,
+      // taking the union so a second device cannot erase the first.
+      const incoming = body as Partial<DemoState['devotion']>;
+      const period = text(incoming.period) || state.devotion.period;
+      const merged: DemoState['devotion'] = {
+        period,
+        prayed_section_ids: [
+          ...new Set([
+            ...(period === state.devotion.period ? state.devotion.prayed_section_ids : []),
+            ...(Array.isArray(incoming.prayed_section_ids) ? incoming.prayed_section_ids : []),
+          ]),
+        ],
+        confession_declared_on:
+          incoming.confession_declared_on ?? state.devotion.confession_declared_on,
+        read_devotional_ids: [
+          ...new Set([
+            ...state.devotion.read_devotional_ids,
+            ...(Array.isArray(incoming.read_devotional_ids) ? incoming.read_devotional_ids : []),
+          ]),
+        ],
+        streak_days: Math.max(number(incoming.streak_days), state.devotion.streak_days),
+        longest_streak_days: Math.max(
+          number(incoming.longest_streak_days),
+          state.devotion.longest_streak_days
+        ),
+        last_active_on: incoming.last_active_on ?? state.devotion.last_active_on,
+      };
+      await mutateDemoState((draft) => {
+        draft.devotion = merged;
+      });
+      return merged;
+    },
   },
 
   /* ------------------------------ sermons ------------------------------- */

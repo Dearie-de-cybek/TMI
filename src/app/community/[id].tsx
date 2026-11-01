@@ -1,11 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Alert, Linking, StyleSheet, View } from 'react-native';
+import { Linking, StyleSheet, View } from 'react-native';
 
 import { describeError } from '@/api/errors';
 import { queryKeys } from '@/api/query-client';
 import { type Group } from '@/api/schemas';
 import { useToast } from '@/components/app/toast';
+import { useDialog } from '@/components/ui/dialog';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { ContentImage } from '@/components/ui/content-image';
@@ -31,6 +32,7 @@ export default function GroupDetailScreen() {
   const toast = useToast();
   const queryClient = useQueryClient();
   const requireAuth = useRequireAuth();
+  const { confirm } = useDialog();
 
   const group = useQuery({
     queryKey: queryKeys.group(id),
@@ -160,10 +162,17 @@ export default function GroupDetailScreen() {
               fullWidth
               loading={leave.isPending}
               onPress={() =>
-                Alert.alert('Leave this group?', 'The group leader will be notified.', [
-                  { text: 'Stay', style: 'cancel' },
-                  { text: 'Leave', style: 'destructive', onPress: () => leave.mutate() },
-                ])
+                void confirm({
+                  eyebrow: data.name,
+                  icon: 'log-out',
+                  title: 'Leave this group?',
+                  message: 'The group leader will be notified that you have left.',
+                  confirmLabel: 'Leave',
+                  cancelLabel: 'Stay',
+                  destructive: true,
+                }).then((confirmed) => {
+                  if (confirmed) leave.mutate();
+                })
               }
             />
           ) : null}

@@ -119,5 +119,7 @@ export const storageKeys = {
   recentSearches: 'search.recent',
   notificationsPrompted: 'notifications.prompted',
   playbackPositions: 'playback.positions',
+  devotionProgress: 'devotion.progress',
+  prayerReminder: 'devotion.reminder',
   demoState: 'demo.state',
 } as const;

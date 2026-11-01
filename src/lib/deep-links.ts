@@ -12,6 +12,7 @@ import { type Href } from 'expo-router';
 
 const allowedPrefixes = [
   '/sermons',
+  '/devotion',
   '/courses',
   '/lessons',
   '/events',

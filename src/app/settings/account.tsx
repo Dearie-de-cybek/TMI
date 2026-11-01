@@ -1,10 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { describeError } from '@/api/errors';
 import { AuthShell } from '@/components/app/auth-shell';
 import { useToast } from '@/components/app/toast';
+import { useDialog } from '@/components/ui/dialog';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
@@ -34,12 +35,13 @@ export default function AccountSettingsScreen() {
   const toast = useToast();
   const member = useAuth((state) => state.member);
   const signOut = useAuth((state) => state.signOut);
+  const { confirm, notice } = useDialog();
 
   const requestDeletion = useMutation({
     mutationFn: () => requestAccountDeletion(),
     onSuccess: (result) => {
       toast('Deletion request sent to the church office.', { icon: 'check' });
-      Alert.alert('Request recorded', result.message);
+      void notice({ eyebrow: 'Account', title: 'Request recorded', message: result.message });
     },
   });
 
@@ -104,18 +106,17 @@ export default function AccountSettingsScreen() {
           fullWidth
           loading={requestDeletion.isPending}
           onPress={() =>
-            Alert.alert(
-              'Request account deletion?',
-              'This sends a request to the church office. Giving records and some membership details may have to be kept by law.',
-              [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                  text: 'Send request',
-                  style: 'destructive',
-                  onPress: () => requestDeletion.mutate(),
-                },
-              ]
-            )
+            void confirm({
+              eyebrow: 'Account and data',
+              icon: 'alert-triangle',
+              title: 'Request account deletion?',
+              message:
+                'This sends a request to the church office. Giving records and some membership details may have to be kept by law.',
+              confirmLabel: 'Send request',
+              destructive: true,
+            }).then((confirmed) => {
+              if (confirmed) requestDeletion.mutate();
+            })
           }
         />
       )}

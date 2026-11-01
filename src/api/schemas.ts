@@ -179,6 +179,68 @@ export const devotionalSchema = z.object({
   scripture_text: z.string(),
   body: z.string(),
   author: z.string().nullable().optional(),
+  artwork_url: z.string().nullable().optional(),
+  /** One question to sit with. Optional — not every devotional has one. */
+  reflection: z.string().nullable().optional(),
+});
+
+/* -------------------------------------------------------------------------- */
+/* Prophetic decree                                                           */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The monthly decree the Lead Pastor publishes: a theme, a scriptural
+ * foundation, numbered declarations to pray through, and the corporate
+ * confession that closes the month.
+ */
+export const decreeSectionSchema = z.object({
+  id,
+  position: z.number().int(),
+  title: z.string(),
+  scriptures: z.array(z.string()).default([]),
+  /** Paragraphs, in the order they are prayed. */
+  body: z.array(z.string()),
+});
+
+export const propheticDecreeSchema = z.object({
+  id,
+  /** `YYYY-MM`, the month this decree belongs to. */
+  period: z.string().regex(/^\d{4}-\d{2}$/),
+  month_label: z.string(),
+  theme: z.string(),
+  subtitle: z.string().nullable().optional(),
+  author: z.string(),
+  author_role: z.string().nullable().optional(),
+  artwork_url: z.string().nullable().optional(),
+  published_at: isoDate,
+  /** The theme the church has set over the whole year, when there is one. */
+  year_theme: z.object({ year: z.number().int(), theme: z.string() }).nullable().optional(),
+  scriptural_foundation: z.array(z.string()).default([]),
+  introduction: z.array(z.string()).default([]),
+  sections: z.array(decreeSectionSchema),
+  confession: z
+    .object({ title: z.string(), lead: z.string(), lines: z.array(z.string()) })
+    .nullable()
+    .optional(),
+  closing_word: z.string().nullable().optional(),
+});
+
+/**
+ * What the member has prayed and read.
+ *
+ * Held locally so it works offline and mid-prayer, and mirrored to the backend
+ * for a signed-in member so it follows them between devices.
+ */
+export const devotionProgressSchema = z.object({
+  period: z.string(),
+  prayed_section_ids: z.array(z.string()).default([]),
+  /** `YYYY-MM-DD` the corporate confession was last declared. */
+  confession_declared_on: z.string().nullable().optional(),
+  read_devotional_ids: z.array(z.string()).default([]),
+  streak_days: z.number().int().default(0),
+  longest_streak_days: z.number().int().default(0),
+  /** `YYYY-MM-DD` of the last day with any devotional activity. */
+  last_active_on: z.string().nullable().optional(),
 });
 
 /* -------------------------------------------------------------------------- */
@@ -626,6 +688,9 @@ export type StudyNotes = z.infer<typeof studyNotesSchema>;
 export type AskMessage = z.infer<typeof askMessageSchema>;
 export type AskConversation = z.infer<typeof askConversationSchema>;
 export type Devotional = z.infer<typeof devotionalSchema>;
+export type DecreeSection = z.infer<typeof decreeSectionSchema>;
+export type PropheticDecree = z.infer<typeof propheticDecreeSchema>;
+export type DevotionProgress = z.infer<typeof devotionProgressSchema>;
 export type ChurchEvent = z.infer<typeof eventSchema>;
 export type Announcement = z.infer<typeof announcementSchema>;
 export type AppNotification = z.infer<typeof notificationSchema>;

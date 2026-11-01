@@ -81,6 +81,16 @@ export type DemoState = {
     new_sermons: boolean;
   };
   askConversations: Record<string, DemoAskMessage[]>;
+  /** Mirror of the device's devotional progress, for a signed-in member. */
+  devotion: {
+    period: string;
+    prayed_section_ids: string[];
+    confession_declared_on: string | null;
+    read_devotional_ids: string[];
+    streak_days: number;
+    longest_streak_days: number;
+    last_active_on: string | null;
+  };
 };
 
 function minutesAgo(minutes: number): string {
@@ -153,6 +163,15 @@ function initialState(): DemoState {
       new_sermons: true,
     },
     askConversations: {},
+    devotion: {
+      period: new Date().toISOString().slice(0, 7),
+      prayed_section_ids: [],
+      confession_declared_on: null,
+      read_devotional_ids: [],
+      streak_days: 0,
+      longest_streak_days: 0,
+      last_active_on: null,
+    },
   };
 }
 

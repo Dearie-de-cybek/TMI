@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import { Alert, Linking, StyleSheet, View } from 'react-native';
+import { Linking, StyleSheet, View } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 
 import { describeError } from '@/api/errors';
@@ -8,6 +8,7 @@ import { queryKeys } from '@/api/query-client';
 import { type PrayerRequest } from '@/api/schemas';
 import { SignInPrompt } from '@/components/app/sign-in-prompt';
 import { useToast } from '@/components/app/toast';
+import { useDialog } from '@/components/ui/dialog';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Tag } from '@/components/ui/chips';
@@ -147,6 +148,7 @@ function RequestCard({ request }: { request: PrayerRequest }) {
   const colors = useColors();
   const toast = useToast();
   const queryClient = useQueryClient();
+  const { confirm } = useDialog();
   const status = statusTones[request.status];
   const visibility = prayerVisibilityLabel(request.visibility);
 
@@ -161,14 +163,17 @@ function RequestCard({ request }: { request: PrayerRequest }) {
   });
 
   function confirmWithdraw() {
-    Alert.alert(
-      'Withdraw this request?',
-      'It will be removed from the prayer list. This cannot be undone.',
-      [
-        { text: 'Keep it', style: 'cancel' },
-        { text: 'Withdraw', style: 'destructive', onPress: () => withdraw.mutate() },
-      ]
-    );
+    void confirm({
+      eyebrow: 'Prayer request',
+      icon: 'trash-2',
+      title: 'Withdraw this request?',
+      message: 'It will be removed from the prayer list. This cannot be undone.',
+      confirmLabel: 'Withdraw',
+      cancelLabel: 'Keep it',
+      destructive: true,
+    }).then((confirmed) => {
+      if (confirmed) withdraw.mutate();
+    });
   }
 
   return (

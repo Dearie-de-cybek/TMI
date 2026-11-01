@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { queryKeys } from '@/api/query-client';
 import { SignInPrompt } from '@/components/app/sign-in-prompt';
 import { TAB_BAR_HEIGHT } from '@/components/app/tab-bar';
+import { useDialog } from '@/components/ui/dialog';
 import { Avatar } from '@/components/ui/avatar';
 import { Banner } from '@/components/ui/banner';
 import { Tag } from '@/components/ui/chips';
@@ -27,6 +28,7 @@ export default function ProfileScreen() {
   const signOut = useAuth((state) => state.signOut);
   const requiresVerification = useAuth((state) => state.requiresVerification);
   const apiMode = useRuntimeConfig((state) => state.apiMode);
+  const { confirm } = useDialog();
 
   const enrollments = useQuery({
     queryKey: queryKeys.enrollments,
@@ -185,16 +187,18 @@ export default function ProfileScreen() {
             icon="log-out"
             destructive
             onPress={() =>
-              Alert.alert('Sign out?', 'Your saved content stays with your account.', [
-                { text: 'Stay signed in', style: 'cancel' },
-                {
-                  text: 'Sign out',
-                  style: 'destructive',
-                  onPress: () => {
-                    void signOut().then(() => router.replace('/'));
-                  },
-                },
-              ])
+              void confirm({
+                eyebrow: 'Your account',
+                icon: 'log-out',
+                title: 'Sign out?',
+                message:
+                  'Your saved teaching, course progress and giving record stay with your account.',
+                confirmLabel: 'Sign out',
+                cancelLabel: 'Stay signed in',
+                destructive: true,
+              }).then((confirmed) => {
+                if (confirmed) void signOut().then(() => router.replace('/'));
+              })
             }
           />
         </Group>

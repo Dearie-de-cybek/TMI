@@ -23,6 +23,7 @@ import {
 import { createQueryClient } from '@/api/query-client';
 import { NoticeStrip, useNoticeStripVisible } from '@/components/app/notices';
 import { ToastHost } from '@/components/app/toast';
+import { DialogHost } from '@/components/ui/dialog';
 import { useRuntimeConfig } from '@/config/runtime';
 import { ThemeProvider, useTheme } from '@/design/theme';
 import { installUnauthorizedHandler, useAuth } from '@/features/auth/store';
@@ -129,6 +130,7 @@ function AppShell() {
           <Stack.Screen name="sign-in" options={{ animation: 'slide_from_bottom' }} />
           <Stack.Screen name="sign-up" options={{ animation: 'slide_from_bottom' }} />
         </Stack>
+        <DialogHost />
         <ToastHost />
       </SafeAreaInsetsContext.Provider>
     </View>
