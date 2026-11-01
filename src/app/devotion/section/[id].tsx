@@ -9,8 +9,10 @@ import { useDialog } from '@/components/ui/dialog';
 import { Tag } from '@/components/ui/chips';
 import { NavBar } from '@/components/ui/header';
 import { Icon } from '@/components/ui/icon';
+import { LikeButton } from '@/components/ui/like-button';
 import { ProgressBar } from '@/components/ui/progress';
 import { Screen, ScreenScroll } from '@/components/ui/screen';
+import { ShareButton } from '@/components/ui/share-button';
 import { SkeletonList } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/states';
 import { Eyebrow, Text } from '@/components/ui/text';
@@ -148,6 +150,13 @@ export default function DecreeSectionScreen() {
           ))}
         </View>
 
+        <View style={styles.reactions}>
+          <LikeButton id={`decree-${section.id}`} />
+          <ShareButton
+            message={`${section.title}\n${decree.data.theme} — ${decree.data.month_label}\n\n${section.body[0] ?? ''}`}
+          />
+        </View>
+
         <View style={styles.actions}>
           {prayed ? (
             <>
@@ -238,6 +247,12 @@ const styles = StyleSheet.create({
   },
   paragraph: {
     marginBottom: space.xl,
+  },
+  reactions: {
+    flexDirection: 'row',
+    gap: space.lg,
+    paddingHorizontal: space.gutter,
+    paddingTop: space.lg,
   },
   actions: {
     paddingHorizontal: space.gutter,

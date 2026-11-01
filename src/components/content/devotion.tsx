@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { queryKeys } from '@/api/query-client';
 import { Button } from '@/components/ui/button';
@@ -159,6 +160,58 @@ export function DevotionCard() {
   );
 }
 
+const badgeIcons: Record<string, keyof typeof Ionicons.glyphMap> = {
+  first: 'heart',
+  half: 'flame',
+  all: 'trophy',
+  confession: 'mic',
+  week: 'flash',
+  month: 'ribbon',
+};
+
+/** Badges in a row: solid maroon-on-soft when earned, a grey lock when not. */
+export function BadgeRow({ milestones }: { milestones: Milestone[] }) {
+  const colors = useColors();
+
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.badgeRow}
+    >
+      {milestones.map((milestone) => (
+        <View
+          key={milestone.id}
+          accessible
+          accessibilityLabel={`${milestone.title}. ${milestone.reached ? 'Earned' : milestone.hint}`}
+          style={styles.badge}
+        >
+          <View
+            style={[
+              styles.badgeArt,
+              { backgroundColor: milestone.reached ? colors.primarySoft : colors.surfaceMuted },
+            ]}
+          >
+            <Ionicons
+              name={milestone.reached ? (badgeIcons[milestone.id] ?? 'ribbon') : 'lock-closed-outline'}
+              size={30}
+              color={milestone.reached ? colors.primary : colors.textTertiary}
+            />
+          </View>
+          <Text
+            variant="caption"
+            color={milestone.reached ? 'text' : 'textTertiary'}
+            style={styles.badgeLabel}
+            numberOfLines={2}
+          >
+            {milestone.title}
+          </Text>
+        </View>
+      ))}
+    </ScrollView>
+  );
+}
+
 /** The markers a member has reached, and the ones still ahead. */
 export function MilestoneGrid({ milestones }: { milestones: Milestone[] }) {
   const colors = useColors();
@@ -269,6 +322,25 @@ const styles = StyleSheet.create({
   },
   progress: {
     paddingTop: space.md,
+  },
+  badgeRow: {
+    gap: space.lg,
+    padding: space.lg,
+  },
+  badge: {
+    width: 76,
+    alignItems: 'center',
+    gap: space.sm,
+  },
+  badgeArt: {
+    width: 68,
+    height: 68,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeLabel: {
+    textAlign: 'center',
   },
   card: {
     gap: space.xs,

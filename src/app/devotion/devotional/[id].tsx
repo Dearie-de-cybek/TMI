@@ -10,7 +10,9 @@ import { Button } from '@/components/ui/button';
 import { ContentImage } from '@/components/ui/content-image';
 import { NavBar } from '@/components/ui/header';
 import { Icon } from '@/components/ui/icon';
+import { LikeButton } from '@/components/ui/like-button';
 import { Screen, ScreenScroll } from '@/components/ui/screen';
+import { ShareButton } from '@/components/ui/share-button';
 import { SkeletonList } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/states';
 import { Eyebrow, Text } from '@/components/ui/text';
@@ -138,6 +140,13 @@ export default function DevotionalScreen() {
           </View>
         ) : null}
 
+        <View style={[styles.gutter, styles.reactions]}>
+          <LikeButton id={`devotional-${item.id}`} />
+          <ShareButton
+            message={`“${item.scripture_text}”\n— ${item.scripture_reference}\n\n${item.title}`}
+          />
+        </View>
+
         <View style={[styles.gutter, styles.actions]}>
           {read ? (
             <View style={styles.readMark}>
@@ -195,8 +204,13 @@ const styles = StyleSheet.create({
     paddingLeft: space.lg,
     gap: space.sm,
   },
-  actions: {
+  reactions: {
+    flexDirection: 'row',
+    gap: space.lg,
     paddingTop: space.xl,
+  },
+  actions: {
+    paddingTop: space.lg,
     gap: space.sm,
   },
   readMark: {

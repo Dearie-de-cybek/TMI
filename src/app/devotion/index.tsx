@@ -281,7 +281,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: space.gutter,
   },
   hero: {
-    height: 240,
+    height: 300,
+    marginHorizontal: space.gutter,
+    marginTop: space.sm,
+    borderRadius: radius.lg,
     justifyContent: 'flex-end',
     overflow: 'hidden',
   },
@@ -291,9 +294,9 @@ const styles = StyleSheet.create({
   },
   theme: {
     fontFamily: fonts.sansBold,
-    fontSize: 28,
-    lineHeight: 33,
-    letterSpacing: -0.6,
+    fontSize: 32,
+    lineHeight: 36,
+    letterSpacing: -1,
   },
   block: {
     paddingTop: space.xl,
