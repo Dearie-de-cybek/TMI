@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   playButton: {
     width: 60,
     height: 60,
-    borderRadius: 30,
+    borderRadius: radius.md,
     alignItems: 'center',
     justifyContent: 'center',
   },

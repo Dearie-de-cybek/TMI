@@ -14,7 +14,7 @@ import { SkeletonList } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/states';
 import { Text } from '@/components/ui/text';
 import { useColors } from '@/design/theme';
-import { space } from '@/design/tokens';
+import { radius, space } from '@/design/tokens';
 import { useIsSignedIn } from '@/features/auth/use-require-auth';
 import {
   fetchNotifications,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     height: 34,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 17,
+    borderRadius: radius.sm,
     marginTop: 2,
   },
   text: {
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   dot: {
     width: 7,
     height: 7,
-    borderRadius: 4,
+    borderRadius: radius.xs,
     marginTop: space.sm,
   },
 });

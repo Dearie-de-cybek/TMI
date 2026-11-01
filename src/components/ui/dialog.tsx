@@ -95,12 +95,8 @@ export function DialogHost() {
             style={[styles.card, { backgroundColor: colors.surface }]}
           >
             {request.icon ? (
-              <View style={[styles.iconWrap, { backgroundColor: colors.primarySoft }]}>
-                <Icon
-                  name={request.icon}
-                  size="md"
-                  color={request.destructive ? 'danger' : 'primaryOnSoft'}
-                />
+              <View style={styles.iconWrap}>
+                <Icon name={request.icon} size="md" color={request.destructive ? 'danger' : 'primary'} />
               </View>
             ) : null}
 
@@ -162,11 +158,6 @@ const styles = StyleSheet.create({
     gap: space.sm,
   },
   iconWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    alignItems: 'center',
-    justifyContent: 'center',
     marginBottom: space.xs,
   },
   title: {

@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
   playBadge: {
     width: 26,
     height: 26,
-    borderRadius: 13,
+    borderRadius: radius.sm,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',

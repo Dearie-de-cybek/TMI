@@ -1,11 +1,19 @@
+import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
+
+import { queryKeys } from '@/api/query-client';
+import { Button } from '@/components/ui/button';
 
 import { Icon } from '@/components/ui/icon';
 import { ProgressBar } from '@/components/ui/progress';
 import { Eyebrow, Text } from '@/components/ui/text';
 import { useColors } from '@/design/theme';
 import { radius, space } from '@/design/tokens';
-import { dayKey } from '@/features/devotion/progress-store';
+import { fetchCurrentDecree } from '@/features/devotion/api';
+import { type Milestone } from '@/features/devotion/milestones';
+import { dayKey, useDevotionProgress } from '@/features/devotion/progress-store';
+import { useDevotionSync } from '@/features/devotion/use-devotion-sync';
 
 /**
  * The streak ribbon.
@@ -99,6 +107,94 @@ export function DecreeProgress({
   );
 }
 
+/**
+ * Home-screen entry to the month's decree. It answers "where did I stop?" in
+ * one glance — the streak, how many decrees are prayed — and its single button
+ * resumes at the next unprayed decree.
+ */
+export function DevotionCard() {
+  const router = useRouter();
+  const colors = useColors();
+  useDevotionSync();
+
+  const decree = useQuery({
+    queryKey: queryKeys.decree('current'),
+    queryFn: ({ signal }) => fetchCurrentDecree(signal),
+  });
+  const prayedIds = useDevotionProgress((state) => state.prayedSectionIds);
+  const period = useDevotionProgress((state) => state.period);
+  const streakDays = useDevotionProgress((state) => state.streakDays);
+
+  if (!decree.data) return null;
+
+  const sections = decree.data.sections;
+  // Progress belongs to a month; a stale month has nothing prayed yet.
+  const prayed = period === decree.data.period ? prayedIds : [];
+  const prayedCount = sections.filter((section) => prayed.includes(section.id)).length;
+  const next = sections.find((section) => !prayed.includes(section.id));
+
+  return (
+    <View style={[styles.card, { borderColor: colors.border, backgroundColor: colors.surface }]}>
+      <Eyebrow>
+        {decree.data.month_label} · {streakDays > 0 ? `${streakDays} days running` : 'prophetic decree'}
+      </Eyebrow>
+      <Text variant="headline">{decree.data.theme}</Text>
+      <DecreeProgress prayed={prayedCount} total={sections.length} />
+      <View style={styles.cardAction}>
+        <Button
+          label={
+            !next
+              ? 'Open this month’s decree'
+              : prayedCount === 0
+                ? 'Begin the first decree'
+                : `Continue — decree ${next.position}`
+          }
+          icon="arrow-right"
+          iconPosition="trailing"
+          fullWidth
+          onPress={() => router.push(next ? `/devotion/section/${next.id}` : '/devotion')}
+        />
+      </View>
+    </View>
+  );
+}
+
+/** The markers a member has reached, and the ones still ahead. */
+export function MilestoneGrid({ milestones }: { milestones: Milestone[] }) {
+  const colors = useColors();
+
+  return (
+    <View style={styles.grid}>
+      {milestones.map((milestone) => (
+        <View
+          key={milestone.id}
+          accessible
+          accessibilityLabel={`${milestone.title}. ${milestone.reached ? 'Reached' : milestone.hint}`}
+          style={[
+            styles.tile,
+            {
+              backgroundColor: milestone.reached ? colors.accentSoft : 'transparent',
+              borderColor: milestone.reached ? colors.accent : colors.border,
+            },
+          ]}
+        >
+          <Icon
+            name={milestone.reached ? 'check' : 'lock'}
+            size="sm"
+            color={milestone.reached ? 'accentOnSoft' : 'textTertiary'}
+          />
+          <Text variant="metaStrong" color={milestone.reached ? 'accentOnSoft' : 'textSecondary'}>
+            {milestone.title}
+          </Text>
+          <Text variant="caption" color="textTertiary" numberOfLines={2}>
+            {milestone.reached ? 'Reached' : milestone.hint}
+          </Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
 /** A single decree in the list, with its prayed state. */
 export function DecreeRow({
   position,
@@ -166,13 +262,34 @@ const styles = StyleSheet.create({
     gap: space.xs,
   },
   dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 12,
+    height: 4,
+    borderRadius: radius.xs,
     borderWidth: 1,
   },
   progress: {
     paddingTop: space.md,
+  },
+  card: {
+    gap: space.xs,
+    padding: space.lg,
+    borderWidth: 1,
+    borderRadius: radius.sm,
+  },
+  cardAction: {
+    paddingTop: space.md,
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: space.sm,
+  },
+  tile: {
+    width: '48.5%',
+    gap: 2,
+    padding: space.md,
+    borderWidth: 1,
+    borderRadius: radius.sm,
   },
   row: {
     flexDirection: 'row',
@@ -184,7 +301,7 @@ const styles = StyleSheet.create({
   marker: {
     width: 28,
     height: 28,
-    borderRadius: 14,
+    borderRadius: radius.sm,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',

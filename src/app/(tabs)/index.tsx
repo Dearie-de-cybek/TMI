@@ -5,6 +5,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { queryKeys } from '@/api/query-client';
 import { SignInPrompt } from '@/components/app/sign-in-prompt';
 import { TAB_BAR_HEIGHT } from '@/components/app/tab-bar';
+import { DevotionCard } from '@/components/content/devotion';
 import { FeaturedSermon, LiveSessionStrip, ScripturePlate } from '@/components/content/featured';
 import { AnnouncementRow, CourseRow, EventRow, SermonTile } from '@/components/content/rows';
 import { Band } from '@/components/ui/band';
@@ -119,6 +120,13 @@ export default function HomeScreen() {
               </View>
             </Band>
           ) : null}
+
+          {/* Prayer — where the member left off in this month's decree. */}
+          <Band>
+            <View style={styles.gutter}>
+              <DevotionCard />
+            </View>
+          </Band>
 
           {/* Formation. */}
           <Band tone="primary">

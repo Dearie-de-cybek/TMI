@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { queryKeys } from '@/api/query-client';
-import { DecreeProgress, StreakRibbon } from '@/components/content/devotion';
+import { DecreeProgress, MilestoneGrid, StreakRibbon } from '@/components/content/devotion';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Band } from '@/components/ui/band';
@@ -21,6 +21,7 @@ import { Eyebrow, Text } from '@/components/ui/text';
 import { useColors } from '@/design/theme';
 import { fonts, radius, space } from '@/design/tokens';
 import { fetchCurrentDecree, fetchTodayDevotional } from '@/features/devotion/api';
+import { milestonesFor } from '@/features/devotion/milestones';
 import { useDevotionProgress } from '@/features/devotion/progress-store';
 import { useDevotionSync } from '@/features/devotion/use-devotion-sync';
 import { resolveArtwork } from '@/lib/artwork';
@@ -78,7 +79,7 @@ export default function DevotionScreen() {
           {
             icon: 'bell',
             label: 'Prayer reminders',
-            onPress: () => router.push('/settings/notifications'),
+            onPress: () => router.push('/devotion/reminders'),
           },
         ]}
       />
@@ -109,7 +110,7 @@ export default function DevotionScreen() {
             ) : null}
             <LinearGradient
               colors={['transparent', colors.scrim, colors.scrimStrong]}
-              locations={[0.2, 0.6, 1]}
+              locations={[0, 0.4, 0.8]}
               style={StyleSheet.absoluteFill}
               pointerEvents="none"
             />
@@ -168,6 +169,11 @@ export default function DevotionScreen() {
                   onPress={() => router.push('/devotion/decree')}
                 />
               </View>
+            </View>
+
+            <View style={styles.block}>
+              <SectionHeader eyebrow="Along the way" title="Milestones" />
+              <MilestoneGrid milestones={milestonesFor(progress, sections.length)} />
             </View>
 
             {allPrayed ? (
@@ -246,7 +252,7 @@ export default function DevotionScreen() {
           <Rule style={styles.footerRule} />
           <View style={styles.gutter}>
             <Pressable
-              onPress={() => router.push('/settings/notifications')}
+              onPress={() => router.push('/devotion/reminders')}
               accessibilityLabel="Set a prayer reminder"
               style={[styles.reminderRow, { borderColor: colors.border }]}
             >
