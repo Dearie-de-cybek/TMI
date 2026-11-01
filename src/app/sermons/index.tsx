@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
@@ -34,7 +34,8 @@ const emptyFilters: Filters = { speaker: null, series: null, topic: null };
  */
 export default function SermonLibraryScreen() {
   const router = useRouter();
-  const [filters, setFilters] = useState<Filters>(emptyFilters);
+  const params = useLocalSearchParams<{ topic?: string }>();
+  const [filters, setFilters] = useState<Filters>({ ...emptyFilters, topic: params.topic ?? null });
   const [sort, setSort] = useState<'newest' | 'oldest'>('newest');
   const [sheetOpen, setSheetOpen] = useState(false);
 

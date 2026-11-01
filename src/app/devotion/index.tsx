@@ -6,7 +6,8 @@ import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { queryKeys } from '@/api/query-client';
-import { DecreeProgress, MilestoneGrid, StreakRibbon } from '@/components/content/devotion';
+import { BadgeShelf } from '@/components/content/badges';
+import { DecreeProgress, StreakRibbon } from '@/components/content/devotion';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Band } from '@/components/ui/band';
@@ -21,7 +22,7 @@ import { Eyebrow, Text } from '@/components/ui/text';
 import { useColors } from '@/design/theme';
 import { fonts, radius, space } from '@/design/tokens';
 import { fetchCurrentDecree, fetchTodayDevotional } from '@/features/devotion/api';
-import { milestonesFor } from '@/features/devotion/milestones';
+import { useBadges } from '@/features/devotion/badges';
 import { useDevotionProgress } from '@/features/devotion/progress-store';
 import { useDevotionSync } from '@/features/devotion/use-devotion-sync';
 import { resolveArtwork } from '@/lib/artwork';
@@ -52,6 +53,7 @@ export default function DevotionScreen() {
   });
 
   const progress = useDevotionProgress();
+  const badges = useBadges();
   const setPeriod = useDevotionProgress((state) => state.setPeriod);
 
   // Opening a decree for a new month resets that month's section progress.
@@ -172,8 +174,7 @@ export default function DevotionScreen() {
             </View>
 
             <View style={styles.block}>
-              <SectionHeader eyebrow="Along the way" title="Milestones" />
-              <MilestoneGrid milestones={milestonesFor(progress, sections.length)} />
+              <BadgeShelf badges={badges} onViewAll={() => router.push('/badges')} />
             </View>
 
             {allPrayed ? (

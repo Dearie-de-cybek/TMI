@@ -121,6 +121,7 @@ export const storageKeys = {
   playbackPositions: 'playback.positions',
   devotionProgress: 'devotion.progress',
   likes: 'likes',
+  avatarChoice: 'avatar.choice',
   prayerReminder: 'devotion.reminder',
   demoState: 'demo.state',
 } as const;

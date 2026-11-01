@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { queryKeys } from '@/api/query-client';
 import { Button } from '@/components/ui/button';
@@ -10,9 +11,8 @@ import { Icon } from '@/components/ui/icon';
 import { ProgressBar } from '@/components/ui/progress';
 import { Eyebrow, Text } from '@/components/ui/text';
 import { useColors } from '@/design/theme';
-import { radius, space } from '@/design/tokens';
+import { fonts, radius, space } from '@/design/tokens';
 import { fetchCurrentDecree } from '@/features/devotion/api';
-import { type Milestone } from '@/features/devotion/milestones';
 import { dayKey, useDevotionProgress } from '@/features/devotion/progress-store';
 import { useDevotionSync } from '@/features/devotion/use-devotion-sync';
 
@@ -109,13 +109,12 @@ export function DecreeProgress({
 }
 
 /**
- * Home-screen entry to the month's decree. It answers "where did I stop?" in
- * one glance — the streak, how many decrees are prayed — and its single button
- * resumes at the next unprayed decree.
+ * Home-screen entry to the month's decree: a maroon card with the month's theme,
+ * one block per decree (gold when prayed), and a single button that resumes at
+ * the next one. It answers "where did I stop?" at a glance.
  */
 export function DevotionCard() {
   const router = useRouter();
-  const colors = useColors();
   useDevotionSync();
 
   const decree = useQuery({
@@ -135,116 +134,60 @@ export function DevotionCard() {
   const next = sections.find((section) => !prayed.includes(section.id));
 
   return (
-    <View style={[styles.card, { borderColor: colors.border, backgroundColor: colors.surface }]}>
-      <Eyebrow>
-        {decree.data.month_label} · {streakDays > 0 ? `${streakDays} days running` : 'prophetic decree'}
-      </Eyebrow>
-      <Text variant="headline">{decree.data.theme}</Text>
-      <DecreeProgress prayed={prayedCount} total={sections.length} />
-      <View style={styles.cardAction}>
-        <Button
-          label={
-            !next
-              ? 'Open this month’s decree'
-              : prayedCount === 0
-                ? 'Begin the first decree'
-                : `Continue — decree ${next.position}`
-          }
-          icon="arrow-right"
-          iconPosition="trailing"
-          fullWidth
-          onPress={() => router.push(next ? `/devotion/section/${next.id}` : '/devotion')}
-        />
-      </View>
-    </View>
-  );
-}
-
-const badgeIcons: Record<string, keyof typeof Ionicons.glyphMap> = {
-  first: 'heart',
-  half: 'flame',
-  all: 'trophy',
-  confession: 'mic',
-  week: 'flash',
-  month: 'ribbon',
-};
-
-/** Badges in a row: solid maroon-on-soft when earned, a grey lock when not. */
-export function BadgeRow({ milestones }: { milestones: Milestone[] }) {
-  const colors = useColors();
-
-  return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.badgeRow}
+    <LinearGradient
+      colors={['#8A2236', '#3D111C']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.decreeCard}
     >
-      {milestones.map((milestone) => (
-        <View
-          key={milestone.id}
-          accessible
-          accessibilityLabel={`${milestone.title}. ${milestone.reached ? 'Earned' : milestone.hint}`}
-          style={styles.badge}
-        >
+      <View style={styles.decreeTop}>
+        <Text variant="metaStrong" style={styles.decreeKicker} numberOfLines={1}>
+          {decree.data.month_label} · Prophetic decree
+        </Text>
+        <View style={styles.streakChip}>
+          <Ionicons name="flash" size={16} color="#E3B965" />
+          <Text variant="labelStrong" style={styles.streakNumber}>
+            {streakDays}
+          </Text>
+        </View>
+      </View>
+
+      <Text style={styles.decreeTitle} numberOfLines={3}>
+        {decree.data.theme}
+      </Text>
+
+      <View style={styles.blocks} accessible accessibilityLabel={`${prayedCount} of ${sections.length} decrees prayed`}>
+        {sections.map((section) => (
           <View
+            key={section.id}
             style={[
-              styles.badgeArt,
-              { backgroundColor: milestone.reached ? colors.primarySoft : colors.surfaceMuted },
+              styles.block,
+              { backgroundColor: prayed.includes(section.id) ? '#E3B965' : 'rgba(255,255,255,0.25)' },
             ]}
-          >
-            <Ionicons
-              name={milestone.reached ? (badgeIcons[milestone.id] ?? 'ribbon') : 'lock-closed-outline'}
-              size={30}
-              color={milestone.reached ? colors.primary : colors.textTertiary}
-            />
-          </View>
-          <Text
-            variant="caption"
-            color={milestone.reached ? 'text' : 'textTertiary'}
-            style={styles.badgeLabel}
-            numberOfLines={2}
-          >
-            {milestone.title}
-          </Text>
-        </View>
-      ))}
-    </ScrollView>
-  );
-}
-
-/** The markers a member has reached, and the ones still ahead. */
-export function MilestoneGrid({ milestones }: { milestones: Milestone[] }) {
-  const colors = useColors();
-
-  return (
-    <View style={styles.grid}>
-      {milestones.map((milestone) => (
-        <View
-          key={milestone.id}
-          accessible
-          accessibilityLabel={`${milestone.title}. ${milestone.reached ? 'Reached' : milestone.hint}`}
-          style={[
-            styles.tile,
-            {
-              backgroundColor: milestone.reached ? colors.accentSoft : 'transparent',
-              borderColor: milestone.reached ? colors.accent : colors.border,
-            },
-          ]}
-        >
-          <Icon
-            name={milestone.reached ? 'award' : 'lock'}
-            size="sm"
-            color={milestone.reached ? 'accentOnSoft' : 'textTertiary'}
           />
-          <Text variant="metaStrong" color={milestone.reached ? 'accentOnSoft' : 'textSecondary'}>
-            {milestone.title}
-          </Text>
-          <Text variant="caption" color="textTertiary" numberOfLines={2}>
-            {milestone.reached ? 'Reached' : milestone.hint}
-          </Text>
-        </View>
-      ))}
-    </View>
+        ))}
+      </View>
+
+      <Text variant="meta" style={styles.decreeMeta} numberOfLines={2}>
+        {prayedCount} of {sections.length} prayed{next ? ` · Next: ${next.title}` : ''}
+      </Text>
+
+      <Button
+        label={
+          !next
+            ? 'Open this month’s decree'
+            : prayedCount === 0
+              ? 'Begin the first decree'
+              : `Continue — decree ${next.position}`
+        }
+        variant="light"
+        icon="arrow-right"
+        iconPosition="trailing"
+        fullWidth
+        style={styles.decreeButton}
+        onPress={() => router.push(next ? `/devotion/section/${next.id}` : '/devotion')}
+      />
+    </LinearGradient>
   );
 }
 
@@ -323,45 +266,55 @@ const styles = StyleSheet.create({
   progress: {
     paddingTop: space.md,
   },
-  badgeRow: {
-    gap: space.lg,
-    padding: space.lg,
+  decreeCard: {
+    borderRadius: radius.lg,
+    padding: space.xl,
+    gap: space.md,
   },
-  badge: {
-    width: 76,
-    alignItems: 'center',
-    gap: space.sm,
-  },
-  badgeArt: {
-    width: 68,
-    height: 68,
-    borderRadius: radius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  badgeLabel: {
-    textAlign: 'center',
-  },
-  card: {
-    gap: space.xs,
-    padding: space.lg,
-    borderWidth: 1,
-    borderRadius: radius.sm,
-  },
-  cardAction: {
-    paddingTop: space.md,
-  },
-  grid: {
+  decreeTop: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: space.sm,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: space.md,
   },
-  tile: {
-    width: '48.5%',
-    gap: 2,
-    padding: space.md,
-    borderWidth: 1,
-    borderRadius: radius.sm,
+  decreeKicker: {
+    flex: 1,
+    color: 'rgba(255,255,255,0.82)',
+  },
+  streakChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.xs,
+    height: 32,
+    paddingHorizontal: space.md,
+    borderRadius: radius.pill,
+    backgroundColor: 'rgba(255,255,255,0.16)',
+  },
+  streakNumber: {
+    color: '#FFFFFF',
+  },
+  decreeTitle: {
+    color: '#FFFFFF',
+    fontFamily: fonts.sansExtraBold,
+    fontSize: 26,
+    lineHeight: 31,
+    letterSpacing: -0.8,
+  },
+  blocks: {
+    flexDirection: 'row',
+    gap: 4,
+    paddingTop: space.xs,
+  },
+  block: {
+    flex: 1,
+    height: 8,
+    borderRadius: radius.pill,
+  },
+  decreeMeta: {
+    color: 'rgba(255,255,255,0.85)',
+  },
+  decreeButton: {
+    marginTop: space.sm,
   },
   row: {
     flexDirection: 'row',

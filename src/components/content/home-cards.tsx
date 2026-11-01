@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRef, useState, type ReactNode } from 'react';
 import {
   FlatList,
+  ScrollView,
   Share,
   StyleSheet,
   View,
@@ -258,6 +259,74 @@ export function VerseHero({
   );
 }
 
+const tileColors = ['#B3392F', '#4A2C5C', '#0B7A75', '#2D5B8C', '#7A7A1F', '#8A2236', '#C26A1B', '#3B4CB8'];
+
+const topicIcons: Record<string, keyof typeof Ionicons.glyphMap> = {
+  prayer: 'heart',
+  mercy: 'water',
+  faithfulness: 'shield',
+  forgiveness: 'leaf',
+  leadership: 'compass',
+  generosity: 'gift',
+  stewardship: 'key',
+  community: 'people',
+  discipleship: 'book',
+  church: 'home',
+  lament: 'rainy',
+  'pastoral care': 'medkit',
+};
+
+/**
+ * Coloured topic tiles, two rows that scroll sideways: a solid colour, the topic
+ * in bold capitals, and an icon. Tapping one opens the teaching on that topic.
+ */
+export function TopicTiles({
+  topics,
+  onPress,
+}: {
+  topics: string[];
+  onPress: (topic: string) => void;
+}) {
+  const columns: string[][] = [];
+  for (let i = 0; i < topics.length; i += 2) columns.push(topics.slice(i, i + 2));
+
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.topicRow}
+    >
+      {columns.map((column, columnIndex) => (
+        <View key={columnIndex} style={styles.topicColumn}>
+          {column.map((topic, rowIndex) => {
+            const index = columnIndex * 2 + rowIndex;
+            return (
+              <Pressable
+                key={topic}
+                onPress={() => onPress(topic)}
+                feedback="opacity"
+                accessibilityLabel={`Teaching on ${topic}`}
+                style={[styles.topic, { backgroundColor: tileColors[index % tileColors.length] }]}
+              >
+                <Text style={styles.topicLabel} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>
+                  {topic.toUpperCase()}
+                </Text>
+                <View style={styles.topicIcon}>
+                  <Ionicons
+                    name={topicIcons[topic.toLowerCase()] ?? 'sparkles'}
+                    size={34}
+                    color="rgba(255,255,255,0.35)"
+                  />
+                </View>
+              </Pressable>
+            );
+          })}
+        </View>
+      ))}
+    </ScrollView>
+  );
+}
+
 /**
  * A stacked category card: bold title, one grey line, and two tilted photographs
  * clipped by the card's lower-right corner.
@@ -299,6 +368,33 @@ export function CategoryCard({
 const styles = StyleSheet.create({
   carousel: {
     paddingHorizontal: space.gutter,
+  },
+  topicRow: {
+    gap: space.md,
+    paddingHorizontal: space.gutter,
+  },
+  topicColumn: {
+    gap: space.md,
+  },
+  topic: {
+    width: 188,
+    height: 84,
+    borderRadius: radius.md,
+    paddingHorizontal: space.lg,
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  topicLabel: {
+    color: '#FFFFFF',
+    fontFamily: fonts.sansBold,
+    fontSize: 16,
+    letterSpacing: 0.3,
+    maxWidth: 140,
+  },
+  topicIcon: {
+    position: 'absolute',
+    right: space.md,
+    bottom: space.sm,
   },
   pager: {
     flexDirection: 'row',

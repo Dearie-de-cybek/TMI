@@ -12,14 +12,13 @@ import {
   CategoryCard,
   HeroCard,
   HeroCarousel,
+  TopicTiles,
   VerseHero,
   type HeroItem,
 } from '@/components/content/home-cards';
 import { LiveSessionStrip } from '@/components/content/featured';
-import { AnnouncementRow, CourseRow, EventRow, SermonTile } from '@/components/content/rows';
+import { EventRow, SermonTile } from '@/components/content/rows';
 import { Band } from '@/components/ui/band';
-import { Banner } from '@/components/ui/banner';
-import { Icon } from '@/components/ui/icon';
 import { Rise } from '@/components/ui/motion';
 import { Pressable } from '@/components/ui/pressable';
 import { Rule, Screen, ScreenScroll } from '@/components/ui/screen';
@@ -35,6 +34,7 @@ import { fetchCurrentDecree } from '@/features/devotion/api';
 import { useDevotionProgress } from '@/features/devotion/progress-store';
 import { useDevotionSync } from '@/features/devotion/use-devotion-sync';
 import { fetchHomeFeed } from '@/features/home/api';
+import { fetchSermonFilters } from '@/features/sermons/api';
 
 const categories: {
   title: string;
@@ -73,8 +73,8 @@ const categories: {
     images: [churchImages.fellowshipMen, churchImages.youthAuditorium],
   },
   {
-    title: 'About TwainMan',
-    description: 'Who we are, when we meet, what we believe.',
+    title: 'About',
+    description: 'Our story and beliefs.',
     href: '/about',
     images: [churchImages.congregationBanner, churchImages.communionTable],
   },
@@ -117,6 +117,12 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   useDevotionSync();
   const streakDays = useDevotionProgress((state) => state.streakDays);
+  const sermonFilters = useQuery({
+    queryKey: queryKeys.sermonFilters,
+    queryFn: fetchSermonFilters,
+    staleTime: 10 * 60_000,
+  });
+  const topics = (sermonFilters.data?.topics ?? []).map((item) => item.value).slice(0, 12);
   const decree = useQuery({
     queryKey: queryKeys.decree('current'),
     queryFn: ({ signal }) => fetchCurrentDecree(signal),
@@ -187,9 +193,14 @@ export default function HomeScreen() {
   return (
     <Screen>
       <View style={[styles.header, { paddingTop: insets.top + space.md }]}>
-        <Text variant="display" style={styles.greeting} numberOfLines={2}>
-          {signedIn && firstName ? `${greeting()}, ${firstName}` : 'Welcome'}
-        </Text>
+        <View style={styles.greeting}>
+          <Text variant="meta" color="textSecondary">
+            {signedIn && firstName ? greeting() : 'TwainMan Ministry'}
+          </Text>
+          <Text variant="title" numberOfLines={1} adjustsFontSizeToFit>
+            {signedIn && firstName ? firstName : 'Welcome'}
+          </Text>
+        </View>
         <View style={styles.headerActions}>
           <Pressable
             onPress={() => router.push('/devotion')}
@@ -287,33 +298,24 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          {/* Formation. */}
-          <Band tone="primary">
-            <View style={styles.gutter}>
-              <SectionHeader
-                eyebrow="Keep going"
-                title={signedIn && feed.continue_learning.length > 0 ? 'Your courses' : 'Discipleship'}
-                action={{ label: 'All courses', onPress: () => router.push('/courses') }}
+          {/* Discipleship — teaching by topic. */}
+          {topics.length > 0 ? (
+            <View style={styles.block}>
+              <View style={styles.gutter}>
+                <SectionHeader
+                  title="Discipleship"
+                  action={{ label: 'All sermons', onPress: () => router.push('/sermons') }}
+                />
+                <Text variant="body" color="textSecondary" style={styles.topicCopy}>
+                  Pick a topic and sit with what the church has taught on it.
+                </Text>
+              </View>
+              <TopicTiles
+                topics={topics}
+                onPress={(topic) => router.push({ pathname: '/sermons', params: { topic } })}
               />
             </View>
-            {signedIn && feed.continue_learning.length > 0 ? (
-              feed.continue_learning.map((course, index) => (
-                <View key={course.id}>
-                  {index > 0 ? <Rule inset={space.gutter} /> : null}
-                  <CourseRow course={course} onPress={() => router.push(`/courses/${course.id}`)} />
-                </View>
-              ))
-            ) : (
-              <View style={styles.gutter}>
-                <Banner
-                  tone="accent"
-                  title={signedIn ? 'Not in a course yet' : 'Courses run through the year'}
-                  message="The discipleship team opens short courses through the year — have a look at what is open."
-                  action={{ label: 'Browse courses', onPress: () => router.push('/courses') }}
-                />
-              </View>
-            )}
-          </Band>
+          ) : null}
 
           {/* The life of the house. */}
           <Band>
@@ -341,27 +343,6 @@ export default function HomeScreen() {
             )}
           </Band>
 
-          {feed.announcements.length > 0 ? (
-            <Band tone="neutral">
-              <View style={styles.gutter}>
-                <SectionHeader
-                  eyebrow="From the church"
-                  title="Announcements"
-                  action={{ label: 'See all', onPress: () => router.push('/announcements') }}
-                />
-              </View>
-              {feed.announcements.map((announcement, index) => (
-                <View key={announcement.id}>
-                  {index > 0 ? <Rule inset={space.gutter} /> : null}
-                  <AnnouncementRow
-                    announcement={announcement}
-                    onPress={() => router.push(`/announcements/${announcement.id}`)}
-                  />
-                </View>
-              ))}
-            </Band>
-          ) : null}
-
           {signedIn && feed.recently_saved.length > 0 ? (
             <Band>
               <View style={styles.gutter}>
@@ -386,31 +367,6 @@ export default function HomeScreen() {
               </ScrollView>
             </Band>
           ) : null}
-
-          {/* Prayer — back to the ministry's own colour. */}
-          <Band tone="primary">
-            <View style={styles.gutter}>
-              <SectionHeader eyebrow="Prayer" title="Ask the church to pray" />
-              <Text variant="body" color="textSecondary" style={styles.prayerCopy}>
-                {signedIn && feed.my_prayer_summary && feed.my_prayer_summary.open_count > 0
-                  ? `You have ${feed.my_prayer_summary.open_count} request${
-                      feed.my_prayer_summary.open_count === 1 ? '' : 's'
-                    } with the prayer team.`
-                  : 'Send a request to the pastoral team, or to the prayer community if you would like it shared.'}
-              </Text>
-            </View>
-            <Pressable
-              onPress={() => router.push('/prayer')}
-              style={[styles.prayerAction, { borderColor: colors.border }]}
-              accessibilityLabel="Open prayer"
-            >
-              <Icon name="heart" size="md" color="primary" />
-              <Text variant="labelStrong" style={styles.prayerLabel}>
-                {signedIn ? 'Your prayer requests' : 'Prayer and pastoral care'}
-              </Text>
-              <Icon name="chevron-right" size="sm" color="textTertiary" />
-            </Pressable>
-          </Band>
 
           {!signedIn ? (
             <Band>
@@ -440,7 +396,10 @@ const styles = StyleSheet.create({
   },
   greeting: {
     flex: 1,
-    paddingTop: space.xs,
+    gap: 0,
+  },
+  topicCopy: {
+    paddingBottom: space.lg,
   },
   headerActions: {
     flexDirection: 'row',

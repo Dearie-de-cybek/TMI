@@ -6,8 +6,8 @@ import { StyleSheet, View } from 'react-native';
 import { queryKeys } from '@/api/query-client';
 import { SignInPrompt } from '@/components/app/sign-in-prompt';
 import { TAB_BAR_HEIGHT } from '@/components/app/tab-bar';
-import { BadgeRow } from '@/components/content/devotion';
-import { Avatar } from '@/components/ui/avatar';
+import { BadgeShelf } from '@/components/content/badges';
+import { MemberAvatar } from '@/components/ui/member-avatar';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Tag } from '@/components/ui/chips';
@@ -24,7 +24,7 @@ import { useColors } from '@/design/theme';
 import { fonts, radius, space } from '@/design/tokens';
 import { useAuth } from '@/features/auth/store';
 import { fetchCurrentDecree } from '@/features/devotion/api';
-import { milestonesFor } from '@/features/devotion/milestones';
+import { useBadges } from '@/features/devotion/badges';
 import { useDevotionProgress } from '@/features/devotion/progress-store';
 import { useDevotionSync } from '@/features/devotion/use-devotion-sync';
 import { fetchEnrollments } from '@/features/learning/api';
@@ -51,6 +51,7 @@ export default function ProfileScreen() {
 
   useDevotionSync();
   const progress = useDevotionProgress();
+  const badges = useBadges();
 
   const enrollments = useQuery({
     queryKey: queryKeys.enrollments,
@@ -105,7 +106,6 @@ export default function ProfileScreen() {
     decree.data && progress.period === decree.data.period
       ? decree.data.sections.filter((section) => progress.prayedSectionIds.includes(section.id)).length
       : 0;
-  const milestones = milestonesFor(progress, totalDecrees);
 
   return (
     <Screen>
@@ -113,7 +113,7 @@ export default function ProfileScreen() {
 
       <ScreenScroll bottomSpace={space.xxl}>
         <View style={styles.identity}>
-          <Avatar name={member.name} uri={member.avatar_url} size="xl" />
+          <MemberAvatar size="xl" />
           <View style={styles.identityText}>
             <Text variant="title" numberOfLines={2}>
               {member.name}
@@ -196,15 +196,7 @@ export default function ProfileScreen() {
         </Rise>
 
         <View style={[styles.gutter, styles.badges]}>
-          <View style={styles.badgeHead}>
-            <Text variant="title">Badges</Text>
-            <Text variant="metaStrong" color="textSecondary">
-              {milestones.filter((milestone) => milestone.reached).length} of {milestones.length}
-            </Text>
-          </View>
-          <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <BadgeRow milestones={milestones} />
-          </View>
+          <BadgeShelf badges={badges} onViewAll={() => router.push('/badges')} />
         </View>
 
         <Group label="Your content">

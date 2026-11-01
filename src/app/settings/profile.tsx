@@ -7,12 +7,16 @@ import { StyleSheet, View } from 'react-native';
 import { describeError, fieldError } from '@/api/errors';
 import { AuthShell } from '@/components/app/auth-shell';
 import { useToast } from '@/components/app/toast';
-import { Avatar } from '@/components/ui/avatar';
+import { DefaultAvatar, defaultAvatars } from '@/components/ui/avatar';
+import { MemberAvatar } from '@/components/ui/member-avatar';
+import { Pressable } from '@/components/ui/pressable';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { TextField } from '@/components/ui/text-field';
-import { space } from '@/design/tokens';
+import { useColors } from '@/design/theme';
+import { radius, space } from '@/design/tokens';
+import { useAvatarChoice } from '@/features/auth/avatar-choice';
 import { updateProfile, uploadAvatar } from '@/features/auth/api';
 import { useAuth } from '@/features/auth/store';
 import { profileSchema, validate, type FieldErrors } from '@/lib/validation';
@@ -22,6 +26,9 @@ export default function EditProfileScreen() {
   const toast = useToast();
   const member = useAuth((state) => state.member);
   const setMember = useAuth((state) => state.setMember);
+  const colors = useColors();
+  const choice = useAvatarChoice((state) => state.choice);
+  const setChoice = useAvatarChoice((state) => state.set);
 
   const [values, setValues] = useState({
     name: member?.name ?? '',
@@ -73,6 +80,8 @@ export default function EditProfileScreen() {
     onSuccess: (updated) => {
       if (!updated) return;
       setMember(updated);
+      // A photograph replaces a chosen avatar.
+      setChoice(null);
       toast('Profile picture updated.', { tone: 'success', icon: 'camera' });
     },
   });
@@ -98,7 +107,7 @@ export default function EditProfileScreen() {
       ) : null}
 
       <View style={styles.avatarRow}>
-        <Avatar name={member.name} uri={member.avatar_url} size="xl" />
+        <MemberAvatar size="xl" />
         <View style={styles.avatarActions}>
           <Button
             label="Change picture"
@@ -111,6 +120,31 @@ export default function EditProfileScreen() {
           <Text variant="caption" color="textTertiary">
             A square photo works best.
           </Text>
+        </View>
+      </View>
+
+      <View style={styles.picker}>
+        <Text variant="labelStrong">Or choose an avatar</Text>
+        <View style={styles.pickerGrid}>
+          {defaultAvatars.map((avatarOption) => {
+            const selected = choice === avatarOption.key;
+            return (
+              <Pressable
+                key={avatarOption.key}
+                onPress={() => setChoice(avatarOption.key)}
+                feedback="opacity"
+                accessibilityRole="radio"
+                accessibilityState={{ selected }}
+                accessibilityLabel={avatarOption.label}
+                style={[
+                  styles.pickerItem,
+                  { borderColor: selected ? colors.ink : 'transparent' },
+                ]}
+              >
+                <DefaultAvatar avatarKey={avatarOption.key} dimension={52} />
+              </Pressable>
+            );
+          })}
         </View>
       </View>
 
@@ -176,6 +210,20 @@ export default function EditProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  picker: {
+    gap: space.md,
+  },
+  pickerGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: space.sm,
+  },
+  pickerItem: {
+    padding: 3,
+    borderWidth: 2,
+    borderRadius: radius.pill,
+    minHeight: 0,
+  },
   avatarRow: {
     flexDirection: 'row',
     alignItems: 'center',
