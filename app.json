@@ -20,7 +20,7 @@
     "android": {
       "package": "org.twainman.ministry",
       "adaptiveIcon": {
-        "backgroundColor": "#F3EDF6",
+        "backgroundColor": "#F8F5F0",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
@@ -71,9 +71,10 @@
         {
           "backgroundColor": "#F8F5F0",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 84,
+          "imageWidth": 96,
           "dark": {
-            "backgroundColor": "#15101A"
+            "backgroundColor": "#15101A",
+            "image": "./assets/images/splash-icon-dark.png"
           }
         }
       ],
